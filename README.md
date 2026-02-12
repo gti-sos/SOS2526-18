@@ -1,9 +1,9 @@
 # SOS2526-18
 
-## Equipo
+## Team members
 * Jose Luis Alcón Del Villar ([josalcdel1](https://github.com/josalcdel1))
-* (Compañero 1 - Pendiente de datos)
-* (Compañero 2 - Pendiente de datos)
+* Manuel Castro Sánchez ([mancassan2](https://github.com/kasthro))
+* Nazaret Villalba Delgado([nazaretvillalba22](https://github.com/nazaretvillalba22))
 
-## Proyecto
-**Descripción**: [Descripcion proyecto].
+## Proyect description
+This project analyzes the correlation between cereal production, food supply utilization, and the affordability of healthy diets.
