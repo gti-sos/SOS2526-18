@@ -1,0 +1,23 @@
+{
+  "name": "sos2526-18",
+  "version": "1.0.0",
+  "description": "Project focused on cereal productions, food supply utilization and cost of healthy diet",
+  "main": "index-JLAV.js",
+  "scripts": {
+    "start": "node index-JLAV.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-jlav": "node index-JLAV.js",
+    "start-mcs": "node index-MCS.js",
+    "start-nvd": "node index-NVD.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gti-sos/SOS2526-18.git"
+  },
+  "author": "Jose Luis Alcon Del Villar, Manuel Castro Sanchez, Nazaret Villalba Delgado",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gti-sos/SOS2526-18/issues"
+  },
+  "homepage": "https://github.com/gti-sos/SOS2526-18#readme"
+}
