@@ -15,7 +15,7 @@
     "url": "git+https://github.com/gti-sos/SOS2526-18.git"
   },
   "author": "Jose Luis Alcon Del Villar, Manuel Castro Sanchez, Nazaret Villalba Delgado",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/gti-sos/SOS2526-18/issues"
   },
