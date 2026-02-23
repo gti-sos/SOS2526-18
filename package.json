@@ -1,10 +1,11 @@
 {
   "name": "sos2526-18",
   "version": "1.0.0",
+  "type": "module",
   "description": "Project focused on cereal productions, food supply utilization and cost of healthy diet",
-  "main": "index-JLAV.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node index-JLAV.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-jlav": "node index-JLAV.js",
     "start-mcs": "node index-MCS.js",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/gti-sos/SOS2526-18#readme",
   "dependencies": {
+    "cool-ascii-faces": "^1.3.4",
     "express": "^5.2.1"
   }
 }

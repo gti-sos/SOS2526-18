@@ -19,7 +19,7 @@ const data = [
 ];
 
 //Algoritmo para calcular la media
-function calculateAverage(dataArray, Country, field) {
+export function calculateAverage(dataArray, Country, field) {
     
     //Filtrar el subconjunto de filas que comparten el país
     const filteredRows = dataArray.filter(item => item.country === Country);
@@ -35,9 +35,10 @@ function calculateAverage(dataArray, Country, field) {
 }
 
 //Calcular media de 'cereal_production' para 'Paraguay'
-const country = "Paraguay";
-const field = "cereal_production";
-const average = calculateAverage(data, country, field);
+export const country = "Paraguay";
+export const field = "cereal_production";
+export const average = calculateAverage(data, country, field);
 
 //Mostrar el resultado
-console.log("Media de",field ,"para",country,":" ,average);
+console.log(`La media de ${field} para ${country} es: ${average}`);
+
