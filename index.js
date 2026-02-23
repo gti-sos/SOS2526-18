@@ -13,7 +13,7 @@ app.use("/", express.static("./public"));
 
 //Ruta para la carita ASCII
 app.get("/cool", (req, res) => {
-    console.log("Alguien ha entrado en /cool");
+    console.log(cool());
     res.send(`<html><body><h1></h1>${cool()}</body></html>`);
 });
 
