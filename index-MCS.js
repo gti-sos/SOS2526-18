@@ -144,15 +144,6 @@ function avgperCountry(data, Country, attribute) {
     return sum/values.length;
 }
 
-export con
-// console.log(cool());
-let express = require('express');
-const app = express();
-let avg=avgperCountry(data,"China, mainland","production_tonnes");
-app.get('/samples/MCS', (req, res) => {
-res.send("Average production in tonnes of mainland China: "+avg);
-})
+export const datamcs=data;
 
-app.listen(3000, () => {
-console.log('Server is running on http://localhost:3000');
-})
+console.log("Average production in tonnes of mainland China: ",avgperCountry(data,"China, mainland","production_tonnes"));

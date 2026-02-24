@@ -1,7 +1,7 @@
 import express from "express"; //Cargo la librería Express (el motor del servidor)
 import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
 import { calculateAverage, average, field, country} from "./index-JLAV.js";
-import { avgperCountry} from "./index-MCS.js";
+import { avgperCountry,datamcs} from "./index-MCS.js";
 
 const app = express(); //Creamos la aplicación
 const port = process.env.PORT || 12345; //El puerto: Render nos da uno, si no, usa el 12345
@@ -22,7 +22,7 @@ app.get("/cool", (req, res) => {
 app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
 });
-    let avg=avgperCountry(data,"China, mainland","production_tonnes");
+    let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
