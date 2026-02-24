@@ -22,9 +22,8 @@ app.get("/cool", (req, res) => {
 app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
 });
-
+    let avg=avgperCountry(data,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
-    let avg=avgperCountry(data,"China, mainland","production_tonnes")
     res.send("Average production in tonnes of mainland China: "+avg);
 });
 app.get("/api/v1/cereal-production", (req, res) => {
