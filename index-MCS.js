@@ -145,5 +145,6 @@ function avgperCountry(data, Country, attribute) {
 }
 
 export const datamcs=data;
+export { avgperCountry };
 
 console.log("Average production in tonnes of mainland China: ",avgperCountry(data,"China, mainland","production_tonnes"));
