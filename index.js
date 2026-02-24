@@ -22,7 +22,11 @@ app.get("/cool", (req, res) => {
 app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
 });
-    let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
+
+
+app.use("/", express.static("./public"));
+
+let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
