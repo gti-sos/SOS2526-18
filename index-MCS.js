@@ -144,7 +144,7 @@ function avgperCountry(data, Country, attribute) {
     return sum/values.length;
 }
 
-
+export con
 // console.log(cool());
 let express = require('express');
 const app = express();
