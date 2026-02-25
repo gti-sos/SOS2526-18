@@ -138,19 +138,25 @@ app.put("/api/v1/food-supply-utilization-accounts/:country", (req, res) => {
 
 //delete mcs
 app.delete("/api/v1/food-supply-utilization-accounts/:country", (req, res) => {
-    const country = req.params.country;
 
-    const before = datamcs.length;
+    const country = req.params.country.toLowerCase();
 
-    datamcs = datamcs.filter(
-        d => d.country_name_en.toLowerCase() !== country.toLowerCase()
-    );
+    const initialLength = datamcs.length;
 
-    if (before === datamcs.length) {
+    // MODIFICAR EL ARRAY SIN REASIGNARLO
+    for (let i = datamcs.length - 1; i >= 0; i--) {
+        if (datamcs[i].country_name_en &&
+            datamcs[i].country_name_en.toLowerCase() === country) {
+            datamcs.splice(i, 1); // elimina el elemento
+        }
+    }
+
+    if (initialLength === datamcs.length) {
         return res.status(404).json({ error: "Not Found" });
     }
 
     return res.sendStatus(200);
+
 });
 
 
