@@ -40,5 +40,5 @@ export const field = "cereal_production";
 export const average = calculateAverage(data, country, field);
 
 //Mostrar el resultado
-console.log(`La media de ${field} para ${country} es: ${average}`);
+//console.log(`La media de ${field} para ${country} es: ${average}`);
 
