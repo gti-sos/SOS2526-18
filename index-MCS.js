@@ -1,3 +1,14 @@
+
+// index-MCS.js (ESM)
+
+import express from "express";
+const mcsrouter = express.Router();
+
+/* ===========================
+ *   Datos
+ * =========================== */
+// Sustituye esta línea por tu array real:
+// const data = [ ... ];
 const data = [
   {
     faostat: 41,
@@ -129,22 +140,125 @@ const data = [
     stock_variation_tonnes: 11.61,
     export_quantity_tonnes: 23.44
   }
-];
+]; 
 
-function avgperCountry(data, Country, attribute) {
-    //filter country
-    const dataCountry=data.filter(row=>row.country_name_en===Country);
-    //filter attribute
-    const values=dataCountry.map(row=>row[attribute]).filter(v => typeof v === "number" && !isNaN(v));
-    console.log()
-    //
-    if (values.length === 0) return null;
-    //
-    const sum=values.reduce((acum,n)=>acum+n,0);
-    return sum/values.length;
+export const datamcs = data;
+
+/* ===========================
+ *   Funciones auxiliares
+ * =========================== */
+function avgperCountry(dataset, Country, attribute) {
+  const rows = dataset.filter(r => r.country_name_en === Country);
+  const values = rows
+    .map(r => r[attribute])
+    .filter(v => typeof v === "number" && !isNaN(v));
+
+  if (values.length === 0) return null;
+
+  const sum = values.reduce((a, b) => a + b, 0);
+  return sum / values.length;
 }
 
-export const datamcs=data;
 export { avgperCountry };
 
-//console.log("Average production in tonnes of mainland China: ",avgperCountry(data,"China, mainland","production_tonnes"));
+/* ===========================
+ *   Rutas API (Router)
+ *   Base: /api/v1/food-supply-utilization-accounts
+ * =========================== */
+
+// GET / -> lista completa
+mcsrouter.get("/", (req, res) => {
+  res.status(200).json(datamcs);
+});
+
+// GET /:country -> filtra por país (case-insensitive)
+mcsrouter.get("/:country", (req, res) => {
+  const country = (req.params.country || "").toLowerCase();
+  const filtered = datamcs.filter(
+    d => d.country_name_en && d.country_name_en.toLowerCase() === country
+  );
+
+  if (filtered.length === 0) {
+    return res.status(404).json({ error: "Not Found" });
+  }
+  return res.status(200).json(filtered);
+});
+
+// POST / -> crea nuevo registro (con validación + conflicto)
+mcsrouter.post("/", (req, res) => {
+  const newData = req.body;
+
+  const requiredFields = [
+    "faostat",
+    "m49_code",
+    "country_name_en",
+    "item_code",
+    "item",
+    "year",
+    "opening_stocks_tonnes",
+    "production_tonnes",
+    "import_quantity_tonnes",
+    "stock_variation_tonnes",
+    "export_quantity_tonnes"
+  ];
+
+  const missing = requiredFields.filter(f => !(f in newData));
+  if (missing.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Bad Request", missing_fields: missing });
+  }
+
+  const exists = datamcs.some(
+    d =>
+      d.country_name_en === newData.country_name_en &&
+      d.year === newData.year &&
+      d.item === newData.item
+  );
+  if (exists) {
+    return res
+      .status(409)
+      .json({ error: "Conflict: the resource already exists" });
+  }
+
+  datamcs.push(newData);
+  return res.status(201).json({ message: "Created" });
+});
+
+// PUT /:country -> reemplaza el primer registro del país por el body
+mcsrouter.put("/:country", (req, res) => {
+  const country = (req.params.country || "").toLowerCase();
+  const body = req.body;
+
+  const index = datamcs.findIndex(
+    d => d.country_name_en && d.country_name_en.toLowerCase() === country
+  );
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Not Found" });
+  }
+
+  datamcs[index] = body;
+  return res.status(200).json({ message: "Updated" });
+});
+
+// DELETE /:country -> elimina todos los registros del país
+mcsrouter.delete("/:country", (req, res) => {
+  const country = (req.params.country || "").toLowerCase();
+  const initialLength = datamcs.length;
+
+  for (let i = datamcs.length - 1; i >= 0; i--) {
+    const name = datamcs[i].country_name_en;
+    if (name && name.toLowerCase() === country) {
+      datamcs.splice(i, 1);
+    }
+  }
+
+  if (initialLength === datamcs.length) {
+    return res.status(404).json({ error: "Not Found" });
+  }
+  return res.sendStatus(200);
+});
+
+// Export por defecto del router
+export default mcsrouter;
