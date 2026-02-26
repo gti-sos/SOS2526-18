@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
 import { calculateAverage, average, field, country} from "./index-JLAV.js";
 import { avgperCountry,datamcs} from "./index-MCS.js";
-import { load_JLAV_API,BASE_URL } from "./jlav-api.js";
+import { load_JLAV_API} from "./index-JLAV.js";
 import mcsrouter from "./index-MCS.js";
 
 const app = express(); //Creamos la aplicación
@@ -15,8 +15,6 @@ app.use(express.json()); //Para que el servidor entienda datos en formato JSON
 // el servidor intentará localizar el archivo dentro de la carpeta './public'.
 app.use("/", express.static("./public")); 
 
-//activar body-parser para deserializar
-app.use(bodyParser.json());
 
 //Ruta para la carita ASCII
 app.get("/cool", (req, res) => {
@@ -25,30 +23,27 @@ app.get("/cool", (req, res) => {
 });
 
 
+//resultado del cálculo del algoritmojlav
 app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
 });
-
+//activacion apis jlav
 load_JLAV_API(app);
-app.get(BASE_URL, (req, res) => {
-    res.status(200).json(data); 
-});
 
-app.get("/api/v1/cereal-production", (req, res) => {
-    res.send(`La media de cereal_production para Paraguay es: ${average}`);
-});
 
-app.use("/", express.static("./public"));
 
+
+
+//resultado del cálculo del algoritmo mcs
 let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
-
-
-
-//api mcs
+//activaciob api mcs
 app.use("/api/v1/food-supply-utilization-accounts", mcsrouter);
+
+
+
 
 //Encendemos el servidor
 app.listen(port, () => {
