@@ -225,6 +225,11 @@ mcsrouter.post("/", (req, res) => {
   return res.status(201).json({ message: "Created" });
 });
 
+
+mcsrouter.post("/:country", (req, res) => {
+  res.sendStatus(405); // Method Not Allowed
+});
+
 // PUT /:country -> reemplaza el primer registro del país por el body
 mcsrouter.put("/:country", (req, res) => {
   const country = (req.params.country || "").toLowerCase();
@@ -241,6 +246,12 @@ mcsrouter.put("/:country", (req, res) => {
   datamcs[index] = body;
   return res.status(200).json({ message: "Updated" });
 });
+
+
+mcsrouter.put("/", (req, res) => {
+  res.sendStatus(405); // Method Not Allowed
+});
+
 
 // DELETE /:country -> elimina todos los registros del país
 mcsrouter.delete("/:country", (req, res) => {
