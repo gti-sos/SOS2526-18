@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
 import { calculateAverage, average, field, country} from "./index-JLAV.js";
 import { avgperCountry,datamcs} from "./index-MCS.js";
+import { load_JLAV_API,BASE_URL } from "./jlav-api.js";
 import mcsrouter from "./index-MCS.js";
 
 const app = express(); //Creamos la aplicación
@@ -26,6 +27,11 @@ app.get("/cool", (req, res) => {
 
 app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
+});
+
+load_JLAV_API(app);
+app.get(BASE_URL, (req, res) => {
+    res.status(200).json(data); 
 });
 
 app.get("/api/v1/cereal-production", (req, res) => {
