@@ -27,6 +27,9 @@ app.get("/samples/jlav", (req, res) => {
     res.send(`La media de ${field} para ${country} es: ${average}`);
 });
 
+app.get("/api/v1/cereal-production", (req, res) => {
+    res.send(`La media de cereal_production para Paraguay es: ${average}`);
+});
 
 app.use("/", express.static("./public"));
 
@@ -35,9 +38,7 @@ app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
 
-app.get("/api/v1/cereal-production", (req, res) => {
-    res.send(`La media de cereal_production para Paraguay es: ${average}`);
-});
+
 
 //get MCS
 app.get("/api/v1/food-supply-utilization-accounts", (req, res) => {
