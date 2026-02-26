@@ -39,7 +39,7 @@ let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
-//activaciob api mcs
+//activacion api mcs
 app.use("/api/v1/food-supply-utilization-accounts", mcsrouter);
 
 
