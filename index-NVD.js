@@ -230,15 +230,18 @@ export function load_NVD_API(app){
 
         // Filtrado opcional según query parameters
         if (req.query.year) {
-            const year = parseInt(req.query.year);
-            results = results.filter(d => d.year === year);
+            //const year = parseInt(req.query.year);
+            results = results.filter(d => d.year === parseInt(req.query.year));
+        }
+        if (req.query.from && req.query.to){
+            results = results.filter(d => d.year >= parseInt(req.query.from) && d.year <= parseInt(req.query.to));
         }
         if (req.query.region) {
             results = results.filter(d => d.region.toLowerCase() === req.query.region.toLowerCase());
         }
         if (req.query.country) {
             results = results.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
-        }   
+        }
         res.status(200).json(results);
     });
 
