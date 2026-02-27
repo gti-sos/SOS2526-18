@@ -50,7 +50,7 @@ export const average = calculateAverage(initialData, country, field);
 // Operaciones sobre recursos
 let data = [];
 export function load_JLAV_API(app) {
-    const BASE_URL = "/api/v1/cereal-production";
+    const BASE_URL = "/api/v1/cereal-productions";
 
     //carga inicial
     app.get(BASE_URL + "/loadInitialData", (req, res) => {

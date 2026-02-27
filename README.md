@@ -8,7 +8,7 @@
 - **Repository**: [gti-sos/SOS2526-18](https://github.com/gti-sos/SOS2526-18)
 - **URI**:(https://sos2526-18.onrender.com/)
 - **Apis**
-  - Jose Luis Alcón Del Villar ([https://sos2526-18.onrender.com/api/v1/cereal-production](https://sos2526-18.onrender.com/api/v1/cereal-production))
+  - Jose Luis Alcón Del Villar ([https://sos2526-18.onrender.com/api/v1/cereal-productions](https://sos2526-18.onrender.com/api/v1/cereal-productions))
   - Manuel Castro Sánchez ([https://sos2526-18.onrender.com/api/v1/food-supply-utilization-accounts](https://sos2526-18.onrender.com/api/v1/food-supply-utilization-accounts))
   - Nazaret Villalba Delgado([https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries](https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries))
  
