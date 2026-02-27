@@ -226,6 +226,19 @@ export function load_NVD_API(app){
 
     // Devuelve todos los recursos
     app.get(BASE_URL, (req, res) =>{
+        let results = [...nvdAPIData];
+
+        // Filtrado opcional según query parameters
+        if (req.query.year) {
+            const year = parseInt(req.query.year);
+            results = results.filter(d => d.year === year);
+        }
+        if (req.query.region) {
+            results = results.filter(d => d.region.toLowerCase() === req.query.region.toLowerCase());
+        }
+        if (req.query.country) {
+            results = results.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
+        }   
         res.status(200).json(nvdAPIDATA);
     });
 
