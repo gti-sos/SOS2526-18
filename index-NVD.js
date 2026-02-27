@@ -203,7 +203,7 @@ export const campo_nvd = "annual_cost_healthy_diet_usd";
 
 export const resultado_nvd = mediaPorRegion(data, region_nvd, campo_nvd);
 
-console.log(`La media de ${campo} en la región ${region} es : ${resultado}`);
+console.log(`La media de ${campo_nvd} en la región ${region_nvd} es : ${resultado_nvd}`);
 
 export { mediaPorRegion };
 export const datosnvd = data;
