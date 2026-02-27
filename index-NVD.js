@@ -245,7 +245,7 @@ export function load_NVD_API(app){
         res.status(200).json(results);
     });
 
-    //Acceso a un dato concreto (por pais y año)
+    //Acceso a un recurso concreto (por pais y año) 
     app.get("/api/v1/cost-of-healthy-diet-by-countries/:country/:year", (req,res) => {
         let nvdAPIDATA = [...datosnvd];
         const { country,year } = req.params;
