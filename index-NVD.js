@@ -198,9 +198,95 @@ function mediaPorRegion(datos, region, campoNumerico) {
 }
 
 // EJECUCIÓN mediaPorRegion
-const region = "Europe";
-const campo = "annual_cost_healthy_diet_usd";
+export const region_nvd = "Europe";
+export const campo_nvd = "annual_cost_healthy_diet_usd";
 
-const resultado = mediaPorRegion(data, region, campo);
+export const resultado_nvd = mediaPorRegion(data, region, campo);
 
 console.log(`La media de ${campo} en la región ${region} es : ${resultado}`);
+
+export { mediaPorRegion };
+export const datosnvd = data;
+
+export function load_NVD_API(app){
+    const BASE_URL = "/api/v1/cost-of-healthy-diet-by-countries";
+    
+    //Datos en memoria
+    let nvdAPIDATA = [...datosnvd];
+
+    //Carga inicial
+    app.get(BASE_URL + "/loadInitialData", (req,res) => {
+        if(nvdAPIDATA.length === 0){
+            nvdAPIDATA = [...datosnvd];
+            res.sendStatus(201); //201 Created
+        }else{
+            res.status(400).send("Array no está vacío"); //400 Bad Request
+        }
+    });
+
+    // Devuelve todos los recursos
+    app.get(BASE_URL, (req, res) =>{
+        res.status(200).json(nvdAPIDATA);
+    });
+
+    // Crea un nuevo recurso
+    app.post(BASE_URL, (req,res) =>{
+        const newItem = req.body;
+        if(!newItem || !newItem.region || !newItem.year){
+            return res.sendStatus(400); // 400 Bad Request
+        }
+        const exists = nvdAPIDATA.some(d => d.region === newItem.region && d.year === newItem.year);
+        if (exists) return res.sendStatus(409); // 409 Conflict
+        nvdAPIDATA.push(newItem);
+        res.sendStatus(201);
+    });
+
+    // Borra todos los recursos
+    app.delete(BASE_URL, (req,res) => {
+        nvdAPIDATA = []; //Array vacío
+        res.sendStatus(200); // 200 Ok
+    });
+
+    //No permitido PUT en la colección
+    app.put(BASE_URL, (req,res) =>{
+        res.sendStatus(405); // 405 method Not Allowed
+    });
+
+    //Obtener datos de un elemento en específico
+    app.get(BASE_URL + "/:region/:year", (req,res) =>{
+        const { region, year } = req.params;
+        const resource = nvdAPIDATA.find(d => d.region === region && d.year=== parseInt(year));
+        if (resource) res.status(200).json(resource);
+        else res.sendStatus(400);
+    });
+
+    //Borra un elemento concreto
+    app.delete(BASE_URL + "/:region/:year", (req,res) => {
+        const { region,year } = req.params;
+        const initialLength = nvdAPIDATA.length;
+        nvdAPIDATA = nvdAPIDATA.filter(d => !(d.region === region && d.year === parseInt(year)));
+        if (nvdAPIDATA.length < initialLength) res.sendStatus(200);
+        else res.sendStatus(404);
+    });
+
+    // Actualiza un elemento
+    app.put(BASE_URL + "/:region/:year", (req,res) => {
+        const newItem = req.body;
+        const { region, year } = req.params;
+        const index = nvdAPIDATA.findIndex(d => d.region === region && d.year ===parseInt(year));
+        if (index === -1) return res.sendStatus(404);
+        if (newItem.region !== region || newItem.year !== parseInt(year)) {
+            return res.status(400).send("La región o el año no coinciden con la URL");
+        }
+        nvdAPIDATA[index] = newItem;
+        res.sendStatus(200);
+    })
+
+    // No permitido POST en recurso concreto
+    app.post(BASE_URL + "/:region/:year", (req,res) => {
+        res.sendStatus(405);
+    });
+
+
+
+}
