@@ -224,7 +224,7 @@ export function load_NVD_API(app){
         }
     });
 
-    // Devuelve todos los recursos
+    // Devuelve todos los recursos (y con filtrado)
     app.get(BASE_URL, (req, res) =>{
         let results = [...nvdAPIDATA];
 
@@ -244,6 +244,21 @@ export function load_NVD_API(app){
         }
         res.status(200).json(results);
     });
+
+    //Acceso a un dato concreto (por pais y año)
+    app.get("/api/v1/cost-of-healthy-diet-by-countries/:country/:year", (req,res) => {
+        const { country,year } = req.params;
+        const yearInt = parseInt(year);
+        const record = nvdAPIDATA.find(r => r.country.toLowerCase() === country.toLowerCase() && r.year === yearInt);
+        if (record){
+            res.status(200).json(record); //Devuelve el objeto encontrado
+        }
+        else {
+            res.sendStatus(404); // No encontrado
+        }
+    });
+
+
 
     // Crea un nuevo recurso
     app.post(BASE_URL, (req,res) =>{
