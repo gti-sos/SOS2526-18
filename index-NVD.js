@@ -201,7 +201,7 @@ function mediaPorRegion(datos, region, campoNumerico) {
 export const region_nvd = "Europe";
 export const campo_nvd = "annual_cost_healthy_diet_usd";
 
-export const resultado_nvd = mediaPorRegion(data, region, campo);
+export const resultado_nvd = mediaPorRegion(data, region_nvd, campo_nvd);
 
 console.log(`La media de ${campo} en la región ${region} es : ${resultado}`);
 
