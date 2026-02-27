@@ -171,7 +171,7 @@ const data = [
         country_code: 724, 
         country: "Spain", 
         region: "Europe", 
-        year: 2020, 
+        year: 2022, 
         cost_healthy_diet_ppp_usd: 3.4, 
         annual_cost_healthy_diet_usd: 1241.1, 
         cost_vegetables_ppp_usd: 0.76, 
