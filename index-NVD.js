@@ -239,7 +239,7 @@ export function load_NVD_API(app){
         if (req.query.country) {
             results = results.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
         }   
-        res.status(200).json(nvdAPIDATA);
+        res.status(200).json(results);
     });
 
     // Crea un nuevo recurso
