@@ -226,7 +226,7 @@ export function load_NVD_API(app){
 
     // Devuelve todos los recursos
     app.get(BASE_URL, (req, res) =>{
-        let results = [...nvdAPIData];
+        let results = [...nvdAPIDATA];
 
         // Filtrado opcional según query parameters
         if (req.query.year) {
