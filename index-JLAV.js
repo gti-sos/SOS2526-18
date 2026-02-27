@@ -62,9 +62,23 @@ export function load_JLAV_API(app) {
         }
     });
 
-    //Devuelve todos los recursos
+    // Devuelve todos los recursos y permite filtrado
     app.get(BASE_URL, (req, res) => {
-        res.status(200).json(data); // 200 Ok
+        let filteredData = [...data]; //Hacemos una copia de los datos originales
+        //Filtrado por País(?country=spain)
+        if (req.query.country) {
+            filteredData = filteredData.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
+        }
+        //Filtrado por Año (?year=2024)
+        if (req.query.year) {
+            filteredData = filteredData.filter(d => d.year === parseInt(req.query.year));
+        }
+        //Filtrado por Rango de Años (?from=2015&to=2020)
+        if (req.query.from && req.query.to) {
+            filteredData = filteredData.filter(d => d.year >= parseInt(req.query.from) && d.year <= parseInt(req.query.to));
+        }
+        //Si no hay datos, devolver array vacio [] con 200 OK
+        res.status(200).json(filteredData);
     });
 
     //Crea un nuevo recurso
@@ -103,6 +117,7 @@ export function load_JLAV_API(app) {
         }
     });
 
+
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {
         const {country, year} = req.params;
@@ -119,6 +134,9 @@ export function load_JLAV_API(app) {
     app.put(BASE_URL + "/:country/:year", (req, res) => {
         const newItem = req.body;
         const {country, year} = req.params;
+        if (!newItem || !newItem.country || !newItem.year) {
+            return res.status(400).send("Petición incompleta");
+        }
         const index = data.findIndex(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
         
         if (index === -1) {
