@@ -334,7 +334,7 @@ export function load_NVD_API(app){
         if(from) resultado = resultado.filter(d=> d.year >= parseInt(from));
         if(to) resultado = resultado.filter(d => d.year <= parseInt(to));
 
-        if (resultado.length === 0) return res.sendStatus(404);
+        //if (resultado.length === 0) return res.sendStatus(404);
 
         res.status(200).json(resultado);
 
