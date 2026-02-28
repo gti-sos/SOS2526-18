@@ -322,5 +322,22 @@ export function load_NVD_API(app){
     });
 
 
+    //GET por país con rango de años opcional
+    app.get(BASE_URL + "/:country", (req,res) => {
+        const { country } = req.params;
+        const { from, to } = req.query;
+
+        let resultado = nvdAPIDATA.filter(d => d.country === country);
+        
+        if(resultado.length === 0) return res.sendStatus(404);
+
+        if(from) resultado = resultado.filter(d=> d.year >= parseInt(from));
+        if(to) resultado = resultado.filter(d => d.year <= parseInt(to));
+
+        if (resultado.length === 0) return res.sendStatus(404);
+
+        res.status(200).json(resultado);
+
+    })
 
 }
