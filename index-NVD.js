@@ -312,7 +312,7 @@ export function load_NVD_API(app){
         }
         nvdAPIDATA[index] = newItem;
         res.sendStatus(200);
-    })
+    });
 
     // No permitido POST en recurso concreto
     app.post(BASE_URL + "/:region/:year", (req,res) => {
