@@ -305,13 +305,13 @@ export function load_NVD_API(app){
     app.put(BASE_URL + "/:country/:year", (req,res) => {
         const newItem = req.body;
         const { country, year } = req.params;
-        year = parseInt(year);
-        const index = nvdAPIDATA.findIndex(d => d.country === country && d.year === year);
+        const yearInt = parseInt(year);
+        const index = nvdAPIDATA.findIndex(d => d.country === country && d.year === yearInt);
         if (index === -1) return res.sendStatus(404);
-        if (newItem.country !== country || newItem.year !== year) {
+        if (newItem.country !== country || newItem.year !== yearInt) {
             return res.status(400).send("El país o el año no coinciden con la URL");
         }
-        newItem.year = year;
+        newItem.year = yearInt;
         nvdAPIDATA[index] = newItem;
         res.sendStatus(200);
     });
