@@ -293,10 +293,10 @@ export function load_NVD_API(app){
     });
 
     //Borra un elemento concreto
-    app.delete(BASE_URL + "/:region/:year", (req,res) => {
-        const { region,year } = req.params;
+    app.delete(BASE_URL + "/:country/:year", (req,res) => {
+        const { country,year } = req.params;
         const initialLength = nvdAPIDATA.length;
-        nvdAPIDATA = nvdAPIDATA.filter(d => !(d.region === region && d.year === parseInt(year)));
+        nvdAPIDATA = nvdAPIDATA.filter(d => !(d.country === country && d.year === parseInt(year)));
         if (nvdAPIDATA.length < initialLength) res.sendStatus(200);
         else res.sendStatus(404);
     });
