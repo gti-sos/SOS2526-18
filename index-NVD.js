@@ -302,14 +302,16 @@ export function load_NVD_API(app){
     });
 
     // Actualiza un elemento
-    app.put(BASE_URL + "/:region/:year", (req,res) => {
+    app.put(BASE_URL + "/:country/:year", (req,res) => {
         const newItem = req.body;
-        const { region, year } = req.params;
-        const index = nvdAPIDATA.findIndex(d => d.region === region && d.year ===parseInt(year));
+        const { country, year } = req.params;
+        year = parseInt(year);
+        const index = nvdAPIDATA.findIndex(d => d.country === country && d.year === year);
         if (index === -1) return res.sendStatus(404);
-        if (newItem.region !== region || newItem.year !== parseInt(year)) {
-            return res.status(400).send("La región o el año no coinciden con la URL");
+        if (newItem.country !== country || newItem.year !== year) {
+            return res.status(400).send("El país o el año no coinciden con la URL");
         }
+        newItem.year = year;
         nvdAPIDATA[index] = newItem;
         res.sendStatus(200);
     });
