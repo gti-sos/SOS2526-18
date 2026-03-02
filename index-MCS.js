@@ -377,7 +377,11 @@ mcsrouter.put("/:country/:year", (req, res) => {
 
   if (idx === -1) return sendJson(res, 404, { error: "Resource not found" });
 
-  const body = req.body || {};
+  const body = req.body;
+    console.log(body)
+    if (body==null){
+    res.status(400).send("body empty")
+  }else{
 
   // Validaciones de coherencia con la ruta
   if (
@@ -394,7 +398,7 @@ mcsrouter.put("/:country/:year", (req, res) => {
 
   datamcs[idx] = { ...datamcs[idx], ...body };
   return sendJson(res, 200, { message: "Updated resource for country/year" });
-});
+}});
 
 /* ===========================
  * PUT /:country  -> (heredado)
@@ -403,6 +407,9 @@ mcsrouter.put("/:country/:year", (req, res) => {
 mcsrouter.put("/:country", (req, res) => {
   const country = (req.params.country || "").toLowerCase();
   const body = req.body;
+  if (body==null){
+    res.status(400).send("body empty")
+  }else{
   const index = datamcs.findIndex(
     (d) => d.country_name_en && d.country_name_en.toLowerCase() === country
   );
@@ -411,7 +418,7 @@ mcsrouter.put("/:country", (req, res) => {
   }
   datamcs[index] = body;
   return sendJson(res, 200, { message: "Updated resource for country" });
-});
+}});
 
 // PUT / -> 405
 mcsrouter.put("/", (req, res) => {
