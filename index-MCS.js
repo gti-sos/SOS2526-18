@@ -140,7 +140,7 @@ const data = [
 
 // Copia inmutable de los datos originales para poder recargarlos cuando esté vacío
 const originalData = data.map((o) => ({ ...o }));
-export const datamcs = [];
+export const datamcs = data;
 
 /* ===========================
  * Utilidades de respuesta
