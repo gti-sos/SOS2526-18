@@ -20,7 +20,7 @@ let initialData = [
 
 //Algoritmo para calcular la media
 export function calculateAverage(dataArray, Country, field) {
-    
+
     //Filtrar el subconjunto de filas que comparten el país
     const filteredRows = dataArray.filter(item => item.country === Country);
 
@@ -84,7 +84,7 @@ export function load_JLAV_API(app) {
     //Crea un nuevo recurso
     app.post(BASE_URL, (req, res) => {
         const newItem = req.body;
-        if (!newItem || !newItem.country || !newItem.year) {
+        if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
             return res.sendStatus(400); //400 Bad Request
         }
         const exists = data.some(d => d.country === newItem.country && d.year === newItem.year);
@@ -108,7 +108,7 @@ export function load_JLAV_API(app) {
 
     //Obtener datos de un elemento
     app.get(BASE_URL + "/:country/:year", (req, res) => {
-        const {country,year} = req.params;
+        const { country, year } = req.params;
         const resource = data.find(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
         if (resource) {
             res.status(200).json(resource); //200 Ok
@@ -120,7 +120,7 @@ export function load_JLAV_API(app) {
 
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {
-        const {country, year} = req.params;
+        const { country, year } = req.params;
         const longitudInicial = data.length;
         data = data.filter(d => !(d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year)));
         if (data.length < longitudInicial) {
@@ -133,21 +133,21 @@ export function load_JLAV_API(app) {
     //Actualiza los datos de un elemento
     app.put(BASE_URL + "/:country/:year", (req, res) => {
         const newItem = req.body;
-        const {country, year} = req.params;
-        if (!newItem || !newItem.country || !newItem.year) {
+        const { country, year } = req.params;
+        if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
             return res.status(400).send("Petición incompleta");
         }
         const index = data.findIndex(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
-        
+
         if (index === -1) {
             res.sendStatus(404); //404 Not Found
-        }else {
+        } else {
             if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) { //por si acaso nos equivocamos y metemos el registro de otro pais diferente
                 res.status(400).send("El país o el año no coinciden con la URL");
             }
-            else{
-            data[index] = req.body;
-            res.sendStatus(200); //200 Ok
+            else {
+                data[index] = req.body;
+                res.sendStatus(200); //200 Ok
             }
         }
     });
@@ -156,4 +156,5 @@ export function load_JLAV_API(app) {
     app.post(BASE_URL + "/:country/:year", (req, res) => {//No tiene sentido crear algo en una direccion que ya esxiste
         res.sendStatus(405); // 405 Method Not Allowed
     });
+
 }
