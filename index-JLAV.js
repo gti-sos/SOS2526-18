@@ -85,7 +85,7 @@ export function load_JLAV_API(app) {
     app.post(BASE_URL, (req, res) => {
         const newItem = req.body;
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
-            return res.status(400).send("Petición incompleta"); //400 Bad Request
+            return res.status(400).send("La petición no tiene los campos esperados"); //400 Bad Request
         }
         const exists = data.some(d => d.country === newItem.country && d.year === newItem.year);
         if (exists) {
@@ -135,7 +135,7 @@ export function load_JLAV_API(app) {
         const newItem = req.body;
         const { country, year } = req.params;
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
-            return res.status(400).send("Petición incompleta");
+            return res.status(400).send("La petición no tiene los campos esperados incompleta");
         }
         const index = data.findIndex(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
 
