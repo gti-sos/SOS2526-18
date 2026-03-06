@@ -135,7 +135,7 @@ export function load_JLAV_API(app) {
         const newItem = req.body;
         const { country, year } = req.params;
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
-            return res.status(400).send("La petición no tiene los campos esperados incompleta");
+            return res.status(400).send("La petición no tiene los campos esperados");
         }
         const index = data.findIndex(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
 
