@@ -85,7 +85,7 @@ export function load_JLAV_API(app) {
     app.post(BASE_URL, (req, res) => {
         const newItem = req.body;
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
-            return res.sendStatus(400); //400 Bad Request
+            return res.status(400).send("Petición incompleta"); //400 Bad Request
         }
         const exists = data.some(d => d.country === newItem.country && d.year === newItem.year);
         if (exists) {
