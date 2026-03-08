@@ -302,9 +302,14 @@ export function load_NVD_API(app){
     });
 
     // Actualiza un elemento
-    app.put(BASE_URL + "/:country/:year", (req,res) => {
+    app.put(BASE_URL + "/:country/:year", (req, res) => {
         const newItem = req.body;
         const { country, year } = req.params;
+
+        const requiredFields = ["country_code", "country", "region", "year", "cost_healthy_diet_ppp_usd", "annual_cost_healthy_diet_usd", "cost_vegetables_ppp_usd", "cost_fruits_ppp_usd", "total_food_components_cost", "cost_category"];
+        const hasAllFields = requiredFields.every(field => field in newItem);
+        if (!hasAllFields) return res.status(400).send("Faltan campos obligatorios");
+
         const yearInt = parseInt(year);
         const index = nvdAPIDATA.findIndex(d => d.country === country && d.year === yearInt);
         if (index === -1) return res.sendStatus(404);
