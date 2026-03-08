@@ -301,6 +301,13 @@ mcsrouter.get("/:country", (req, res) => {
     }
     filtered = filtered.filter((d) => Number(d.year) >= f && Number(d.year) <= t);
   }
+  const row = datamcs.find(
+    (d) =>
+      d.country_name_en &&
+      d.country_name_en.toLowerCase() === country &&
+      Number(d.year) === year
+  );
+  if (!row) return sendJson(res, 404, { error: "Resource not found" });
 
   // Siempre array (aunque vacío)
   return res.status(200).json(filtered);
@@ -366,6 +373,25 @@ mcsrouter.post("/:country", (req, res) => {
 mcsrouter.put("/:country/:year", (req, res) => {
   const country = (req.params.country || "").toLowerCase();
   const year = Number(req.params.year);
+  const newData = req.body;
+  const requiredFields = [
+    "faostat",
+    "m49_code",
+    "country_name_en",
+    "item_code",
+    "item",
+    "year",
+    "opening_stocks_tonnes",
+    "production_tonnes",
+    "import_quantity_tonnes",
+    "stock_variation_tonnes",
+    "export_quantity_tonnes"
+  ];
+
+  const missing = requiredFields.filter((f) => !(f in newData));
+  if (missing.length > 0) {
+    return sendJson(res, 400, { missing_fields: missing });
+  }
   if (Number.isNaN(year)) return sendJson(res, 400, { error: "Invalid year" });
 
   const idx = datamcs.findIndex(
@@ -407,9 +433,36 @@ mcsrouter.put("/:country/:year", (req, res) => {
 mcsrouter.put("/:country", (req, res) => {
   const country = (req.params.country || "").toLowerCase();
   const body = req.body;
+  const newData = req.body;
+  const requiredFields = [
+    "faostat",
+    "m49_code",
+    "country_name_en",
+    "item_code",
+    "item",
+    "year",
+    "opening_stocks_tonnes",
+    "production_tonnes",
+    "import_quantity_tonnes",
+    "stock_variation_tonnes",
+    "export_quantity_tonnes"
+  ];
+
+  const missing = requiredFields.filter((f) => !(f in newData));
+  if (missing.length > 0) {
+    return sendJson(res, 400, { missing_fields: missing });
+  }
   if (body==null){
     res.status(400).send("body empty")
-  }else{
+  }else
+    if (
+    typeof body.country_name_en === "string" &&
+    body.country_name_en.toLowerCase() !== country
+  ) {
+    return sendJson(res, 400, {
+      error: "Body.country_name_en must match :country in path"
+    });
+  }{
   const index = datamcs.findIndex(
     (d) => d.country_name_en && d.country_name_en.toLowerCase() === country
   );
@@ -446,6 +499,21 @@ mcsrouter.delete("/:country", (req, res) => {
     }
   return sendJson(res, 200, { message: "Deleted all records for country" });
 });
+
+
+mcsrouter.delete("/", (req, res) => {
+  const initialLength = datamcs.length;
+
+  // Elimina todos los registros del array
+  datamcs.length = 0;
+
+  if (initialLength === 0) {
+    return sendJson(res, 404, { error: "No records found to delete" });
+  }
+
+  return sendJson(res, 200, { message: "Deleted all records" });
+});
+
 
 // Export por defecto del router
 export default mcsrouter;
