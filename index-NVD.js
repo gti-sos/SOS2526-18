@@ -289,7 +289,7 @@ export function load_NVD_API(app){
         const { region, year } = req.params;
         const resource = nvdAPIDATA.find(d => d.region === region && d.year=== parseInt(year));
         if (resource) res.status(200).json(resource);
-        else res.sendStatus(400);
+        else res.sendStatus(404);
     });
 
     //Borra un elemento concreto
