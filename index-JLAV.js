@@ -58,7 +58,7 @@ export function load_JLAV_API(app) {
             data = [...initialData];
             res.sendStatus(201); //201 Created 
         } else {
-            res.status(409).send("Array no esta vacio"); //400 Bad Request
+            res.status(409).send("Array no esta vacio"); //409 Conflict
         }
     });
 
