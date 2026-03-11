@@ -52,7 +52,7 @@ console.log(`La media de ${field} para ${country} es: ${average}`);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Operaciones sobre recursos
-import Datastore from 'nedb';
+import Datastore from '@seald-io/nedb';
 // Creamos la base de datos
 const db = new Datastore(); 
 
