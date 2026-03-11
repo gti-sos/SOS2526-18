@@ -190,3 +190,10 @@ export function load_JLAV_API(app) {
         res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
     });
 }
+
+
+const port = process.env.PORT || 12345;
+
+app.listen(port, () => {
+    console.log(`Servidor listo escuchando en el puerto ${port}`);
+});
