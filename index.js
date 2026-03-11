@@ -2,9 +2,8 @@ import express from "express"; //Cargo la librería Express (el motor del servid
 import bodyParser from "body-parser";
 import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
 import { calculateAverage, average, field, country} from "./index-JLAV.js";
-import { avgperCountry,datamcs} from "./index-MCS.js";
+import { avgperCountry,datamcs,BackendMCS} from "./index-MCS.js";
 import { load_JLAV_API} from "./index-JLAV.js";
-import mcsrouter from "./index-MCS.js";
 import { mediaPorRegion, datosnvd, campo_nvd, region_nvd } from "./index-NVD.js";
 import { load_NVD_API } from "./index-NVD.js";
 
@@ -31,7 +30,7 @@ app.get("/samples/jlav", (req, res) => {
 });
 //activacion apis jlav
 load_JLAV_API(app);
-
+BackendMCS(app);
 
     
 
@@ -41,8 +40,6 @@ let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
 app.get("/samples/mcs", (req, res) => {
     res.send("Average production in tonnes of mainland China: "+avg);
 });
-//activacion api mcs
-app.use("/api/v1/food-supply-utilization-accounts", mcsrouter);
 
 
 
