@@ -33,7 +33,7 @@ app.get("/samples/jlav", (req, res) => {
 load_JLAV_API(app);
 
 
-
+    
 
 
 //resultado del cálculo del algoritmo mcs

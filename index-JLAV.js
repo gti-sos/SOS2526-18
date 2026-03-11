@@ -18,6 +18,11 @@ let initialData = [
     { country: "Paraguay", country_code: "PRY", year: 2005, land_used: 806850, cereal_production: 1749200, cereal_yield: 2.16, population: 5448100 }
 ];
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //Algoritmo para calcular la media
 export function calculateAverage(dataArray, Country, field) {
 
@@ -157,4 +162,15 @@ export function load_JLAV_API(app) {
         res.sendStatus(405); // 405 Method Not Allowed
     });
 
+
+    // Portal de documentación creados en POSTMAN
+    app.get(BASE_URL + "/docs", (req, res) => {
+        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
+    });
+
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
