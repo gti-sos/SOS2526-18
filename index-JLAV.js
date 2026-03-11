@@ -191,6 +191,9 @@ export function load_JLAV_API(app) {
     });
 }
 
+import express from 'express'; // Añade este import
+const app = express();         // Crea el objeto app
+app.use(express.json());       // Para que el POST y el PUT funcionen
 
 const port = process.env.PORT || 12345;
 
