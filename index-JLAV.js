@@ -51,39 +51,50 @@ console.log(`La media de ${field} para ${country} es: ${average}`);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // Operaciones sobre recursos
-let data = [];
+import Datastore from 'nedb';
+// Creamos la base de datos
+const db = new Datastore(); 
+
 export function load_JLAV_API(app) {
     const BASE_URL = "/api/v1/cereal-productions";
 
     //carga inicial
     app.get(BASE_URL + "/loadInitialData", (req, res) => {
-        if (data.length === 0) {
-            data = [...initialData];
-            res.sendStatus(201); //201 Created 
-        } else {
-            res.status(409).send("Array no esta vacio"); //409 Conflict
-        }
+        // Comprobamos si hay datos en la base de datos
+        db.count({}, (err, count) => {
+            if (count === 0) {
+                db.insert(initialData, (err, newDocs) => {
+                    res.sendStatus(201); //201 Created 
+                });
+            } else {
+                res.status(409).send("Array no esta vacio"); //409 Conflict
+            }
+        });
     });
 
     // Devuelve todos los recursos y permite filtrado
     app.get(BASE_URL, (req, res) => {
-        let filteredData = [...data]; //Hacemos una copia de los datos originales
+        let query = {};
+        
         //Filtrado por País(?country=spain)
         if (req.query.country) {
-            filteredData = filteredData.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
+            query.country = new RegExp("^" + req.query.country + "$", "i");
         }
         //Filtrado por Año (?year=2024)
         if (req.query.year) {
-            filteredData = filteredData.filter(d => d.year === parseInt(req.query.year));
+            query.year = parseInt(req.query.year);
         }
         //Filtrado por Rango de Años (?from=2015&to=2020)
         if (req.query.from && req.query.to) {
-            filteredData = filteredData.filter(d => d.year >= parseInt(req.query.from) && d.year <= parseInt(req.query.to));
+            query.year = { $gte: parseInt(req.query.from), $lte: parseInt(req.query.to) };
         }
-        //Si no hay datos, devolver array vacio [] con 200 OK
-        res.status(200).json(filteredData);
+
+        // Buscamos en la base de datos con la query construida
+        db.find(query, { _id: 0 }, (err, filteredData) => {
+            //Si no hay datos, devolver array vacio [] con 200 OK
+            res.status(200).json(filteredData);
+        });
     });
 
     //Crea un nuevo recurso
@@ -92,18 +103,24 @@ export function load_JLAV_API(app) {
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
             return res.status(400).send("La petición no tiene los campos esperados"); //400 Bad Request
         }
-        const exists = data.some(d => d.country === newItem.country && d.year === newItem.year);
-        if (exists) {
-            return res.sendStatus(409); //409 Conflict
-        }
-        data.push(newItem);
-        res.sendStatus(201); //201 Created 
+
+        // Comprobamos si ya existe el recurso
+        db.findOne({ country: newItem.country, year: newItem.year }, (err, doc) => {
+            if (doc) {
+                return res.sendStatus(409); //409 Conflict
+            } else {
+                db.insert(newItem, (err, newDoc) => {
+                    res.sendStatus(201); //201 Created 
+                });
+            }
+        });
     });
 
     //Borra todos los recursos
     app.delete(BASE_URL, (req, res) => {
-        data = [];
-        res.sendStatus(200); //200 Ok
+        db.remove({}, { multi: true }, (err, numRemoved) => {
+            res.sendStatus(200); //200 Ok
+        });
     });
 
     //No permitido
@@ -114,63 +131,62 @@ export function load_JLAV_API(app) {
     //Obtener datos de un elemento
     app.get(BASE_URL + "/:country/:year", (req, res) => {
         const { country, year } = req.params;
-        const resource = data.find(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
-        if (resource) {
-            res.status(200).json(resource); //200 Ok
-        } else {
-            res.sendStatus(404); //404 Not Found
-        }
+        // Buscamos un elemento concreto
+        db.findOne({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, { _id: 0 }, (err, resource) => {
+            if (resource) {
+                res.status(200).json(resource); //200 Ok
+            } else {
+                res.sendStatus(404); //404 Not Found
+            }
+        });
     });
-
 
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {
         const { country, year } = req.params;
-        const longitudInicial = data.length;
-        data = data.filter(d => !(d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year)));
-        if (data.length < longitudInicial) {
-            res.sendStatus(200); //200 Ok
-        } else {
-            res.sendStatus(404); //404 Not Found
-        }
+        // Borramos el elemento que coincida
+        db.remove({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, {}, (err, numRemoved) => {
+            if (numRemoved > 0) {
+                res.sendStatus(200); //200 Ok
+            } else {
+                res.sendStatus(404); //404 Not Found
+            }
+        });
     });
 
     //Actualiza los datos de un elemento
     app.put(BASE_URL + "/:country/:year", (req, res) => {
         const newItem = req.body;
         const { country, year } = req.params;
+
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
             return res.status(400).send("La petición no tiene los campos esperados");
         }
-        const index = data.findIndex(d => d.country.toLowerCase() === country.toLowerCase() && d.year === parseInt(year));
 
-        if (index === -1) {
-            res.sendStatus(404); //404 Not Found
-        } else {
-            if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) { //por si acaso nos equivocamos y metemos el registro de otro pais diferente
-                res.status(400).send("El país o el año no coinciden con la URL");
+        // Verificamos si existe antes de actualizar
+        db.findOne({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, (err, doc) => {
+            if (!doc) {
+                res.sendStatus(404); //404 Not Found
+            } else {
+                if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) {
+                    res.status(400).send("El país o el año no coinciden con la URL");
+                } else {
+                    // Actualizamos en la base de datos
+                    db.update({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, newItem, {}, (err, numReplaced) => {
+                        res.sendStatus(200); //200 Ok
+                    });
+                }
             }
-            else {
-                data[index] = req.body;
-                res.sendStatus(200); //200 Ok
-            }
-        }
+        });
     });
 
     //No permitido
-    app.post(BASE_URL + "/:country/:year", (req, res) => {//No tiene sentido crear algo en una direccion que ya esxiste
+    app.post(BASE_URL + "/:country/:year", (req, res) => {
         res.sendStatus(405); // 405 Method Not Allowed
     });
-
 
     // Portal de documentación creados en POSTMAN
     app.get(BASE_URL + "/docs", (req, res) => {
         res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
     });
-
 }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
