@@ -189,14 +189,4 @@ export function load_JLAV_API(app) {
     app.get(BASE_URL + "/docs", (req, res) => {
         res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
     });
-}
-
-import express from 'express'; // Añade este import
-const app = express();         // Crea el objeto app
-app.use(express.json());       // Para que el POST y el PUT funcionen
-
-const port = process.env.PORT || 12345;
-
-app.listen(port, () => {
-    console.log(`Servidor listo escuchando en el puerto ${port}`);
-});
+};
