@@ -214,6 +214,11 @@ export function load_NVD_API(app){
     //Datos en memoria
     let nvdAPIDATA = [...datosnvd];
 
+    // Get colleccion postman
+    app.get(BASE_URL + "/docs", (req,res) => {
+        res.redirect("https://documenter.getpostman.com/view/52413337/2sBXigKYBy");
+    });
+
     //Carga inicial
     app.get(BASE_URL + "/loadInitialData", (req,res) => {
         if(nvdAPIDATA.length === 0){
@@ -344,11 +349,5 @@ export function load_NVD_API(app){
         res.sendStatus(405);
     });
 
-
-    // Get colleccion postman
-    app.get(BASE_URL + "/docs", (req,res) => {
-        res.redirect("https://documenter.getpostman.com/view/52413337/2sBXigKYBy");
-    });
-    
 
 }
