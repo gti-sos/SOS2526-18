@@ -349,5 +349,6 @@ export function load_NVD_API(app){
     app.get(BASE_URL + "/docs", (req,res) => {
         res.redirect("https://documenter.getpostman.com/view/52413337/2sBXigKYBy");
     });
+    
 
 }
