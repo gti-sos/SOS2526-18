@@ -15,7 +15,8 @@ jobs:
         node-version: 20
         
     - name: Install dependencies
-      [cite_start]run: npm install # Aquí se instalará express y nedb 
+      [cite_start]
+      run: npm install # Aquí se instalará express y nedb 
         
     - name: Run server and tests
       run: |
