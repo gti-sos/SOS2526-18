@@ -4,8 +4,8 @@ import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
 import { calculateAverage, average, field, country} from "./index-JLAV.js";
 import { avgperCountry,datamcs,BackendMCS} from "./index-MCS.js";
 import { load_JLAV_API} from "./index-JLAV.js";
-import { mediaPorRegion, datosnvd, campo_nvd, region_nvd } from "./index-NVD.js";
-import { load_NVD_API } from "./index-NVD.js";
+//import { mediaPorRegion, datosnvd, campo_nvd, region_nvd } from "./index-NVD.js";
+//import { load_NVD_API } from "./index-NVD.js";
 
 const app = express(); //Creamos la aplicación
 const port = process.env.PORT || 12345; //El puerto: Render nos da uno, si no, usa el 12345
@@ -44,12 +44,12 @@ app.get("/samples/mcs", (req, res) => {
 
 
 //resultado del cálculo del algoritmo nvd
-let resultadoNVD = mediaPorRegion(datosnvd, region_nvd, campo_nvd);
-app.get("/samples/nvd", (req, res) => {
-    res.send("La media de " + campo_nvd + " en la región " + region_nvd + " es: " + resultadoNVD)
-})
+//let resultadoNVD = mediaPorRegion(datosnvd, region_nvd, campo_nvd);
+//app.get("/samples/nvd", (req, res) => {
+//    res.send("La media de " + campo_nvd + " en la región " + region_nvd + " es: " + resultadoNVD)
+//})
 //activacion api nvd
-load_NVD_API(app);
+//load_NVD_API(app);
 
 
 
