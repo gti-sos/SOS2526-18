@@ -54,7 +54,8 @@ console.log(`La media de ${field} para ${country} es: ${average}`);
 // Operaciones sobre recursos
 import Datastore from '@seald-io/nedb';
 // Creamos la base de datos
-const db = new Datastore(); 
+// Creamos la base de datos con persistencia en un archivo físico
+const db = new Datastore({ filename: './cereal-productions.db', autoload: true }); 
 
 export function load_JLAV_API(app) {
     const BASE_URL = "/api/v1/cereal-productions";
