@@ -343,6 +343,11 @@ export function load_NVD_API(app){
 
         res.status(200).json(resultado);
 
-    })
+    });
+
+    // Get colleccion postman
+    app.get(BASE_URL + "/docs", (req,res) => {
+        res.redirect("https://documenter.getpostman.com/view/52413337/2sBXigKYBy");
+    });
 
 }
