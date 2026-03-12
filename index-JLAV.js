@@ -55,7 +55,7 @@ console.log(`La media de ${field} para ${country} es: ${average}`);
 import Datastore from '@seald-io/nedb';
 
 // Creamos la base de datos con persistencia en un archivo físico
-const db = new Datastore({ filename: './cereal-productions.db', autoload: true }); 
+const db = new Datastore({ filename: './cereal-productions.db', autoload: true });
 
 export function load_JLAV_API(app) {
     const BASE_URL = "/api/v1/cereal-productions";
@@ -77,8 +77,8 @@ export function load_JLAV_API(app) {
     // Devuelve todos los recursos y permite filtrado
     app.get(BASE_URL, (req, res) => {
         let query = {};
-        
-        //Filtrado por Texto País y Código
+
+        //Filtrado por País y Código
         if (req.query.country) {
             query.country = new RegExp("^" + req.query.country + "$", "i");
         }
@@ -154,6 +154,32 @@ export function load_JLAV_API(app) {
                 res.status(200).json(resource); //200 Ok
             } else {
                 res.sendStatus(404); //404 Not Found
+            }
+        });
+    });
+
+    // Obtener todos los datos de un país concreto
+    app.get(BASE_URL + "/:country", (req, res) => {
+        const { country } = req.params;
+
+        db.find({ country: new RegExp("^" + country + "$", "i") }, { _id: 0 }, (err, resources) => {
+            if (resources.length > 0) {
+                res.status(200).json(resources); // Devuelve el array de datos de ese país
+            } else {
+                res.sendStatus(404); // Si el array está vacío, el país no existe
+            }
+        });
+    });
+
+    // Obtener todos los datos de un año concreto
+    app.get(BASE_URL + "/:year", (req, res) => {
+        const { year } = req.params;
+
+        db.find({ year: parseInt(year) }, { _id: 0 }, (err, resources) => {
+            if (resources.length > 0) {
+                res.status(200).json(resources); // Devuelve el array de países de ese año
+            } else {
+                res.sendStatus(404); // Si no hay datos para ese año
             }
         });
     });
