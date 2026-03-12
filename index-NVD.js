@@ -321,12 +321,6 @@ export function load_NVD_API(app){
         res.sendStatus(200);
     });
 
-    // No permitido POST en recurso concreto
-    app.post(BASE_URL + "/:region/:year", (req,res) => {
-        res.sendStatus(405);
-    });
-
-
     //GET por país con rango de años opcional
     app.get(BASE_URL + "/:country", (req,res) => {
         const { country } = req.params;
@@ -344,6 +338,12 @@ export function load_NVD_API(app){
         res.status(200).json(resultado);
 
     });
+
+    // No permitido POST en recurso concreto
+    app.post(BASE_URL + "/:region/:year", (req,res) => {
+        res.sendStatus(405);
+    });
+
 
     // Get colleccion postman
     app.get(BASE_URL + "/docs", (req,res) => {
