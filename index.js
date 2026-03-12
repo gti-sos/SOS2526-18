@@ -18,10 +18,10 @@ app.use("/", express.static("./public"));
 
 
 //Ruta para la carita ASCII
-app.get("/cool", (req, res) => {
-    console.log(cool());
-    res.send(`<html><body><h1></h1>${cool()}</body></html>`);
-});
+//app.get("/cool", (req, res) => {
+//    console.log(cool());
+//    res.send(`<html><body><h1></h1>${cool()}</body></html>`);
+//});
 
 
 //resultado del cálculo del algoritmojlav
