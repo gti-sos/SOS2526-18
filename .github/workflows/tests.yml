@@ -22,3 +22,7 @@ jobs:
         npm start &  #Arranca servidor
         sleep 5 #Espera 5 segundos
         npm test #Lanza Newman y newman ejecuta los tests de Postman contra el servidor que acabas de arrancar
+
+    - name: Deploy to Render
+      if: success() # Solo se ejecuta si el check de Newman es verde
+      run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"

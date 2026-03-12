@@ -51,10 +51,11 @@ console.log(`La media de ${field} para ${country} es: ${average}`);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Operaciones sobre recursos
+// Herramientas de NeDB para poder guardar datos en el disco duro
 import Datastore from '@seald-io/nedb';
-// Creamos la base de datos
-const db = new Datastore(); 
+
+// Creamos la base de datos con persistencia en un archivo físico
+const db = new Datastore({ filename: './cereal-productions.db', autoload: true });
 
 export function load_JLAV_API(app) {
     const BASE_URL = "/api/v1/cereal-productions";
@@ -76,23 +77,43 @@ export function load_JLAV_API(app) {
     // Devuelve todos los recursos y permite filtrado
     app.get(BASE_URL, (req, res) => {
         let query = {};
-        
-        //Filtrado por País(?country=spain)
+
+        //Parámetros de Paginación
+        let offset = parseInt(req.query.offset) || 0; 
+        let limit = parseInt(req.query.limit) || 1000;
+
+        //Filtrado por País y Código
         if (req.query.country) {
             query.country = new RegExp("^" + req.query.country + "$", "i");
         }
-        //Filtrado por Año (?year=2024)
+        if (req.query.country_code) {
+            query.country_code = new RegExp("^" + req.query.country_code + "$", "i");
+        }
+
+        //Filtrado por Año y Rango 
         if (req.query.year) {
             query.year = parseInt(req.query.year);
         }
-        //Filtrado por Rango de Años (?from=2015&to=2020)
         if (req.query.from && req.query.to) {
             query.year = { $gte: parseInt(req.query.from), $lte: parseInt(req.query.to) };
         }
 
-        // Buscamos en la base de datos con la query construida
-        db.find(query, { _id: 0 }, (err, filteredData) => {
-            //Si no hay datos, devolver array vacio [] con 200 OK
+        // Filtrado por campos numéricos
+        if (req.query.land_used) {
+            query.land_used = parseFloat(req.query.land_used);
+        }
+        if (req.query.cereal_production) {
+            query.cereal_production = parseFloat(req.query.cereal_production);
+        }
+        if (req.query.cereal_yield) {
+            query.cereal_yield = parseFloat(req.query.cereal_yield);
+        }
+        if (req.query.population) {
+            query.population = parseInt(req.query.population);
+        }
+
+        //Buscamos en la base de datos con la query construida con todos los campos y usamos .skip() para el offset y .limit() para el límite 
+        db.find(query, { _id: 0 }).skip(offset).limit(limit).exec((err, filteredData) => {
             res.status(200).json(filteredData);
         });
     });
@@ -140,6 +161,21 @@ export function load_JLAV_API(app) {
             }
         });
     });
+
+    // Obtener todos los datos de un país concreto
+    app.get(BASE_URL + "/:country", (req, res) => {
+        const { country } = req.params;
+
+        db.find({ country: new RegExp("^" + country + "$", "i") }, { _id: 0 }, (err, resources) => {
+            if (resources.length > 0) {
+                res.status(200).json(resources); // Devuelve el array de datos de ese país
+            } else {
+                res.sendStatus(404); // Si el array está vacío, el país no existe
+            }
+        });
+    });
+
+   
 
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {

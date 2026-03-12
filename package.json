@@ -13,7 +13,7 @@
     "start-mcs": "node index-MCS.js",
     "start-nvd": "node index-NVD.js"
   },
-  "repository": {
+  "repository": {  
     "type": "git",
     "url": "git+https://github.com/gti-sos/SOS2526-18.git"
   },
