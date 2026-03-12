@@ -78,6 +78,10 @@ export function load_JLAV_API(app) {
     app.get(BASE_URL, (req, res) => {
         let query = {};
 
+        //Parámetros de Paginación
+        let offset = parseInt(req.query.offset) || 0; 
+        let limit = parseInt(req.query.limit) || 1000;
+
         //Filtrado por País y Código
         if (req.query.country) {
             query.country = new RegExp("^" + req.query.country + "$", "i");
@@ -108,8 +112,8 @@ export function load_JLAV_API(app) {
             query.population = parseInt(req.query.population);
         }
 
-        // Buscamos en la base de datos con la query construida con todos los campos
-        db.find(query, { _id: 0 }, (err, filteredData) => {
+        //Buscamos en la base de datos con la query construida con todos los campos y usamos .skip() para el offset y .limit() para el límite 
+        db.find(query, { _id: 0 }).skip(offset).limit(limit).exec((err, filteredData) => {
             res.status(200).json(filteredData);
         });
     });
@@ -171,18 +175,7 @@ export function load_JLAV_API(app) {
         });
     });
 
-    // Obtener todos los datos de un año concreto
-    app.get(BASE_URL + "/:year", (req, res) => {
-        const { year } = req.params;
-
-        db.find({ year: parseInt(year) }, { _id: 0 }, (err, resources) => {
-            if (resources.length > 0) {
-                res.status(200).json(resources); // Devuelve el array de países de ese año
-            } else {
-                res.sendStatus(404); // Si no hay datos para ese año
-            }
-        });
-    });
+   
 
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {
