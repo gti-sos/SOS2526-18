@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1/cereal-productions &&",
+    "test": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1/cereal-productions",
     "test-jlav": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1/cereal-productions",
     "start-jlav": "node index-JLAV.js",
     "start-mcs": "node index-MCS.js",
