@@ -1,0 +1,24 @@
+name: Node.js CI
+
+on: [push] # Se activa cada vez que haces push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4 # El robot descarga tu código
+    
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        
+    - name: Install dependencies
+      [cite_start]run: npm install # Aquí se instalará express y nedb 
+        
+    - name: Run server and tests
+      run: |
+        npm start & 
+        sleep 5
+        npm test
