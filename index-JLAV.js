@@ -58,6 +58,12 @@ import Datastore from '@seald-io/nedb';
 const db = new Datastore({ filename: './cereal-productions.db', autoload: true });
 
 export function load_JLAV_API(app) {
+
+      // Portal de documentación creados en POSTMAN
+    app.get(BASE_URL + "/docs", (req, res) => {
+        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
+    });
+    
     const BASE_URL = "/api/v1/cereal-productions";
 
     //carga inicial
@@ -221,8 +227,5 @@ export function load_JLAV_API(app) {
         res.sendStatus(405); // 405 Method Not Allowed
     });
 
-    // Portal de documentación creados en POSTMAN
-    app.get(BASE_URL + "/docs", (req, res) => {
-        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
-    });
+  
 };
