@@ -22,9 +22,10 @@
                   "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"La respuesta es un array\", function () {\r",
-                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
-                  "});"
+                  "pm.test(\"La respuesta tiene contenido\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('object');\r",
+                  "});\r",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -79,6 +80,10 @@
                   "\r",
                   "pm.test(\"La respuesta es un array\", function () {\r",
                   "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La lista tiene el tamaño esperado\", function () {\r",
+                  "    pm.expect(pm.response.json().length).to.be.above(0);\r",
                   "});\r",
                   "\r",
                   ""
@@ -159,10 +164,6 @@
                 "exec": [
                   "pm.test(\"Recursos concreto optenido con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"La respuesta es un array\", function () {\r",
-                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});\r",
                   "\r",
                   "pm.test(\"El dato tiene los campos esperados\", function () {\r",
