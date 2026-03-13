@@ -61,12 +61,12 @@ export function load_JLAV_API(app) {
 
     const BASE_URL = "/api/v1/cereal-productions";
 
-      // Portal de documentación creados en POSTMAN
+    // Portal de documentación creados en POSTMAN
     app.get(BASE_URL + "/docs", (req, res) => {
         res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
     });
 
-    
+
 
     //carga inicial
     app.get(BASE_URL + "/loadInitialData", (req, res) => {
@@ -87,7 +87,7 @@ export function load_JLAV_API(app) {
         let query = {};
 
         //Parámetros de Paginación
-        let offset = parseInt(req.query.offset) || 0; 
+        let offset = parseInt(req.query.offset) || 0;
         let limit = parseInt(req.query.limit) || 1000;
 
         //Filtrado por País y Código
@@ -183,7 +183,7 @@ export function load_JLAV_API(app) {
         });
     });
 
-   
+
 
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req, res) => {
@@ -215,6 +215,10 @@ export function load_JLAV_API(app) {
                 if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) {
                     res.status(400).send("El país o el año no coinciden con la URL");
                 } else {
+                    //Validación de coherencia entre URL y BODY
+                    if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) {
+                        return res.status(400).send("El país o el año no coinciden con la URL");
+                    }
                     // Actualizamos en la base de datos
                     db.update({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, newItem, {}, (err, numReplaced) => {
                         res.sendStatus(200); //200 Ok
@@ -229,5 +233,5 @@ export function load_JLAV_API(app) {
         res.sendStatus(405); // 405 Method Not Allowed
     });
 
-  
+
 };
