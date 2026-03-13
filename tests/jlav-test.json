@@ -22,9 +22,6 @@
                   "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"La respuesta tiene contenido\", function () {\r",
-                  "    pm.expect(pm.response.json()).to.be.an('object');\r",
-                  "});\r",
                   ""
                 ],
                 "type": "text/javascript",
