@@ -63,7 +63,7 @@ export function load_JLAV_API(app) {
 
     // Portal de documentación creados en POSTMAN
     app.get(BASE_URL + "/docs", (req, res) => {
-        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXiesEPa");
+        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXigLt7a");
     });
 
 

@@ -20,6 +20,10 @@
                   "pm.test(\"Carga inicial exitosa\", function () {\r",
                   "    // Verificamos que el servidor responda con un 201 Created\r",
                   "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -73,6 +77,9 @@
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});\r",
                   "\r",
                   ""
                 ],
@@ -106,6 +113,10 @@
                 "exec": [
                   "pm.test(\"LLamada de paginación con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -148,6 +159,16 @@
                 "exec": [
                   "pm.test(\"Recursos concreto optenido con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El dato tiene los campos esperados\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('country');\r",
+                  "    pm.expect(jsonData).to.have.property('year'); \r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -182,6 +203,10 @@
                 "exec": [
                   "pm.test(\"Filtrado por pais con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -220,6 +245,10 @@
                 "exec": [
                   "pm.test(\"filtrado por año con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -258,6 +287,10 @@
                 "exec": [
                   "pm.test(\"Rango de años filtrado con exito\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
                   "});"
                 ],
                 "type": "text/javascript",
