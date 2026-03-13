@@ -6,15 +6,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1 && newman run https://api.getpostman.com/collections/52413337-a02ed3da-6075-4cac-a4cf-2665b8cab2cc?apikey=PMAK-69b32014b9f7b30001ee329d-b892fa40319587a061deb35a19c47ae7c3 --env-var base_url=http://localhost:12345/api/v1",
+    "test": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1 && newman run https://api.getpostman.com/collections/52413337-a02ed3da-6075-4cac-a4cf-2665b8cab2cc?apikey=PMAK-69b32014b9f7b30001ee329d-b892fa40319587a061deb35a19c47ae7c3 --env-var base_url=http://localhost:12345/api/v1 && npx newman run tests/mcs-test.json -e tests/local.json",
     "test-jlav": "newman run https://api.getpostman.com/collections/52314819-e1c177e5-3c0c-4316-be10-c98a857ec96a?apikey=PMAK-69b168dbe6a7f000013cb3df-0aafdac6d48c25eb0ec4a4e8647c5f2488 --env-var base_url=http://localhost:12345/api/v1",
-    "test-nvd":"newman run https://api.getpostman.com/collections/52413337-a02ed3da-6075-4cac-a4cf-2665b8cab2cc?apikey=PMAK-69b32014b9f7b30001ee329d-b892fa40319587a061deb35a19c47ae7c3 --env-var base_url=http://localhost:12345/api/v1",
+    "test-nvd": "newman run https://api.getpostman.com/collections/52413337-a02ed3da-6075-4cac-a4cf-2665b8cab2cc?apikey=PMAK-69b32014b9f7b30001ee329d-b892fa40319587a061deb35a19c47ae7c3 --env-var base_url=http://localhost:12345/api/v1",
+    "test-mcs": "npx newman run tests/mcs-test.json -e tests/local.json",
     "start-jlav": "node index-JLAV.js",
     "start-mcs": "node index-MCS.js",
     "start-nvd": "node index-NVD.js"
   },
-  "repository": {  
-    "type": "git", 
+  "repository": {
+    "type": "git",
     "url": "git+https://github.com/gti-sos/SOS2526-18.git"
   },
   "author": "Jose Luis Alcon Del Villar, Manuel Castro Sanchez, Nazaret Villalba Delgado",

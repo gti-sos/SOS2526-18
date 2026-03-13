@@ -271,35 +271,66 @@ export function BackendMCS(app){
   * Si no hay resultados -> [] (200)
   * =========================== */
   app.get("/api/v1/food-supply-utilization-accounts/:country", (req, res) => {
-    const country = (req.params.country || "").toLowerCase();
-    const { from, to } = req.query;
+  const country = (req.params.country || "").toLowerCase();
+  const { from, to, year } = req.query;
 
-    let filtered = datamcs.filter(
-      (d) => d.country_name_en && d.country_name_en.toLowerCase() === country
-    );
+  // Filtrar por país
+  let filtered = datamcs.filter(
+    (d) =>
+      d.country_name_en &&
+      d.country_name_en.toLowerCase() === country
+  );
 
-    // Rango opcional para ese país
-    const hasFrom = typeof from !== "undefined";
-    const hasTo = typeof to !== "undefined";
-    if (hasFrom || hasTo) {
-      const f = hasFrom ? Number(from) : Number.NEGATIVE_INFINITY;
-      const t = hasTo ? Number(to) : Number.POSITIVE_INFINITY;
-      if ((hasFrom && Number.isNaN(f)) || (hasTo && Number.isNaN(t))) {
-        return sendJson(res, 400, { error: "Invalid from/to" });
-      }
-      filtered = filtered.filter((d) => Number(d.year) >= f && Number(d.year) <= t);
+  // Si no hay datos de ese país
+  if (filtered.length === 0) {
+    return sendJson(res, 404, { error: "Country not found" });
+  }
+
+  // -------------------------------------------------------------------
+  // 1. FILTRO POR AÑO EXACTO (si se especifica)
+  // -------------------------------------------------------------------
+  if (typeof year !== "undefined") {
+    const y = Number(year);
+    if (Number.isNaN(y)) {
+      return sendJson(res, 400, { error: "Invalid year" });
     }
-    const row = datamcs.find(
-      (d) =>
-        d.country_name_en &&
-        d.country_name_en.toLowerCase() === country &&
-        Number(d.year) === year
-    );
-    if (!row) return sendJson(res, 404, { error: "Resource not found" });
 
-    // Siempre array (aunque vacío)
+    filtered = filtered.filter((d) => Number(d.year) === y);
+
+    if (filtered.length === 0) {
+      return sendJson(res, 404, { error: "No data for that year" });
+    }
+
+    // Si piden año concreto, devolvemos directamente el array filtrado
     return res.status(200).json(filtered);
-  });
+  }
+
+  // -------------------------------------------------------------------
+  // 2. FILTRO POR RANGO from/to (si se especifican)
+  // -------------------------------------------------------------------
+  const hasFrom = typeof from !== "undefined";
+  const hasTo = typeof to !== "undefined";
+
+  if (hasFrom || hasTo) {
+    const f = hasFrom ? Number(from) : Number.NEGATIVE_INFINITY;
+    const t = hasTo ? Number(to) : Number.POSITIVE_INFINITY;
+
+    if ((hasFrom && Number.isNaN(f)) || (hasTo && Number.isNaN(t))) {
+      return sendJson(res, 400, { error: "Invalid from/to" });
+    }
+
+    filtered = filtered.filter((d) => Number(d.year) >= f && Number(d.year) <= t);
+
+    if (filtered.length === 0) {
+      return sendJson(res, 404, { error: "No data for that range" });
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // 3. RESPUESTA GENERAL (sin año y sin rango)
+  // -------------------------------------------------------------------
+  return res.status(200).json(filtered);
+});
 
   /* ===========================
   * POST /  -> crea nuevo registro

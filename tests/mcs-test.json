@@ -1,0 +1,487 @@
+{
+  "info": {
+    "_postman_id": "9b795b37-757b-4559-b362-38e2c8fc2cda",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52349546",
+    "_collection_link": "https://go.postman.co/collection/52349546-9b795b37-757b-4559-b362-38e2c8fc2cda?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "global",
+      "item": [
+        {
+          "name": "Get global",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts"
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "Post global",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Successful POST request\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"faostat\": 112,\n    \"m49_code\": 400,\n    \"country_name_en\": \"Jaen\",\n    \"item_code\": 221,\n    \"item\": \"Almonds, in shell\",\n    \"year\": 2013,\n    \"opening_stocks_tonnes\": 978.13,\n    \"production_tonnes\": 2143,\n    \"import_quantity_tonnes\": 531,\n    \"stock_variation_tonnes\": -450.93,\n    \"export_quantity_tonnes\": 38\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts"
+              ]
+            },
+            "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "Put global",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jaen\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2013,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete general",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Especifico",
+      "item": [
+        {
+          "name": "Get Especifico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "Post Especifico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Successful POST request\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"faostat\": 112,\n    \"m49_code\": 400,\n    \"country_name_en\": \"Jaen\",\n    \"item_code\": 221,\n    \"item\": \"Almonds, in shell\",\n    \"year\": 2013,\n    \"opening_stocks_tonnes\": 978.13,\n    \"production_tonnes\": 2143,\n    \"import_quantity_tonnes\": 531,\n    \"stock_variation_tonnes\": -450.93,\n    \"export_quantity_tonnes\": 38\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            },
+            "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "Put Especifico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jaen\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2014,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Especifico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "400 body not match",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jerez\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2014,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "400 missing field",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jaen\",\r\n    \"item_code\": 221,\r\n    \"year\": 2014,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jordan\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2013,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Load Initial Data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/food-supply-utilization-accounts/loadInitialData",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "food-supply-utilization-accounts",
+            "loadInitialData"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
