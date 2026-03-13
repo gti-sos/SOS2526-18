@@ -8,10 +8,10 @@
   },
   "item": [
     {
-      "name": "Éxito (201 Created)",
+      "name": "Carga de datos (201 Created)",
       "item": [
         {
-          "name": "Carga de Datos (Éxito)",
+          "name": "Carga de Datos (Éxito) (201 Created)",
           "event": [
             {
               "listen": "test",
@@ -55,52 +55,11 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Crear recurso nuevo",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Recurso creado con éxito\", function () {\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{ \"country\": \"Spain\", \r\n\"country_code\": \"ESP\", \r\n\"year\": 2024, \"land_used\": 1000, \r\n\"cereal_production\": 5000, \"cereal_yield\": 5.0, \r\n\"population\": 47000000 }",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/cereal-productions",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cereal-productions"
-              ]
-            }
-          },
-          "response": []
         }
       ]
     },
     {
-      "name": "Éxito (200 Ok)",
+      "name": "Get (200 OK)",
       "item": [
         {
           "name": "Obtener todos los recursos",
@@ -125,149 +84,6 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/cereal-productions",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cereal-productions"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener datos concretos",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Recursos concreto optenido con exito\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cereal-productions",
-                "Paraguay",
-                "2005"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Actualización de datos",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Datos actualizados con exito con exito\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\"country\":\"Paraguay\",\r\n\"country_code\":\"PRY\",\r\n\"year\":2005,\r\n\"land_used\":806850,\r\n\"cereal_production\":1749200333333333,\r\n\"cereal_yield\":2.16,\r\n\"population\":5448101}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cereal-productions",
-                "Paraguay",
-                "2005"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Borrar recurso concreto",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Dato borrados con exito\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cereal-productions",
-                "Paraguay",
-                "2005"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Borrar todos los datos",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Datos borrados con exito\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{base_url}}/cereal-productions",
@@ -318,6 +134,40 @@
                   "key": "offset",
                   "value": "0"
                 }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener datos concretos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recursos concreto optenido con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
               ]
             }
           },
@@ -436,6 +286,100 @@
                   "key": "to",
                   "value": "1963"
                 }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post (201 Created)",
+      "item": [
+        {
+          "name": "Crear recurso nuevo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recurso creado con éxito\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"country\": \"Spain\", \r\n\"country_code\": \"ESP\", \r\n\"year\": 2024, \"land_used\": 1000, \r\n\"cereal_production\": 5000, \"cereal_yield\": 5.0, \r\n\"population\": 47000000 }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Put (200 OK)",
+      "item": [
+        {
+          "name": "Actualización de datos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Datos actualizados con exito con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"Paraguay\",\r\n\"country_code\":\"PRY\",\r\n\"year\":2005,\r\n\"land_used\":806850,\r\n\"cereal_production\":1749200333333333,\r\n\"cereal_yield\":2.16,\r\n\"population\":5448101}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
               ]
             }
           },
@@ -844,6 +788,77 @@
                 }
               }
             },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Delete (200 OK)",
+      "item": [
+        {
+          "name": "Borrar recurso concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Dato borrados con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2002",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2002"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar todos los datos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Datos borrados con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
             "url": {
               "raw": "{{base_url}}/cereal-productions",
               "host": [
