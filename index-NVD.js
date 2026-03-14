@@ -208,11 +208,18 @@ console.log(`La media de ${campo_nvd} en la región ${region_nvd} es : ${resulta
 export { mediaPorRegion };
 export const datosnvd = data;
 
+//Carga API
+import Datastore from "@seald-io/nedb";
+
 export function load_NVD_API(app){
     const BASE_URL = "/api/v1/cost-of-healthy-diet-by-countries";
     
     //Datos en memoria
     let nvdAPIDATA = [...datosnvd];
+
+    //Datos en db
+    const db = new Datastore({filename: "cost-of-healthy-diet-by-countries.db", autoload:true});
+
 
     // Get colleccion postman
     app.get(BASE_URL + "/docs", (req,res) => {
@@ -221,47 +228,62 @@ export function load_NVD_API(app){
 
     //Carga inicial
     app.get(BASE_URL + "/loadInitialData", (req,res) => {
-        if(nvdAPIDATA.length === 0){
-            nvdAPIDATA = [...datosnvd];
-            res.sendStatus(201); //201 Created
-        }else{
-            res.status(400).send("Array no está vacío"); //400 Bad Request
-        }
+        db.count({}, (err, count) => {
+            if(count > 0){
+                return res.status(400).send("Array no está vacío");
+            }
+            db.insert(datosnvd, (err) => {
+                if (err) 
+                    return res.sendStatus(500);
+                res.sendStatus(201);
+            });
+        });
     });
 
-    // Devuelve todos los recursos (y con filtrado)
+    // Devuelve todos los recursos con filtrado y paginación
     app.get(BASE_URL, (req, res) =>{
-        let results = [...nvdAPIDATA];
+        let query = {};
 
         // Filtrado opcional según query parameters
-        if (req.query.year) {
-            //const year = parseInt(req.query.year);
-            results = results.filter(d => d.year === parseInt(req.query.year));
+        if (req.query.country) 
+            query.country = req.query.country;
+        if (req.query.region)
+            query.region = req.query.region;
+        if (req.query.year)
+            query.year = parseInt(req.query.year);
+        if (req.query.cost_category)
+            query.cost_category = req.query.cost_category;
+        if (req.query.country_code)
+            query.country_code = parseInt(req.query.country_code);
+
+        if(req.query.from || req.query.to){
+            query.year = {};
+            if(req.query.from)
+                query.year.$gte = parseInt(req.query.from);
+            if (req.query.to)
+                query.year.$lte = parseInt(req.query.to);
         }
-        if (req.query.from && req.query.to){
-            results = results.filter(d => d.year >= parseInt(req.query.from) && d.year <= parseInt(req.query.to));
-        }
-        if (req.query.region) {
-            results = results.filter(d => d.region.toLowerCase() === req.query.region.toLowerCase());
-        }
-        if (req.query.country) {
-            results = results.filter(d => d.country.toLowerCase() === req.query.country.toLowerCase());
-        }
-        res.status(200).json(results);
+
+        //paginación
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1)*limit;
+
+        db.find(query).skip(skip).limit(limit).exec((err,docs) =>{
+            if (err)
+                return res.sendStatus(500);
+            res.status(200).json(docs);
+        });
     });
 
     //Acceso a un recurso concreto (por pais y año) 
     app.get(BASE_URL + "/:country/:year", (req,res) => {
-        let nvdAPIDATA = [...datosnvd];
-        const { country,year } = req.params;
-        const yearInt = parseInt(year);
-        const record = nvdAPIDATA.find(r => r.country.toLowerCase() === country.toLowerCase() && r.year === yearInt);
-        if (record){
-            res.status(200).json(record); //Devuelve el objeto encontrado
-        }
-        else {
-            res.sendStatus(404); // No encontrado
-        }
+        const { country, year } = req.params;
+        db.findOne({country: country, year: parseInt(year) }, (err,doc) =>{
+            if(!doc)
+                return res.sendStatus(404);
+            res.status(200).json(doc);
+        });
     });
 
 
@@ -272,16 +294,21 @@ export function load_NVD_API(app){
         if(!newItem || !newItem.region || !newItem.year){
             return res.sendStatus(400); // 400 Bad Request
         }
-        const exists = nvdAPIDATA.some(d => d.region === newItem.region && d.year === newItem.year);
-        if (exists) return res.sendStatus(409); // 409 Conflict
-        nvdAPIDATA.push(newItem);
-        res.sendStatus(201);
+        db.findOne({ country: newItem.country, year: newItem.year }, (err, existing) =>{
+            if (existing) return res.sendStatus(409); // 409 Conflict
+            db.insert(newItem, (err) =>{
+                if(err) return res.sendStatus(500);
+                res.sendStatus(201);
+            });
+        });
     });
 
     // Borra todos los recursos
     app.delete(BASE_URL, (req,res) => {
-        nvdAPIDATA = []; //Array vacío
-        res.sendStatus(200); // 200 Ok
+        db.remove({}, {multi:true}, (err) => {
+            if (err) return res.sendStatus(500);
+            res.sendStatus(200);
+        });
     });
 
     //No permitido PUT en la colección
@@ -289,59 +316,32 @@ export function load_NVD_API(app){
         res.sendStatus(405); // 405 method Not Allowed
     });
 
-    //Obtener datos de un elemento en específico
-    app.get(BASE_URL + "/:country/:year", (req,res) =>{
-        const { country, year } = req.params;
-        const resource = nvdAPIDATA.find(d => d.country === country && d.year=== parseInt(year));
-        if (resource) res.status(200).json(resource);
-        else res.sendStatus(404);
-    });
-
     //Borra un elemento concreto
     app.delete(BASE_URL + "/:country/:year", (req,res) => {
         const { country,year } = req.params;
-        const initialLength = nvdAPIDATA.length;
-        nvdAPIDATA = nvdAPIDATA.filter(d => !(d.country === country && d.year === parseInt(year)));
-        if (nvdAPIDATA.length < initialLength) res.sendStatus(200);
-        else res.sendStatus(404);
+        db.remove({country:country,year:parseInt(year)}, {}, (err,numRemoved) => {
+            if(numRemoved === 0) return res.sendStatus(404);
+            res.sendStatus(200);
+        });
     });
 
     // Actualiza un elemento
     app.put(BASE_URL + "/:country/:year", (req, res) => {
         const newItem = req.body;
         const { country, year } = req.params;
+        const yearInt = parseInt(year);
 
         const requiredFields = ["country_code", "country", "region", "year", "cost_healthy_diet_ppp_usd", "annual_cost_healthy_diet_usd", "cost_vegetables_ppp_usd", "cost_fruits_ppp_usd", "total_food_components_cost", "cost_category"];
         const hasAllFields = requiredFields.every(field => field in newItem);
         if (!hasAllFields) return res.status(400).send("Faltan campos obligatorios");
 
-        const yearInt = parseInt(year);
-        const index = nvdAPIDATA.findIndex(d => d.country === country && d.year === yearInt);
-        if (index === -1) return res.sendStatus(404);
         if (newItem.country !== country || newItem.year !== yearInt) {
             return res.status(400).send("El país o el año no coinciden con la URL");
         }
-        newItem.year = yearInt;
-        nvdAPIDATA[index] = newItem;
-        res.sendStatus(200);
-    });
-
-    //GET por país con rango de años opcional
-    app.get(BASE_URL + "/:country", (req,res) => {
-        const { country } = req.params;
-        const { from, to } = req.query;
-
-        let resultado = nvdAPIDATA.filter(d => d.country === country);
-        
-        if(resultado.length === 0) return res.sendStatus(404);
-
-        if(from) resultado = resultado.filter(d=> d.year >= parseInt(from));
-        if(to) resultado = resultado.filter(d => d.year <= parseInt(to));
-
-        //if (resultado.length === 0) return res.sendStatus(404);
-
-        res.status(200).json(resultado);
-
+        db.update({country: country, year:yearInt}, {$set:newItem}, {}, (err, numReplaced) => {
+            if (numReplaced === 0) return res.sendStatus(404);
+            res.sendStatus(200);
+        });
     });
 
     // No permitido POST en recurso concreto
