@@ -251,7 +251,7 @@ export function load_NVD_API(app){
     });
 
     //Acceso a un recurso concreto (por pais y año) 
-    app.get("/api/v1/cost-of-healthy-diet-by-countries/:country/:year", (req,res) => {
+    app.get(BASE_URL + "/:country/:year", (req,res) => {
         let nvdAPIDATA = [...datosnvd];
         const { country,year } = req.params;
         const yearInt = parseInt(year);
@@ -290,9 +290,9 @@ export function load_NVD_API(app){
     });
 
     //Obtener datos de un elemento en específico
-    app.get(BASE_URL + "/:region/:year", (req,res) =>{
-        const { region, year } = req.params;
-        const resource = nvdAPIDATA.find(d => d.region === region && d.year=== parseInt(year));
+    app.get(BASE_URL + "/:country/:year", (req,res) =>{
+        const { country, year } = req.params;
+        const resource = nvdAPIDATA.find(d => d.country === country && d.year=== parseInt(year));
         if (resource) res.status(200).json(resource);
         else res.sendStatus(404);
     });
@@ -345,7 +345,7 @@ export function load_NVD_API(app){
     });
 
     // No permitido POST en recurso concreto
-    app.post(BASE_URL + "/:region/:year", (req,res) => {
+    app.post(BASE_URL + "/:country/:year", (req,res) => {
         res.sendStatus(405);
     });
 
