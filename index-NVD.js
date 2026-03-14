@@ -266,10 +266,10 @@ export function load_NVD_API(app){
 
         //paginación
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 15;
         const skip = (page - 1)*limit;
 
-        db.find(query).skip(skip).limit(limit).exec((err,docs) =>{
+        db.find(query).sort({country:1, year:1}).skip(skip).limit(limit).exec((err,docs) =>{
             if (err)
                 return res.sendStatus(500);
             res.status(200).json(docs);
