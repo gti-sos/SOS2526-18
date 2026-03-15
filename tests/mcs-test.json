@@ -9,6 +9,44 @@
   },
   "item": [
     {
+      "name": "Load",
+      "item": [
+        {
+          "name": "Load Initial Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/loadInitialData",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "loadInitialData"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Errores",
       "item": [
         {
@@ -536,39 +574,6 @@
           "response": []
         }
       ]
-    },
-    {
-      "name": "Load Initial Data",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(201);\r",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base_url}}/food-supply-utilization-accounts/loadInitialData",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "food-supply-utilization-accounts",
-            "loadInitialData"
-          ]
-        }
-      },
-      "response": []
     }
   ]
 }
