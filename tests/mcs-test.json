@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "9b795b37-757b-4559-b362-38e2c8fc2cda",
-    "name": "My Collection",
+    "name": "mcs-test",
     "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "52349546",
@@ -92,6 +92,90 @@
                 "jordan"
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"faostat\": 112,\n    \"m49_code\": 400,\n    \"country_name_en\": \"Jaen\",\n    \"item_code\": 221,\n    \"item\": \"Almonds, in shell\",\n    \"year\": 2013,\n    \"opening_stocks_tonnes\": 978.13,\n    \"production_tonnes\": 2143,\n    \"import_quantity_tonnes\": 531,\n    \"stock_variation_tonnes\": -450.93,\n    \"export_quantity_tonnes\": 38\n  }"
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/Jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "Jaen"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "405",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(405);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"faostat\": 112,\n    \"m49_code\": 400,\n    \"country_name_en\": \"Jaen\",\n    \"item_code\": 221,\n    \"item\": \"Almonds, in shell\",\n    \"year\": 2013,\n    \"opening_stocks_tonnes\": 978.13,\n    \"production_tonnes\": 2143,\n    \"import_quantity_tonnes\": 531,\n    \"stock_variation_tonnes\": -450.93,\n    \"export_quantity_tonnes\": 38\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jaen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "food-supply-utilization-accounts",
+                "jaen"
+              ]
+            },
+            "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
           },
           "response": []
         },
