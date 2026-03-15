@@ -41,13 +41,14 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan",
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan/2014",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "food-supply-utilization-accounts",
-                "jordan"
+                "jordan",
+                "2014"
               ]
             }
           },
@@ -83,13 +84,14 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan",
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan/2014",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "food-supply-utilization-accounts",
-                "jordan"
+                "jordan",
+                "2014"
               ]
             }
           },
@@ -325,7 +327,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jordan\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2014,\r\n    \"opening_stocks_tonnes\": 978.13,\r\n    \"production_tonnes\": 2143,\r\n    \"import_quantity_tonnes\": 531,\r\n    \"stock_variation_tonnes\": -450.93,\r\n    \"export_quantity_tonnes\": 38\r\n  }",
+              "raw": "{\r\n    \"faostat\": 112,\r\n    \"m49_code\": 400,\r\n    \"country_name_en\": \"Jordan\",\r\n    \"item_code\": 221,\r\n    \"item\": \"Almonds, in shell\",\r\n    \"year\": 2013,\r\n    \"opening_stocks_tonnes\": 0,\r\n    \"production_tonnes\": 0,\r\n    \"import_quantity_tonnes\": 0,\r\n    \"stock_variation_tonnes\": 0,\r\n    \"export_quantity_tonnes\": 0\r\n  }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -333,13 +335,14 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan",
+              "raw": "{{base_url}}/food-supply-utilization-accounts/jordan/2013",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "food-supply-utilization-accounts",
-                "jordan"
+                "jordan",
+                "2013"
               ]
             }
           },
@@ -542,7 +545,7 @@
           "script": {
             "exec": [
               "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.status(201);\r",
               "});"
             ],
             "type": "text/javascript",
