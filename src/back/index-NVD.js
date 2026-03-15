@@ -240,7 +240,7 @@ export function load_NVD_API(app){
         const limit = parseInt(req.query.limit) || 15;
         const skip = (page - 1)*limit;
 
-        db.find(query).sort({country:1, year:1}).skip(skip).limit(limit).exec((err,docs) =>{
+        db.find(query, { _id: 0 }).sort({country:1, year:1}).skip(skip).limit(limit).exec((err,docs) =>{
             if (err)
                 return res.sendStatus(500);
             res.status(200).json(docs);
@@ -250,7 +250,7 @@ export function load_NVD_API(app){
     //Acceso a un recurso concreto (por pais y año) 
     app.get(BASE_URL + "/:country/:year", (req,res) => {
         const { country, year } = req.params;
-        db.findOne({country: country, year: parseInt(year) }, (err,doc) =>{
+        db.findOne({country: country, year: parseInt(year) },{_id:0}, (err,doc) =>{
             if(!doc)
                 return res.sendStatus(404);
             res.status(200).json(doc);
