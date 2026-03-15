@@ -20,34 +20,6 @@ let initialData = [
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//Algoritmo para calcular la media
-export function calculateAverage(dataArray, Country, field) {
-
-    //Filtrar el subconjunto de filas que comparten el país
-    const filteredRows = dataArray.filter(item => item.country === Country);
-
-    //Extraer los valores numéricos del campo elegido y ver sea un valor numérico
-    const values = filteredRows.map(item => item[field]).filter(v => v !== null && !isNaN(v));
-
-    //Calcular la media usando reduce
-    if (values.length === 0) return 0;
-
-    const sum = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    return sum / values.length;
-}
-
-//Calcular media de 'cereal_production' para 'Paraguay'
-export const country = "Paraguay";
-export const field = "cereal_production";
-export const average = calculateAverage(initialData, country, field);
-
-//Mostrar el resultado
-console.log(`La media de ${field} para ${country} es: ${average}`);
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -212,13 +184,10 @@ export function load_JLAV_API(app) {
             if (!doc) {
                 res.sendStatus(404); //404 Not Found
             } else {
+                //Validación de coherencia entre URL y BODY
                 if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) {
                     res.status(400).send("El país o el año no coinciden con la URL");
                 } else {
-                    //Validación de coherencia entre URL y BODY
-                    if (newItem.country.toLowerCase() !== country.toLowerCase() || newItem.year !== parseInt(year)) {
-                        return res.status(400).send("El país o el año no coinciden con la URL");
-                    }
                     // Actualizamos en la base de datos
                     db.update({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, newItem, {}, (err, numReplaced) => {
                         res.sendStatus(200); //200 Ok

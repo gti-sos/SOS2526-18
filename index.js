@@ -1,10 +1,6 @@
 import express from "express"; //Cargo la librería Express (el motor del servidor)
-import bodyParser from "body-parser";
-import cool from "cool-ascii-faces"; // Cargo la librería de las caritas
-import { calculateAverage, average, field, country} from "./index-JLAV.js";
-import { avgperCountry,datamcs,BackendMCS} from "./index-MCS.js";
+import { BackendMCS} from "./index-MCS.js";
 import { load_JLAV_API} from "./index-JLAV.js";
-//import { mediaPorRegion, datosnvd, campo_nvd, region_nvd } from "./index-NVD.js";
 import { load_NVD_API } from "./index-NVD.js";
 
 const app = express(); //Creamos la aplicación
@@ -17,41 +13,14 @@ app.use(express.json()); //Para que el servidor entienda datos en formato JSON
 app.use("/", express.static("./public")); 
 
 
-//Ruta para la carita ASCII
-//app.get("/cool", (req, res) => {
-//    console.log(cool());
-//    res.send(`<html><body><h1></h1>${cool()}</body></html>`);
-//});
-
-
-//resultado del cálculo del algoritmojlav
-app.get("/samples/jlav", (req, res) => {
-    res.send(`La media de ${field} para ${country} es: ${average}`);
-});
 //activacion apis jlav
 load_JLAV_API(app);
+
+//activacion apis mcs
 BackendMCS(app);
 
-    
-
-
-//resultado del cálculo del algoritmo mcs
-let avg=avgperCountry(datamcs,"China, mainland","production_tonnes");
-app.get("/samples/mcs", (req, res) => {
-    res.send("Average production in tonnes of mainland China: "+avg);
-});
-
-
-
-//resultado del cálculo del algoritmo nvd
-//let resultadoNVD = mediaPorRegion(datosnvd, region_nvd, campo_nvd);
-//app.get("/samples/nvd", (req, res) => {
-//    res.send("La media de " + campo_nvd + " en la región " + region_nvd + " es: " + resultadoNVD)
-//})
 //activacion api nvd
 load_NVD_API(app);
-
-
 
 
 //Encendemos el servidor
