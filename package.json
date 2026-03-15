@@ -10,9 +10,9 @@
     "test-jlav": "npx newman run tests/jlav-test.json -e tests/local.json",
     "test-nvd": "npx newman run tests/nvd-test.json -e tests/local.json",
     "test-mcs": "npx newman run tests/mcs-test.json -e tests/local.json",
-    "start-jlav": "node index-JLAV.js",
-    "start-mcs": "node index-MCS.js",
-    "start-nvd": "node index-NVD.js"
+    "start-jlav": "node src/back/index-JLAV.js",
+    "start-mcs": "node src/back/index-MCS.js",
+    "start-nvd": "node src/back/index-NVD.js"
   },
   "repository": {
     "type": "git",

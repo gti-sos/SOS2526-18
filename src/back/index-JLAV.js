@@ -1,5 +1,5 @@
 
-//Inicialización del array
+//Inicialización del array 
 let initialData = [
     { country: "Afghanistan", country_code: "AFG", year: 1961, land_used: 3313500, cereal_production: 3695000, cereal_yield: 1.11, population: 9214082 },
     { country: "Afghanistan", country_code: "AFG", year: 1962, land_used: 3425500, cereal_production: 3696000, cereal_yield: 1.07, population: 9440441 },

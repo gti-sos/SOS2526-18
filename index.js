@@ -1,7 +1,7 @@
 import express from "express"; //Cargo la librería Express (el motor del servidor)
-import { BackendMCS} from "./index-MCS.js";
-import { load_JLAV_API} from "./index-JLAV.js";
-import { load_NVD_API } from "./index-NVD.js";
+import { BackendMCS} from "./src/back/index-MCS.js";
+import { load_JLAV_API} from "./src/back/index-JLAV.js";
+import { load_NVD_API } from "./src/back/index-NVD.js";
 
 const app = express(); //Creamos la aplicación
 const port = process.env.PORT || 12345; //El puerto: Render nos da uno, si no, usa el 12345
