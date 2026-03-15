@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "newman run tests/jlav-test.json -e tests/local.json && npx newman run tests/nvd-test.json -e tests/local.json && npx newman run tests/mcs-test.json -e tests/local.json",
-    "test-jlav": "npx newman run tests/jlav-test.json -e tests/local.json",
+    "test": "newman run tests/test-cereal-productions.json -e tests/local.json && npx newman run tests/nvd-test.json -e tests/local.json && npx newman run tests/mcs-test.json -e tests/local.json",
+    "test-cereal-productions": "npx newman run tests/test-cereal-productions.json -e tests/local.json",
     "test-nvd": "npx newman run tests/nvd-test.json -e tests/local.json",
     "test-mcs": "npx newman run tests/mcs-test.json -e tests/local.json",
     "start-jlav": "node src/back/index-JLAV.js",
