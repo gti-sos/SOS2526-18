@@ -8,45 +8,52 @@
   },
   "item": [
     {
-      "name": "201 Created",
+      "name": "1. Inicio - Limpiar y cargar estado",
       "item": [
         {
-          "name": "GET loadInitialData",
+          "name": "DELETE todos los datos (inicio)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/loadInitialData",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries","loadInitialData"
-              ]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries"]
             }
           },
           "response": []
         },
         {
-          "name": "POST nuevo dato",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"country_code\": 818,\r\n    \"country\": \"Test\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1241.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.7,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
+          "name": "GET loadInitialData (inicio)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
               }
-            },
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": ["cost-of-healthy-diet-by-countries"]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/loadInitialData",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "loadInitialData"]
             }
           },
           "response": []
@@ -54,51 +61,80 @@
       ]
     },
     {
-      "name": "200 Ok",
+      "name": "2. GET - Consultas",
       "item": [
         {
-          "name": "DELETE todos los datos",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": ["cost-of-healthy-diet-by-countries"]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "GET todos los datos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Es un array', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});",
+                  "pm.test('Tiene elementos', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.length).to.be.greaterThan(0);",
+                  "});",
+                  "pm.test('Los elementos tienen los campos esperados', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json[0]).to.have.property('country');",
+                  "    pm.expect(json[0]).to.have.property('year');",
+                  "    pm.expect(json[0]).to.have.property('region');",
+                  "    pm.expect(json[0]).to.have.property('cost_category');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
-              "host": [
-                "{{base_url}}"
-              ],
+              "host": ["{{base_url}}"],
               "path": ["cost-of-healthy-diet-by-countries"]
             }
           },
           "response": []
         },
         {
-          "name": "DELETE dato concreto",
+          "name": "GET con rango de años",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Es un array', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});",
+                  "pm.test('Todos los años están en el rango 2001-2020', () => {",
+                  "    const json = pm.response.json();",
+                  "    json.forEach(d => {",
+                  "        pm.expect(d.year).to.be.within(2001, 2020);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
-            "method": "DELETE",
+            "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2020",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2020"
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries?from=2001&to=2020",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries"],
+              "query": [
+                { "key": "from", "value": "2001" },
+                { "key": "to", "value": "2020" }
               ]
             }
           },
@@ -106,83 +142,68 @@
         },
         {
           "name": "GET dato concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Es el dato correcto', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.country).to.eql('Spain');",
+                  "    pm.expect(json.year).to.eql(2022);",
+                  "});",
+                  "pm.test('Tiene todos los campos', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('country_code');",
+                  "    pm.expect(json).to.have.property('region');",
+                  "    pm.expect(json).to.have.property('cost_healthy_diet_ppp_usd');",
+                  "    pm.expect(json).to.have.property('cost_category');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": { "type": "noauth" },
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n        \"country_code\": 818,\r\n        \"country\": \"Egypt\",\r\n        \"region\": \"Africa\",\r\n        \"year\": 2021,\r\n        \"cost_healthy_diet_ppp_usd\": 3.88,\r\n        \"annual_cost_healthy_diet_usd\": 1416.2,\r\n        \"cost_vegetables_ppp_usd\": 0.79,\r\n        \"cost_fruits_ppp_usd\": 0.73,\r\n        \"total_food_components_cost\": 1.48,\r\n        \"cost_category\": \"High Cost\"\r\n    }"
-            },
             "url": {
               "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2022",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2022"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Spain", "2022"]
             }
           },
           "response": []
         },
         {
-          "name": "PUT dato concreto",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"country_code\": 724,\r\n    \"country\": \"Spain\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2022,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
+          "name": "GET dato no existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                ],
+                "type": "text/javascript"
               }
-            },
-            "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2022",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2022"
-              ]
             }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
           },
-          "response": []
-        },
-        {
-          "name": "GET con rango de años",
           "request": {
+            "auth": { "type": "noauth" },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries?from=2001&to=2020",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": ["cost-of-healthy-diet-by-countries"],
-              "query": [
-                {
-                  "key": "from",
-                  "value": "2001"
-                },
-                {
-                  "key": "to",
-                  "value": "2020"
-                }
-              ]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Brazil/2025",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Brazil", "2025"]
             }
           },
           "response": []
@@ -190,57 +211,180 @@
       ]
     },
     {
-      "name": "400 Bad Request",
+      "name": "3. POST - Crear datos",
       "item": [
         {
-          "name": "GET loadInitialData con array NO vacío",
+          "name": "POST nuevo dato",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country_code\": 818,\r\n    \"country\": \"Test\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1241.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.7,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/loadInitialData",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "loadInitialData"
-              ]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries"]
             }
           },
           "response": []
         },
         {
-          "name": "PUT dato con parametros diferentes en url",
+          "name": "POST dato ya existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
-            "auth": {
-              "type": "noauth"
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country_code\": 818,\r\n    \"country\": \"Test\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1241.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.7,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
             },
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST con campos faltantes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country_code\": 724,\r\n    \"region\": \"Europe\"\r\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST en dato concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 405', () => pm.response.to.have.status(405));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country_code\": 724,\r\n    \"country\": \"Spain\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2025",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Spain", "2025"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. PUT - Actualizar datos",
+      "item": [
+        {
+          "name": "PUT dato concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n        \"country_code\": 818,\r\n        \"country\": \"Egypt\",\r\n        \"region\": \"Africa\",\r\n        \"year\": 2021,\r\n        \"cost_healthy_diet_ppp_usd\": 3.88,\r\n        \"annual_cost_healthy_diet_usd\": 1416.2,\r\n        \"cost_vegetables_ppp_usd\": 0.79,\r\n        \"cost_fruits_ppp_usd\": 0.73,\r\n        \"total_food_components_cost\": 1.48,\r\n        \"cost_category\": \"High Cost\"\r\n    }",
+              "raw": "{\r\n    \"country_code\": 724,\r\n    \"country\": \"Spain\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2022,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
               "options": {
-                "raw": {
-                  "language": "json"
-                }
+                "raw": { "language": "json" }
               }
             },
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Egypt/2020",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Egypt",
-                "2020"
-              ]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2022",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Spain", "2022"]
             }
           },
           "response": []
         },
         {
           "name": "PUT con campos faltantes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PUT",
             "header": [],
@@ -248,82 +392,93 @@
               "mode": "raw",
               "raw": "{\r\n    \"country_code\": 724,\r\n    \"country\": \"Spain\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2022,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78\r\n}",
               "options": {
-                "raw": {
-                  "language": "json"
-                }
+                "raw": { "language": "json" }
               }
             },
             "url": {
               "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2022",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2022"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "404 Not Found",
-      "item": [
-        {
-          "name": "DELETE dato que no existe",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2025",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2025"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Spain", "2022"]
             }
           },
           "response": []
         },
         {
-          "name": "GET dato no existente o no encontrado",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
+          "name": "PUT dato con parametros diferentes en url",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
+            "auth": { "type": "noauth" },
+            "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n        \"country_code\": 818,\r\n        \"country\": \"Egypt\",\r\n        \"region\": \"Africa\",\r\n        \"year\": 2021,\r\n        \"cost_healthy_diet_ppp_usd\": 3.88,\r\n        \"annual_cost_healthy_diet_usd\": 1416.2,\r\n        \"cost_vegetables_ppp_usd\": 0.79,\r\n        \"cost_fruits_ppp_usd\": 0.73,\r\n        \"total_food_components_cost\": 1.48,\r\n        \"cost_category\": \"High Cost\"\r\n    }"
+              "raw": "{\r\n    \"country_code\": 818,\r\n    \"country\": \"Egypt\",\r\n    \"region\": \"Africa\",\r\n    \"year\": 2021,\r\n    \"cost_healthy_diet_ppp_usd\": 3.88,\r\n    \"annual_cost_healthy_diet_usd\": 1416.2,\r\n    \"cost_vegetables_ppp_usd\": 0.79,\r\n    \"cost_fruits_ppp_usd\": 0.73,\r\n    \"total_food_components_cost\": 1.48,\r\n    \"cost_category\": \"High Cost\"\r\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
             },
             "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Brazil/2025",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Brazil",
-                "2025"
-              ]
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Egypt/2020",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Egypt", "2020"]
             }
           },
           "response": []
-        }
-      ]
-    },
-    {
-      "name": "405 Method Not Allowed",
-      "item": [
+        },
+        {
+          "name": "PUT dato que no existe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country_code\": 999,\r\n    \"country\": \"Inexistente\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Inexistente/2025",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Inexistente", "2025"]
+            }
+          },
+          "response": []
+        },
         {
           "name": "PUT en la coleccion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 405', () => pm.response.to.have.status(405));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PUT",
             "header": [],
@@ -333,35 +488,8 @@
             },
             "url": {
               "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
-              "host": [
-                "{{base_url}}"
-              ],
+              "host": ["{{base_url}}"],
               "path": ["cost-of-healthy-diet-by-countries"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "POST en dato concreto",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"country_code\": 724,\r\n    \"country\": \"Spain\",\r\n    \"region\": \"Europe\",\r\n    \"year\": 2025,\r\n    \"cost_healthy_diet_ppp_usd\": 3.4,\r\n    \"annual_cost_healthy_diet_usd\": 1270.1,\r\n    \"cost_vegetables_ppp_usd\": 0.76,\r\n    \"cost_fruits_ppp_usd\": 0.78,\r\n    \"total_food_components_cost\": 1.33,\r\n    \"cost_category\": \"High Cost\"\r\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2025",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cost-of-healthy-diet-by-countries", "Spain",
-                "2025"
-              ]
             }
           },
           "response": []
@@ -369,28 +497,134 @@
       ]
     },
     {
-      "name": "409 Conflict",
+      "name": "5. DELETE - Borrar datos",
       "item": [
         {
-          "name": "POST dato ya existente",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n        \"country_code\": 818,\r\n        \"country\": \"Egypt\",\r\n        \"region\": \"Africa\",\r\n        \"year\": 2021,\r\n        \"cost_healthy_diet_ppp_usd\": 4.01,\r\n        \"annual_cost_healthy_diet_usd\": 1463.65,\r\n        \"cost_vegetables_ppp_usd\": 0.52,\r\n        \"cost_fruits_ppp_usd\": 0.42,\r\n        \"total_food_components_cost\": 0.94,\r\n        \"cost_category\": \"High Cost\"\r\n    }",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
+          "name": "DELETE dato concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
               }
-            },
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Test/2025",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Test", "2025"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE dato que no existe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/Spain/2025",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "Spain", "2025"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. loadInitialData - Casuísticas",
+      "item": [
+        {
+          "name": "GET loadInitialData con array NO vacío",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/loadInitialData",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "loadInitialData"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Fin - Restaurar estado inicial",
+      "item": [
+        {
+          "name": "DELETE todos los datos (fin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
             "url": {
               "raw": "{{base_url}}/cost-of-healthy-diet-by-countries",
-              "host": [
-                "{{base_url}}"
-              ],
+              "host": ["{{base_url}}"],
               "path": ["cost-of-healthy-diet-by-countries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET loadInitialData (fin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cost-of-healthy-diet-by-countries/loadInitialData",
+              "host": ["{{base_url}}"],
+              "path": ["cost-of-healthy-diet-by-countries", "loadInitialData"]
             }
           },
           "response": []
