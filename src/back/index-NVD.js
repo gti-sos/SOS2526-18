@@ -181,41 +181,12 @@ const data = [
     }
 ];
 
-function mediaPorRegion(datos, region, campoNumerico) {
-    // Filtra las filas que pertenecen a la región indicada
-    const subconjunto = datos.filter(d => d.region === region);
-
-    // Extraer solo los valores del campo numérico especificado
-    const valores = subconjunto.map(d => d[campoNumerico]);
-    
-    // Calcular la suma total
-    const suma = valores.reduce((acum, valor) => acum + valor, 0);
-    
-    // Calcular la media    
-    const media =  suma / valores.length;
-
-    return media
-}
-
-// EJECUCIÓN mediaPorRegion
-export const region_nvd = "Europe";
-export const campo_nvd = "annual_cost_healthy_diet_usd";
-
-export const resultado_nvd = mediaPorRegion(data, region_nvd, campo_nvd);
-
-console.log(`La media de ${campo_nvd} en la región ${region_nvd} es : ${resultado_nvd}`);
-
-export { mediaPorRegion };
-export const datosnvd = data;
 
 //Carga API
 import Datastore from "@seald-io/nedb";
 
 export function load_NVD_API(app){
     const BASE_URL = "/api/v1/cost-of-healthy-diet-by-countries";
-    
-    //Datos en memoria
-    let nvdAPIDATA = [...datosnvd];
 
     //Datos en db
     const db = new Datastore({filename: "cost-of-healthy-diet-by-countries.db", autoload:true});
@@ -232,7 +203,7 @@ export function load_NVD_API(app){
             if(count > 0){
                 return res.status(400).send("Array no está vacío");
             }
-            db.insert(datosnvd, (err) => {
+            db.insert(data, (err) => {
                 if (err) 
                     return res.sendStatus(500);
                 res.sendStatus(201);
