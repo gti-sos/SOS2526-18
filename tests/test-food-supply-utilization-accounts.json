@@ -18,8 +18,20 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 201\", function () {\r",
                   "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Respuesta es JSON\", function () {\r",
+                  "    pm.response.to.be.withBody;\r",
+                  "    pm.response.to.be.json;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Contiene campo inserted\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"inserted\");\r",
+                  "    pm.expect(json.inserted).to.be.a(\"number\");\r",
+                  "    pm.expect(json.inserted).to.be.greaterThan(0);\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -56,8 +68,15 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 400\", function () {\r",
                   "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contiene error\", function () {\r",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {\r",
+                  "        const json = pm.response.json();\r",
+                  "        pm.expect(json).to.have.property(\"error\");\r",
+                  "    }\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -99,8 +118,13 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 400\", function () {\r",
                   "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contiene error por campos faltantes\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"error\");\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -142,8 +166,15 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 404\", function () {\r",
                   "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contiene error\", function () {\r",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {\r",
+                  "        const json = pm.response.json();\r",
+                  "        pm.expect(json).to.have.property(\"error\");\r",
+                  "    }\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -182,8 +213,16 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
+                  "",
+                  "pm.test(\"Status 405\", function () {",
                   "    pm.response.to.have.status(405);",
+                  "});",
+                  "",
+                  "pm.test(\"Body contiene error 405\", function () {",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {",
+                  "        const json = pm.response.json();",
+                  "        pm.expect(json).to.have.property(\"error\");",
+                  "    }",
                   "});",
                   ""
                 ],
@@ -226,8 +265,14 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 409\", function () {\r",
                   "    pm.response.to.have.status(409);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contiene texto de conflicto\", function () {\r",
+                  "    const body = pm.response.text().toLowerCase();\r",
+                  "    pm.expect(body).to.be.a(\"string\");\r",
+                  "    pm.expect(body).to.include(\"conflict\");\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -272,8 +317,26 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
+                  "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Es un array\", function () {",
+                  "    pm.response.to.be.json;",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Tiene elementos\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Campos esperados\", function () {",
+                  "    const item = pm.response.json()[0];",
+                  "    pm.expect(item).to.have.property(\"faostat\");",
+                  "    pm.expect(item).to.have.property(\"country_name_en\");",
+                  "    pm.expect(item).to.have.property(\"year\");",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -306,10 +369,15 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
+                  "pm.test(\"Status 405\", function () {",
                   "    pm.response.to.have.status(405);",
                   "});",
-                  ""
+                  "",
+                  "pm.test(\"Body contiene error\", function () {",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {",
+                  "        pm.expect(pm.response.json()).to.have.property(\"error\");",
+                  "    }",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -350,8 +418,19 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Devuelve OK\", function () {\r",
+                  "    const body = pm.response.text();\r",
+                  "    pm.expect(body).to.be.a(\"string\");\r",
+                  "    pm.expect(body.toLowerCase()).to.include(\"ok\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No intenta parsear JSON\", function () {\r",
+                  "    const ct = pm.response.headers.get(\"Content-Type\") || \"\";\r",
+                  "    pm.expect(ct.includes(\"application/json\")).to.be.false;\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -393,8 +472,16 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body indica borrado\", function () {\r",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {\r",
+                  "        const json = pm.response.json();\r",
+                  "        pm.expect(json).to.have.property(\"deleted\");\r",
+                  "        pm.expect(json.deleted).to.be.a(\"number\");\r",
+                  "    }\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -431,8 +518,25 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
+                  "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Respuesta es array\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Array tiene elementos\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Elementos tienen campos esperados\", function () {",
+                  "    const item = pm.response.json()[0];",
+                  "    pm.expect(item).to.have.property(\"faostat\");",
+                  "    pm.expect(item).to.have.property(\"country_name_en\");",
+                  "    pm.expect(item).to.have.property(\"year\");",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -464,10 +568,28 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Successful POST request\", function () {",
+                  "pm.test(\"Status 200 o 201\", function () {",
                   "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
-                  ""
+                  "",
+                  "pm.test(\"Respuesta es JSON si procede\", function () {",
+                  "    const ct = pm.response.headers.get(\"Content-Type\") || \"\";",
+                  "    if (ct.includes(\"application/json\")) {",
+                  "        pm.response.to.be.json;",
+                  "    } else {",
+                  "        pm.expect(pm.response.text()).to.be.a(\"string\");",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Objeto creado tiene campos enviados si hay JSON\", function () {",
+                  "    const ct = pm.response.headers.get(\"Content-Type\") || \"\";",
+                  "    if (ct.includes(\"application/json\")) {",
+                  "        const json = pm.response.json();",
+                  "        pm.expect(json).to.have.property(\"country_name_en\");",
+                  "        pm.expect(json).to.have.property(\"item\");",
+                  "        pm.expect(json).to.have.property(\"year\");",
+                  "    }",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -548,8 +670,16 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Status 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body indica borrado\", function () {\r",
+                  "    if (pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\")) {\r",
+                  "        const json = pm.response.json();\r",
+                  "        pm.expect(json).to.have.property(\"deleted\");\r",
+                  "        pm.expect(json.deleted).to.be.a(\"number\");\r",
+                  "    }\r",
                   "});"
                 ],
                 "type": "text/javascript",
