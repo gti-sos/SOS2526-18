@@ -14,10 +14,6 @@ app.use(cors());
 
 
 app.use(express.json()); //Para que el servidor entienda datos en formato JSON
-
-// Si la ruta solicitada no coincide con ninguna ruta dinámica (API), 
-// el servidor intentará localizar el archivo dentro de la carpeta './public'.
-app.use("/", express.static("./public")); 
  
 
 //activacion apis jlav
