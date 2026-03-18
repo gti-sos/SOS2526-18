@@ -23,7 +23,7 @@
             postman: "https://documenter.getpostman.com/view/52349546/2sBXigMDpj"
         }
     ];
-
+ 
     const githubUrl = "https://github.com/gti-sos/SOS2526-18";
 </script>
 
