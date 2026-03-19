@@ -129,7 +129,7 @@ export function load_JLAV_API_V1(app) {
     });
 
     //Obtener datos de un elemento
-    app.get([BASE_URL_V1 + "/:country/:year", BASE_URL_V2 + "/:country/:year"], (req, res) => {
+    app.get(BASE_URL_V1 + "/:country/:year", (req, res) => {
         const { country, year } = req.params;
         // Buscamos un elemento concreto
         db.findOne({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, { _id: 0 }, (err, resource) => {
