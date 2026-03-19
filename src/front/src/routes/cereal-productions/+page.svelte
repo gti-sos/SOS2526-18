@@ -155,3 +155,11 @@
     table td, table th { padding: 8px; }
     button { cursor: pointer; }
 </style>
+
+{#if message}
+    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 20px 0; border: 1px solid #f5c6cb; border-radius: 5px;">
+        <strong>Aviso del sistema:</strong> {message}
+        
+        <button on:click={() => message = ""} style="float: right; background: none; border: none; cursor: pointer; font-weight: bold;">X</button>
+    </div>
+{/if}
