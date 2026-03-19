@@ -287,7 +287,9 @@ export function load_JLAV_API_V2(app) {
     //Crea un nuevo recurso
     app.post(BASE_URL_V2, (req, res) => {
         const newItem = req.body;
-        if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
+        if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || 
+        newItem.land_used === undefined || newItem.cereal_production === undefined || 
+        newItem.cereal_yield === undefined || newItem.population === undefined) {
             return res.status(400).send("La petición no tiene los campos esperados"); //400 Bad Request
         }
 
