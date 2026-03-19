@@ -287,12 +287,19 @@ export function load_JLAV_API_V2(app) {
     //Crea un nuevo recurso
     app.post(BASE_URL_V2, (req, res) => {
         const newItem = req.body;
-        if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || 
-        newItem.land_used === undefined || newItem.cereal_production === undefined || 
-        newItem.cereal_yield === undefined || newItem.population === undefined) {
-            return res.status(400).send("La petición no tiene los campos esperados"); //400 Bad Request
-        }
+        const camposValidos = 
+            newItem &&
+            newItem.country && 
+            newItem.country_code && 
+            newItem.year !== undefined &&
+            newItem.land_used !== undefined &&
+            newItem.cereal_production !== undefined &&
+            newItem.cereal_yield !== undefined &&
+            newItem.population !== undefined;
 
+        if (!camposValidos) {
+            return res.status(400).send("La petición no tiene los campos esperados o están mal escritos");
+        }
         // MODIFICACIÓN EXCLUSIVA DE V2: Validación de datos lógicos
         if (newItem.cereal_production <= 0 || newItem.population <= 0) {
             return res.status(400).send("V2 ERROR: La producción y la población deben ser valores positivos.");
