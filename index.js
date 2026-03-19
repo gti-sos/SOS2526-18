@@ -17,7 +17,8 @@ app.use(express.json()); //Para que el servidor entienda datos en formato JSON
  
 
 //activacion apis jlav
-load_JLAV_API(app);
+load_JLAV_API_V1(app);
+load_JLAV_API_V2(app);
 
 //activacion apis mcs
 BackendMCS(app);
