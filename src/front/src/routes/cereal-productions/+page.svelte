@@ -147,7 +147,7 @@
                 </tr>
             {/each}
         </tbody>
-    </table>
+    </table>   
 </main>
 
 <style>
