@@ -1,7 +1,7 @@
 import express from "express"; //Cargo la librería Express (el motor del servidor)
 import cors from "cors";
 import { BackendMCS} from "./src/back/index-MCS.js";
-import { load_JLAV_API} from "./src/back/index-JLAV.js";
+import { load_JLAV_API_V1,load_JLAV_API_V2} from "./src/back/index-JLAV.js";
 import { load_NVD_API } from "./src/back/index-NVD.js";
 import {handler} from './src/front/build/handler.js'; //buscador dentro de archivos sveltepara que express sepa que arechivos servir
 
