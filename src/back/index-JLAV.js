@@ -31,17 +31,21 @@ const db = new Datastore({ filename: './cereal-productions.db', autoload: true }
 
 export function load_JLAV_API(app) {
 
-    const BASE_URL = "/api/v1/cereal-productions";
+    const BASE_URL_V1 = "/api/v1/cereal-productions";
+    const BASE_URL_V2 = "/api/v2/cereal-productions";
 
     // Portal de documentación creados en POSTMAN
-    app.get(BASE_URL + "/docs", (req, res) => {
+    app.get(BASE_URL_V1 + "/docs", (req, res) => {
         res.redirect("https://documenter.getpostman.com/view/52314819/2sBXigLt7a");
+    });
+     app.get(BASE_URL_V2 + "/docs", (req, res) => {
+        res.redirect("https://documenter.getpostman.com/view/52314819/2sBXihrDdQ");
     });
 
 
 
     //carga inicial
-    app.get(BASE_URL + "/loadInitialData", (req, res) => {
+    app.get([BASE_URL_V1 + "/loadInitialData", BASE_URL_V2 + "/loadInitialData"], (req, res) => {
         // Comprobamos si hay datos en la base de datos
         db.count({}, (err, count) => {
             if (count === 0) {
@@ -55,7 +59,7 @@ export function load_JLAV_API(app) {
     });
 
     // Devuelve todos los recursos y permite filtrado
-    app.get(BASE_URL, (req, res) => {
+    app.get([BASE_URL_V1, BASE_URL_V2], (req, res) => {
         let query = {};
 
         //Parámetros de Paginación
@@ -99,7 +103,7 @@ export function load_JLAV_API(app) {
     });
 
     //Crea un nuevo recurso
-    app.post(BASE_URL, (req, res) => {
+    app.post([BASE_URL_V1, BASE_URL_V2], (req, res) => {
         const newItem = req.body;
         if (!newItem || !newItem.country || !newItem.year || !newItem.country_code || !newItem.land_used || !newItem.cereal_production || !newItem.cereal_yield || !newItem.population) {
             return res.status(400).send("La petición no tiene los campos esperados"); //400 Bad Request
@@ -118,19 +122,19 @@ export function load_JLAV_API(app) {
     });
 
     //Borra todos los recursos
-    app.delete(BASE_URL, (req, res) => {
+    app.delete([BASE_URL_V1, BASE_URL_V2], (req, res) => {
         db.remove({}, { multi: true }, (err, numRemoved) => {
             res.sendStatus(200); //200 Ok
         });
     });
 
     //No permitido
-    app.put(BASE_URL, (req, res) => {
+    app.put([BASE_URL_V1, BASE_URL_V2], (req, res) => {
         res.sendStatus(405); //405 Method Not Allowed
     });
 
     //Obtener datos de un elemento
-    app.get(BASE_URL + "/:country/:year", (req, res) => {
+    app.get([BASE_URL_V1 + "/:country/:year", BASE_URL_V2 + "/:country/:year"], (req, res) => {
         const { country, year } = req.params;
         // Buscamos un elemento concreto
         db.findOne({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, { _id: 0 }, (err, resource) => {
@@ -143,7 +147,7 @@ export function load_JLAV_API(app) {
     });
 
     // Obtener todos los datos de un país concreto
-    app.get(BASE_URL + "/:country", (req, res) => {
+    app.get([BASE_URL_V1 + "/:country", BASE_URL_V2 + "/:country"], (req, res) => {
         const { country } = req.params;
 
         db.find({ country: new RegExp("^" + country + "$", "i") }, { _id: 0 }, (err, resources) => {
@@ -158,7 +162,7 @@ export function load_JLAV_API(app) {
 
 
     //Borra un elemento concreto
-    app.delete(BASE_URL + "/:country/:year", (req, res) => {
+    app.delete([BASE_URL_V1 + "/:country/:year", BASE_URL_V2 + "/:country/:year"], (req, res) => {
         const { country, year } = req.params;
         // Borramos el elemento que coincida
         db.remove({ country: new RegExp("^" + country + "$", "i"), year: parseInt(year) }, {}, (err, numRemoved) => {
@@ -171,7 +175,7 @@ export function load_JLAV_API(app) {
     });
 
     //Actualiza los datos de un elemento
-    app.put(BASE_URL + "/:country/:year", (req, res) => {
+    app.put( [BASE_URL_V1 + "/:country/:year", BASE_URL_V2 + "/:country/:year"], (req, res) => {
         const newItem = req.body;
         const { country, year } = req.params;
 
@@ -198,7 +202,7 @@ export function load_JLAV_API(app) {
     });
 
     //No permitido
-    app.post(BASE_URL + "/:country/:year", (req, res) => {
+    app.post([BASE_URL_V1 + "/:country/:year", BASE_URL_V2 + "/:country/:year"], (req, res) => {
         res.sendStatus(405); // 405 Method Not Allowed
     });
 
