@@ -297,7 +297,7 @@ export function load_JLAV_API_V2(app) {
         if (newItem.cereal_production <= 0 || newItem.population <= 0) {
             return res.status(400).send("V2 ERROR: La producción y la población deben ser valores positivos.");
         }
-
+ 
         // Comprobamos si ya existe el recurso
         db.findOne({ country: newItem.country, year: newItem.year }, (err, doc) => {
             if (doc) {
