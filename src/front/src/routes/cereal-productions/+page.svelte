@@ -1,11 +1,11 @@
 <script>
     import { onMount } from 'svelte';
 
-    // 1. VARIABLES (El estado de nuestra aplicación)
-    let cereals = []; // Aquí guardamos la lista que viene del servidor
-    let message = ""; // Para mostrar avisos de éxito o error
+    // 1. VARIABLES (Estado de la aplicación)
+    let cereals = []; 
+    let message = ""; 
     
-    // Objeto vacío para el formulario de CREAR
+    // Objeto para el formulario de CREAR
     let newCereal = {
         country: "",
         country_code: "",
@@ -16,53 +16,63 @@
         population: 0
     };
 
-    // 2. FUNCIONES (La lógica que habla con la API)
+    // 2. FUNCIONES (Lógica de API)
 
-    // GET - Obtener todos los recursos (LISTAR)
+    // GET - Listar todos los recursos
     async function getCereals() {
         const res = await fetch("/api/v2/cereal-productions");
         if (res.ok) {
             const data = await res.json();
             cereals = data;
-            if (cereals.length === 0) message = "La base de datos está vacía.";
+            if (cereals.length === 0) {
+                message = "La base de datos está vacía. Pulsa 'Cargar Datos Iniciales'.";
+            }
         } else {
-            message = "Error al conectar con el servidor.";
+            message = "Error: No se ha podido conectar con el servidor.";
         }
     }
 
-    // GET - Cargar datos iniciales
+    // GET - Cargar datos de prueba
     async function loadInitialData() {
         message = "Cargando datos iniciales...";
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
         if (res.ok) {
-            message = "Datos cargados con éxito.";
-            getCereals(); // Refrescamos la tabla
+            message = "¡Datos cargados con éxito!";
+            getCereals(); 
         } else {
-            message = "Error: Los datos ya existen o el servidor falló.";
+            message = "Error: Los datos ya existen o el servidor ha fallado.";
         }
     }
 
     // POST - Crear un nuevo recurso
     async function createCereal() {
+        const cerealToPost = {
+            ...newCereal,
+            year: parseInt(newCereal.year),
+            land_used: parseFloat(newCereal.land_used),
+            cereal_production: parseFloat(newCereal.cereal_production),
+            cereal_yield: parseFloat(newCereal.cereal_yield),
+            population: parseInt(newCereal.population)
+        };
+
         const res = await fetch("/api/v2/cereal-productions", {
             method: "POST",
-            body: JSON.stringify(newCereal),
+            body: JSON.stringify(cerealToPost),
             headers: { "Content-Type": "application/json" }
         });
 
         if (res.ok) {
-            message = `Recurso ${newCereal.country} creado correctamente.`;
-            // Limpiamos el formulario
+            message = `¡Recurso ${newCereal.country} (${newCereal.year}) creado correctamente!`;
             newCereal = { country: "", country_code: "", year: "", land_used: 0, cereal_production: 0, cereal_yield: 0, population: 0 };
-            getCereals(); // Refrescamos la tabla
+            getCereals(); 
         } else if (res.status === 409) {
-            message = "Error: Ese país y año ya existen.";
+            message = "Error: Ese país y año ya existen en la base de datos.";
         } else {
-            message = "Error: Faltan campos o los datos son incorrectos (v2 no acepta negativos).";
+            message = "Error: Datos incorrectos. Recuerda que Producción y Población deben ser > 0.";
         }
     }
 
-    // DELETE - Borrar un recurso concreto
+    // DELETE - Borrar un recurso
     async function deleteCereal(country, year) {
         const res = await fetch(`/api/v2/cereal-productions/${country}/${year}`, {
             method: "DELETE"
@@ -71,24 +81,23 @@
             message = `Borrado: ${country} (${year})`;
             getCereals();
         } else {
-            message = "No se pudo borrar el recurso.";
+            message = "Error: No se ha podido borrar el recurso.";
         }
     }
 
-    // DELETE - Borrar TODOS los recursos
+    // DELETE - Borrar todo
     async function deleteAllCereals() {
         if (confirm("¿Estás seguro de que quieres borrar TODOS los datos?")) {
             const res = await fetch("/api/v2/cereal-productions", {
                 method: "DELETE"
             });
             if (res.ok) {
-                message = "Todos los recursos han sido eliminados.";
+                message = "Todos los recursos han sido eliminados correctamente.";
                 getCereals();
             }
         }
     }
 
-    // Al cargar la página, pedimos los datos
     onMount(getCereals);
 </script>
 
@@ -96,19 +105,20 @@
     <h1>Gestión de Producción de Cereales (JLAV)</h1>
 
     {#if message}
-        <div style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
-            <strong>Aviso:</strong> {message}
+        <div class="alert">
+            <strong>Aviso del sistema:</strong> {message}
+            <button on:click={() => message = ""} class="close-btn">X</button>
         </div>
     {/if}
 
-    <div style="margin-bottom: 20px;">
-        <button on:click={loadInitialData} style="background-color: #4CAF50; color: white;">Cargar Datos Iniciales</button>
-        <button on:click={deleteAllCereals} style="background-color: #f44336; color: white;">Borrar Todo</button>
+    <div class="actions">
+        <button on:click={loadInitialData} class="btn-load">Cargar Datos Iniciales</button>
+        <button on:click={deleteAllCereals} class="btn-delete-all">Borrar Todo</button>
     </div>
 
-    <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+    <table>
         <thead>
-            <tr style="background-color: #ddd;">
+            <tr>
                 <th>País</th>
                 <th>Código</th>
                 <th>Año</th>
@@ -120,15 +130,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #e8f4fd;">
-                <td><input bind:value={newCereal.country} placeholder="Ej: Spain" size="10"></td>
-                <td><input bind:value={newCereal.country_code} placeholder="ESP" size="5"></td>
-                <td><input bind:value={newCereal.year} type="number" placeholder="2024" style="width: 60px;"></td>
-                <td><input bind:value={newCereal.land_used} type="number" style="width: 80px;"></td>
-                <td><input bind:value={newCereal.cereal_production} type="number" style="width: 80px;"></td>
-                <td><input bind:value={newCereal.cereal_yield} type="number" style="width: 60px;"></td>
-                <td><input bind:value={newCereal.population} type="number" style="width: 100px;"></td>
-                <td><button on:click={createCereal} style="width: 100%;">Añadir</button></td>
+            <tr class="create-row">
+                <td><input bind:value={newCereal.country} placeholder="Ej: Spain"></td>
+                <td><input bind:value={newCereal.country_code} placeholder="ESP"></td>
+                <td><input bind:value={newCereal.year} type="number"></td>
+                <td><input bind:value={newCereal.land_used} type="number"></td>
+                <td><input bind:value={newCereal.cereal_production} type="number"></td>
+                <td><input bind:value={newCereal.cereal_yield} type="number"></td>
+                <td><input bind:value={newCereal.population} type="number"></td>
+                <td><button on:click={createCereal} class="btn-add">Añadir</button></td>
             </tr>
 
             {#each cereals as c}
@@ -141,25 +151,39 @@
                     <td>{c.cereal_yield}</td>
                     <td>{c.population}</td>
                     <td>
-                        <a href="/cereal-productions/{c.country}/{c.year}"><button>Editar</button></a>
-                        <button on:click={() => deleteCereal(c.country, c.year)} style="color: red;">Borrar</button>
+                        <a href="/cereal-productions/{c.country}/{c.year}"><button class="btn-edit">Editar</button></a>
+                        <button on:click={() => deleteCereal(c.country, c.year)} class="btn-delete">Borrar</button>
                     </td>
                 </tr>
             {/each}
         </tbody>
-    </table>   
+    </table>
 </main>
 
 <style>
     main { font-family: sans-serif; padding: 20px; }
-    table td, table th { padding: 8px; }
-    button { cursor: pointer; }
-</style>
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    
+    .alert { 
+        background-color: #f8d7da; color: #721c24; 
+        padding: 15px; margin: 20px 0; 
+        border: 1px solid #f5c6cb; border-radius: 4px; 
+        position: relative;
+    }
+    .close-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-weight: bold; cursor: pointer; }
 
-{#if message}
-    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 20px 0; border: 1px solid #f5c6cb; border-radius: 5px;">
-        <strong>Aviso del sistema:</strong> {message}
-        
-        <button on:click={() => message = ""} style="float: right; background: none; border: none; cursor: pointer; font-weight: bold;">X</button>
-    </div>
-{/if}
+    .actions { margin-bottom: 20px; }
+    button { padding: 8px 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; margin-right: 5px; }
+    
+    .btn-load { background-color: #4CAF50; color: white; border: none; }
+    .btn-delete-all { background-color: #f44336; color: white; border: none; }
+    .btn-add { background-color: #007bff; color: white; width: 100%; border: none; }
+    .btn-edit { background-color: #ffc107; }
+    .btn-delete { color: #dc3545; border-color: #dc3545; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    .create-row { background-color: #eef7ff; }
+    input { width: 80px; padding: 5px; }
+</style>
