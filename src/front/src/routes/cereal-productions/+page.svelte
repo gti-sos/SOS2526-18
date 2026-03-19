@@ -44,33 +44,33 @@
         }
     }
 
-    // POST - Crear un nuevo recurso
     async function createCereal() {
-        const cerealToPost = {
-            ...newCereal,
-            year: parseInt(newCereal.year),
-            land_used: parseFloat(newCereal.land_used),
-            cereal_production: parseFloat(newCereal.cereal_production),
-            cereal_yield: parseFloat(newCereal.cereal_yield),
-            population: parseInt(newCereal.population)
-        };
+    // Creamos el objeto asegurando que los números sean números
+    const cerealToPost = {
+        country: newCereal.country,
+        country_code: newCereal.country_code,
+        year: parseInt(newCereal.year),
+        land_used: parseFloat(newCereal.land_used),
+        cereal_production: parseFloat(newCereal.cereal_production),
+        cereal_yield: parseFloat(newCereal.cereal_yield),
+        population: parseInt(newCereal.population)
+    };
 
-        const res = await fetch("/api/v2/cereal-productions", {
-            method: "POST",
-            body: JSON.stringify(cerealToPost),
-            headers: { "Content-Type": "application/json" }
-        });
+    const res = await fetch("/api/v2/cereal-productions", {
+        method: "POST",
+        body: JSON.stringify(cerealToPost),
+        headers: { "Content-Type": "application/json" }
+    });
 
-        if (res.ok) {
-            message = `¡Recurso ${newCereal.country} (${newCereal.year}) creado correctamente!`;
-            newCereal = { country: "", country_code: "", year: "", land_used: 0, cereal_production: 0, cereal_yield: 0, population: 0 };
-            getCereals(); 
-        } else if (res.status === 409) {
-            message = "Error: Ese país y año ya existen en la base de datos.";
-        } else {
-            message = "Error: Datos incorrectos. Recuerda que Producción y Población deben ser > 0.";
-        }
+    if (res.ok) {
+        message = "¡Añadido con éxito!";
+        newCereal = { country: "", country_code: "", year: "", land_used: 0, cereal_production: 0, cereal_yield: 0, population: 0 };
+        await getCereals();
+    } else {
+        const errorText = await res.text();
+        message = "Error: " + errorText; // Esto te dirá qué le molesta al backend
     }
+}
 
     // DELETE - Borrar un recurso
     async function deleteCereal(country, year) {
