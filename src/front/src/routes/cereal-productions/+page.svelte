@@ -4,10 +4,14 @@
     import CerealForm from './CerealForm.svelte';
     import CerealTable from './CerealTable.svelte';
 
+    // 1. VARIABLES GLOBALES (Estado Svelte 5)
     let cereals = $state([]); 
     let message = $state("");
     let messageType = $state("danger"); 
 
+    // 2. FUNCIONES DE LÓGICA
+    
+    // Obtener datos de la API
     async function getCereals() {
         const res = await fetch("/api/v2/cereal-productions");
         if (res.ok) {
@@ -19,6 +23,7 @@
         }
     }
 
+    // Cargar datos iniciales (Botón Verde)
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
         if (res.ok) {
@@ -31,6 +36,7 @@
         }
     }
 
+    // Borrar todos los registros (Botón Rojo)
     async function deleteAllCereals() {
         if (confirm("¿Estás seguro de que quieres borrar TODOS los datos?")) {
             const res = await fetch("/api/v2/cereal-productions", {
@@ -47,6 +53,7 @@
         }
     }
 
+    // Carga automática al abrir
     onMount(getCereals);
 </script>
 
@@ -93,9 +100,11 @@
     .controls { 
         margin-bottom: 25px; 
         display: flex;
-        gap: 10px; /* Esto separa los botones automáticamente */
+        gap: 15px; /* Espacio elegante entre botones */
+        justify-content: flex-start;
     }
 
+    /* Estilo Botón Verde */
     .btn-load { 
         background-color: #28a745; 
         color: white; 
@@ -104,12 +113,14 @@
         border-radius: 6px; 
         cursor: pointer; 
         font-weight: bold;
-        transition: background-color 0.3s ease;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .btn-load:hover { background-color: #218838; }
+    .btn-load:hover { background-color: #218838; transform: translateY(-1px); }
 
-    /* ESTO ES LO QUE TE FALTABA EN EL STYLE */
+    /* Estilo Botón Rojo */
     .btn-delete-all { 
         background-color: #dc3545; 
         color: white; 
@@ -118,10 +129,14 @@
         border-radius: 6px; 
         cursor: pointer; 
         font-weight: bold;
-        transition: background-color 0.3s ease;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .btn-delete-all:hover { background-color: #c82333; }
+    .btn-delete-all:hover { background-color: #c82333; transform: translateY(-1px); }
+
+    .btn-load:active, .btn-delete-all:active { transform: translateY(0); }
 
     hr { 
         margin: 40px 0; 
