@@ -37,6 +37,24 @@
         }
     }
 
+    // Función para borrar TODOS los registros (DELETE global)
+    async function deleteAllCereals() {
+        if (confirm("¿Estás seguro de que quieres borrar TODOS los datos?")) {
+            const res = await fetch("/api/v2/cereal-productions", {
+                method: "DELETE"
+            });
+
+            if (res.ok) {
+                message = "Se han eliminado todos los registros correctamente.";
+                messageType = "success";
+                await getCereals(); // La tabla se vaciará sola
+            } else {
+                message = "Error: No se han podido borrar los datos.";
+                messageType = "danger";
+            }
+        }
+    }
+
     // Esto hace que nada más entrar en la web se cargue la tabla
     onMount(getCereals);
 </script>
@@ -49,6 +67,16 @@
     <section class="controls">
         <button onclick={loadInitialData} class="btn-load">
             Cargar Datos Iniciales
+        </button>
+    </section>
+
+    <section class="controls">
+        <button onclick={loadInitialData} class="btn-load">
+            Cargar Datos Iniciales
+        </button>
+        
+        <button onclick={deleteAllCereals} class="btn-delete-all">
+            Borrar todo
         </button>
     </section>
 
