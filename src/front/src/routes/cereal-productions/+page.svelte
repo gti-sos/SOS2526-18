@@ -5,9 +5,10 @@
     import CerealTable from './CerealTable.svelte';
 
     // 1. VARIABLES GLOBALES (El estado de tu página)
-    let cereals = []; 
-    let message = "";
-    let messageType = "danger"; 
+    // SVELTE 5: Usamos $state para que Svelte sepa que pueden cambiar
+    let cereals = $state([]); 
+    let message = $state("");
+    let messageType = $state("danger"); 
 
     // 2. FUNCIONES DE LÓGICA (Se quedan en el script)
     
@@ -16,7 +17,7 @@
         const res = await fetch("/api/v2/cereal-productions");
         if (res.ok) {
             const data = await res.json();
-            cereals = data;
+            cereals = data; // <--- SVELTE 5: Simplemente asignamos
         } else {
             message = "Error al conectar con la base de datos.";
             messageType = "danger";
@@ -46,7 +47,7 @@
     <Message bind:message bind:type={messageType} />
 
     <section class="controls">
-        <button on:click={loadInitialData} class="btn-load">
+        <button onclick={loadInitialData} class="btn-load">
             Cargar Datos Iniciales
         </button>
     </section>
@@ -61,6 +62,7 @@
 </main>
 
 <style>
+    /* ESTA ES LA PARTE QUE ESTABA FALLANDO */
     main { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         padding: 40px; 
@@ -92,7 +94,7 @@
         cursor: pointer; 
         font-weight: bold;
         font-size: 1rem;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.1s ease;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -102,16 +104,12 @@
     }
 
     .btn-load:active {
-        transform: translateY(0);
+        transform: translateY(1px);
     }
 
     hr { 
         margin: 40px 0; 
         border: 0; 
         border-top: 2px solid #eee; 
-    }
-
-    br {
-        margin-bottom: 20px;
     }
 </style>
