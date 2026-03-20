@@ -4,50 +4,42 @@
     import CerealForm from './CerealForm.svelte';
     import CerealTable from './CerealTable.svelte';
 
-    // 1. VARIABLES GLOBALES (El estado de tu página)
-    // SVELTE 5: Usamos $state para que Svelte sepa que pueden cambiar
     let cereals = $state([]); 
     let message = $state("");
     let messageType = $state("danger"); 
 
-    // 2. FUNCIONES DE LÓGICA (Se quedan en el script)
-    
-    // Trae los datos de la API para llenar la tabla
     async function getCereals() {
         const res = await fetch("/api/v2/cereal-productions");
         if (res.ok) {
             const data = await res.json();
-            cereals = data; // <--- SVELTE 5: Simplemente asignamos
+            cereals = data;
         } else {
             message = "Error al conectar con la base de datos.";
             messageType = "danger";
         }
     }
 
-    // Acción del botón verde para meter datos de prueba
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
         if (res.ok) {
             message = "¡Datos iniciales cargados con éxito!";
             messageType = "success";
-            await getCereals(); // Refrescamos la lista automáticamente
+            await getCereals();
         } else {
             message = "Aviso: Los datos ya existen o el servidor no responde.";
             messageType = "danger";
         }
     }
 
-    // Función para borrar TODOS los registros (DELETE global)
     async function deleteAllCereals() {
         if (confirm("¿Estás seguro de que quieres borrar TODOS los datos?")) {
             const res = await fetch("/api/v2/cereal-productions", {
                 method: "DELETE"
             });
-
             if (res.ok) {
                 message = "Se han eliminado todos los registros correctamente.";
                 messageType = "success";
-                await getCereals(); // La tabla se vaciará sola
+                await getCereals();
             } else {
                 message = "Error: No se han podido borrar los datos.";
                 messageType = "danger";
@@ -55,7 +47,6 @@
         }
     }
 
-    // Esto hace que nada más entrar en la web se cargue la tabla
     onMount(getCereals);
 </script>
 
@@ -68,13 +59,6 @@
         <button onclick={loadInitialData} class="btn-load">
             Cargar Datos Iniciales
         </button>
-    </section>
-
-    <section class="controls">
-        <button onclick={loadInitialData} class="btn-load">
-            Cargar Datos Iniciales
-        </button>
-        
         <button onclick={deleteAllCereals} class="btn-delete-all">
             Borrar todo
         </button>
@@ -90,7 +74,6 @@
 </main>
 
 <style>
-    /* ESTA ES LA PARTE QUE ESTABA FALLANDO */
     main { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         padding: 40px; 
@@ -110,7 +93,7 @@
     .controls { 
         margin-bottom: 25px; 
         display: flex;
-        justify-content: flex-start;
+        gap: 10px; /* Esto separa los botones automáticamente */
     }
 
     .btn-load { 
@@ -121,19 +104,24 @@
         border-radius: 6px; 
         cursor: pointer; 
         font-weight: bold;
-        font-size: 1rem;
-        transition: background-color 0.3s ease, transform 0.1s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease;
     }
 
-    .btn-load:hover {
-        background-color: #218838;
-        transform: translateY(-1px);
+    .btn-load:hover { background-color: #218838; }
+
+    /* ESTO ES LO QUE TE FALTABA EN EL STYLE */
+    .btn-delete-all { 
+        background-color: #dc3545; 
+        color: white; 
+        padding: 12px 24px; 
+        border: none; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        font-weight: bold;
+        transition: background-color 0.3s ease;
     }
 
-    .btn-load:active {
-        transform: translateY(1px);
-    }
+    .btn-delete-all:hover { background-color: #c82333; }
 
     hr { 
         margin: 40px 0; 
