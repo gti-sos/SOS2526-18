@@ -4,7 +4,7 @@
         {
             name: "Jose Luis Alcon Del Villar",
             data: "cereal-productions",
-            api: "/api/v1/cereal-productions",
+            api: "/api/v2/cereal-productions",
             frontend: "/cereal-productions",
             postman: "https://documenter.getpostman.com/view/52314819/2sBXigLt7a"
         },

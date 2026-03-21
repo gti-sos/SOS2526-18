@@ -113,7 +113,7 @@
         <div class="search-container">
             <input bind:value={sCountry} placeholder="País..." />
             <input bind:value={sYear} type="number" placeholder="Año..." />
-            <button onclick={fetchSpecific} class="btn-search">🔍 Buscar</button>
+            <button onclick={fetchSpecific} class="btn-search">Buscar</button>
             <button onclick={getCereals} class="btn-reset">Limpiar</button>
         </div>
     </div>
