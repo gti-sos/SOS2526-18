@@ -47,31 +47,132 @@
 
 <div class="form-wrap">
     <h3>Añadir nuevo registro</h3>
+
     <div class="fila">
-        <input bind:value={country_code} type="number" placeholder="Cód. país" />
-        <input bind:value={country} placeholder="País *" />
-        <input bind:value={region} placeholder="Región *" />
-        <input bind:value={year} type="number" placeholder="Año *" />
-        <input bind:value={cost_diet} type="number" step="0.01" placeholder="Coste diario" />
-        <input bind:value={cost_annual} type="number" step="0.01" placeholder="Coste anual" />
-        <input bind:value={cost_veg} type="number" step="0.01" placeholder="Verduras" />
-        <input bind:value={cost_fruit} type="number" step="0.01" placeholder="Frutas" />
-        <input bind:value={cost_total} type="number" step="0.01" placeholder="Total comp." />
-        <select bind:value={cost_category}>
-            <option value="">Categoría</option>
-            <option value="Low Cost">Coste bajo</option>
-            <option value="Medium Cost">Coste medio</option>
-            <option value="High Cost">Coste alto</option>
-        </select>
-        <button onclick={createDiet} class="btn-add">Añadir</button>
+        <div class="campo">
+            <label for="f-code">Código de país</label>
+            <input id="f-code" bind:value={country_code} type="number" placeholder="Ej: 724" />
+        </div>
+        <div class="campo">
+            <label for="f-country">País *</label>
+            <input id="f-country" bind:value={country} placeholder="Ej: Spain" />
+        </div>
+        <div class="campo">
+            <label for="f-region">Región *</label>
+            <input id="f-region" bind:value={region} placeholder="Ej: Europe" />
+        </div>
+        <div class="campo">
+            <label for="f-year">Año *</label>
+            <input id="f-year" bind:value={year} type="number" placeholder="Ej: 2023" />
+        </div>
+        <div class="campo">
+            <label for="f-cat">Categoría de coste</label>
+            <select id="f-cat" bind:value={cost_category}>
+                <option value="">-- Selecciona --</option>
+                <option value="Low Cost">Coste bajo</option>
+                <option value="Medium Cost">Coste medio</option>
+                <option value="High Cost">Coste alto</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="fila">
+        <div class="campo">
+            <label for="f-diet">Coste diario dieta (USD)</label>
+            <input id="f-diet" bind:value={cost_diet} type="number" step="0.01" placeholder="Ej: 2.75" />
+        </div>
+        <div class="campo">
+            <label for="f-annual">Coste anual dieta (USD)</label>
+            <input id="f-annual" bind:value={cost_annual} type="number" step="0.01" placeholder="Ej: 1003.75" />
+        </div>
+        <div class="campo">
+            <label for="f-veg">Coste verduras/día (USD)</label>
+            <input id="f-veg" bind:value={cost_veg} type="number" step="0.01" placeholder="Ej: 0.71" />
+        </div>
+        <div class="campo">
+            <label for="f-fruit">Coste frutas/día (USD)</label>
+            <input id="f-fruit" bind:value={cost_fruit} type="number" step="0.01" placeholder="Ej: 0.67" />
+        </div>
+        <div class="campo">
+            <label for="f-total">Coste total componentes (USD)</label>
+            <input id="f-total" bind:value={cost_total} type="number" step="0.01" placeholder="Ej: 1.52" />
+        </div>
+    </div>
+
+    <div class="form-footer">
+        <span class="nota">* Campos obligatorios</span>
+        <button onclick={createDiet} class="btn-add">Añadir registro</button>
     </div>
 </div>
 
 <style>
-    .form-wrap { background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 14px; margin-bottom: 20px; }
-    h3 { margin: 0 0 10px; font-size: 1rem; color: #333; }
-    .fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    input, select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; font-family: inherit; }
-    .btn-add { background: #e67e22; color: white; border: none; padding: 7px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    .form-wrap {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+    }
+
+    h3 { margin: 0 0 14px; font-size: 1rem; color: #333; }
+
+    .fila {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+    }
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    input, select {
+        padding: 6px 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 0.88rem;
+        font-family: inherit;
+        width: 100%;
+        box-sizing: border-box;
+        background: white;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: #e67e22;
+    }
+
+    .form-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #eee;
+        padding-top: 12px;
+        margin-top: 4px;
+    }
+
+    .nota { font-size: 0.75rem; color: #999; }
+
+    .btn-add {
+        background: #e67e22;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-family: inherit;
+    }
     .btn-add:hover { background: #d35400; }
 </style>
