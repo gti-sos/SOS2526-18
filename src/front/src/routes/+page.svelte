@@ -1,12 +1,11 @@
 <script>
-    // Estos son los datos de tu equipo
     const members = [
         {
             name: "Jose Luis Alcon Del Villar",
             data: "cereal-productions",
             api: "/api/v2/cereal-productions",
             frontend: "/cereal-productions",
-            postman: "https://documenter.getpostman.com/view/52314819/2sBXigLt7a"
+            postman: "https://documenter.getpostman.com/view/52314819/2sBXihrDdQ"
         },
         {
             name: "Nazaret Villalba Delgado",
@@ -60,7 +59,6 @@
 </main>
 
 <style>
-    /* Un poco de estilo básico para que no se vea feo */
     .container {
         font-family: sans-serif;
         padding: 40px;
