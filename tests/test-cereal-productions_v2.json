@@ -1,0 +1,949 @@
+{
+  "info": {
+    "_postman_id": "d40585e4-f624-4e40-b049-abdcd8672168",
+    "name": "Llamadas v2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52314819",
+    "_collection_link": "https://go.postman.co/collection/52314819-d40585e4-f624-4e40-b049-abdcd8672168?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Carga de datos (201 Created)",
+      "item": [
+        {
+          "name": "Carga de Datos (Éxito) (201 Created)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Carga inicial exitosa\", function () {\r",
+                  "    // Verificamos que el servidor responda con un 201 Created\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/loadInitialData",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "loadInitialData"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Get (200 OK)",
+      "item": [
+        {
+          "name": "Obtener todos los recursos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Comprobar que la conexión ha ido bien\r",
+                  "pm.test(\"Recursos optenidos con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La lista tiene el tamaño esperado\", function () {\r",
+                  "    pm.expect(pm.response.json().length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Llamada de Paginación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"LLamada de paginación con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions?limit=2&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener datos concretos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recursos concreto optenido con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El dato tiene los campos esperados\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('country');\r",
+                  "    pm.expect(jsonData).to.have.property('year'); \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtro por pais",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Filtrado por pais con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions?country=Afghanistan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ],
+              "query": [
+                {
+                  "key": "country",
+                  "value": "Afghanistan"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtro por año",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"filtrado por año con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions?year=1961",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "1961"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtro rango de años",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Rango de años filtrado con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La respuesta es un array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions?from=1961&to=1963",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "1961"
+                },
+                {
+                  "key": "to",
+                  "value": "1963"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post (201 Created)",
+      "item": [
+        {
+          "name": "Crear recurso nuevo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recurso creado con éxito\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"country\": \"Spain\", \r\n\"country_code\": \"ESP\", \r\n\"year\": 2024, \"land_used\": 1000, \r\n\"cereal_production\": 5000, \"cereal_yield\": 5.0, \r\n\"population\": 3647973 }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Put (200 OK)",
+      "item": [
+        {
+          "name": "Actualización de datos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Datos actualizados con exito con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"Paraguay\",\r\n\"country_code\":\"PRY\",\r\n\"year\":2005,\r\n\"land_used\":806850,\r\n\"cereal_production\":1749200333333333,\r\n\"cereal_yield\":2.16,\r\n\"population\":5448101}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Petición incorrecta (Error 400 Bad Request)",
+      "item": [
+        {
+          "name": "Faltan campos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Faltan campos\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\": \"France\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Campos incorrectos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Campos incorrectos\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"country\": \"España\",\r\n        \"country_code\": \"ESP\",\r\n        \"year\": 1962,\r\n        \"land_used\": 3313500,\r\n        \"cereal_production\": 3695000,\r\n        \"cereal_yield\": 1.11,\r\n        \"populationnnnnnnnnnnnnnn\": 9214082\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Faltan campos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Faltan campos\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country\": \"Afghanistan\",\r\n    \"country_code\": \"AFG\",\r\n    \"year\": 1961\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Afghanistan/1961",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Afghanistan",
+                "1961"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Campos incorrectos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Campos incorrectos\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"Afghanistan\",\r\n\"country_code\":\"AFG\",\r\n\"year\":1961,\r\n\"land_used\":33500,\r\n\"cereal_production\":369500,\r\n\"cereal_yield\":1.11,\r\n\"populationnnnnnnnnnnnnnnnnnnnn\":9214082}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Afghanistan/1961",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Afghanistan",
+                "1961"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Diferente id (id-dato != id_url)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Campo url diferente a campo dato\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"Paraguay\",\r\n\"country_code\":\"PRY\",\r\n\"year\":2026,\r\n\"land_used\":806850,\r\n\"cereal_production\":1749200,\r\n\"cereal_yield\":2.16,\r\n\"population\":5448100}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "VERSION 2. La producción y la población deben ser valores positivos.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"country\": \"Francia\",\r\n        \"country_code\": \"FRA\",\r\n        \"year\": 1962,\r\n        \"land_used\": 3313500,\r\n        \"cereal_production\": 3695000,\r\n        \"cereal_yield\": 1.11,\r\n        \"population\": 0\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "No encontrado (Error 404 Not Found)",
+      "item": [
+        {
+          "name": "Recurso inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recurso no encontrado\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Atlantida/2024",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Atlantida",
+                "2024"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar recurso inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"recurso no encontrado\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Atlantida/9999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Atlantida",
+                "9999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "No permitido (Error 405 Method Not Allowed)",
+      "item": [
+        {
+          "name": "Método no permitido (POST a recurso concreto)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Método no permitido\", function () {\r",
+                  "    pm.response.to.have.status(405);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2005",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Método no permitido (PUT a la lista)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Método no permitido\", function () {\r",
+                  "    pm.response.to.have.status(405);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Conflicto (Error 409 Conflict)",
+      "item": [
+        {
+          "name": "Recurso Duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Recurso duplicado\", function () {\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"Afghanistan\",\r\n\"country_code\":\"AFG\",\r\n\"year\":1961,\"land_used\":3313500,\r\n\"cereal_production\":3695000,\r\n\"cereal_yield\":1.11,\r\n\"population\":9214082}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Delete (200 OK)",
+      "item": [
+        {
+          "name": "Borrar recurso concreto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Dato borrados con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions/Paraguay/2002",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions",
+                "Paraguay",
+                "2002"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar todos los datos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Datos borrados con exito\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cereal-productions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cereal-productions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
