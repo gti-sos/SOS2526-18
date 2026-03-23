@@ -11,9 +11,9 @@
 
   let sCountry = $state("");   // country_name_en (texto)
   let sYear = $state("");      // year (número)
-  let sItem = $state("");      // item (texto) - opcional para búsqueda exacta v1
+  let sItem = $state("");      // item (texto) - opcional para búsqueda exacta v2
 
-  const BASE = "/api/v1/food-supply-utilization-accounts";
+  const BASE = "/api/v2/food-supply-utilization-accounts";
 
   async function getFSUA() {
     const res = await fetch(`${BASE}`);

@@ -35,7 +35,7 @@
       export_quantity_tonnes: Number(nuevo.export_quantity_tonnes)
     };
 
-    const res = await fetch("/api/v1/food-supply-utilization-accounts", {
+    const res = await fetch("/api/v2/food-supply-utilization-accounts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)

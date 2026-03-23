@@ -142,11 +142,198 @@ const db = new Datastore({
   filename: './food-supply-utilization-accounts.db',
   autoload: true
 });
+const db1 = new Datastore({
+  filename: './food-supply-utilization-accounts_v1.db',
+  autoload: true
+});
 
 // ⚠️ Se asume que existe: const datamcs = [ { ... }, ... ];
 
-export function BackendMCS(app) {
+export function load_MCS_API_V1(app) {
   const BASE_URL = "/api/v1/food-supply-utilization-accounts";
+
+  // Redirección a documentación (Postman)
+  app.get(`${BASE_URL}/docs`, (_req, res) => {
+    res.redirect("https://documenter.getpostman.com/view/52349546/2sBXigMDpj");
+  });
+
+  // Cargar datos iniciales si la BD está vacía
+  app.get(`${BASE_URL}/loadInitialData`, (_req, res) => {
+    db1.count({}, (err, count) => {
+      if (err) return res.sendStatus(500);
+      if (count > 0) return res.sendStatus(409);
+      const src = Array.isArray(datamcs) ? datamcs : [];
+      const toInsert = src.length >= 10 ? src.slice(0, 10) : src;
+      const docs = toInsert.map(({ _id, ...doc }) => ({ ...doc })); // sin _id
+      if (docs.length === 0) return res.status(200).json({ inserted: 0 });
+      db1.insert(docs, (e) => (e ? res.sendStatus(500) : res.status(201).json({ inserted: docs.length })));
+    });
+  });
+
+  // Helpers
+  const toNum = (v) => (v === undefined ? undefined : Number(v));
+  const isNum = (v) => typeof v !== 'undefined' && !Number.isNaN(Number(v));
+  const ciEq = (v) => new RegExp(`^${String(v).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+
+  // GET colección: filtros por todos los campos + paginación
+  app.get(`${BASE_URL}`, (req, res) => {
+    const q = {};
+
+    // Campos string exactos (CI)
+    if (req.query.country || req.query.country_name_en) q.country_name_en = ciEq(req.query.country || req.query.country_name_en);
+    if (req.query.item) q.item = ciEq(req.query.item);
+
+    // faostat / m49_code admiten numérico o CI
+    if (req.query.faostat) q.faostat = isNum(req.query.faostat) ? Number(req.query.faostat) : ciEq(req.query.faostat);
+    if (req.query.m49_code) q.m49_code = isNum(req.query.m49_code) ? Number(req.query.m49_code) : ciEq(req.query.m49_code);
+
+    // item_code numérico
+    if (isNum(req.query.item_code)) q.item_code = Number(req.query.item_code);
+
+    // Campos numéricos exactos
+    ["year","opening_stocks_tonnes","production_tonnes","import_quantity_tonnes","stock_variation_tonnes","export_quantity_tonnes"]
+      .forEach(f => { if (isNum(req.query[f])) q[f] = Number(req.query[f]); });
+
+    // Rango de años ?from=&to=
+    const from = toNum(req.query.from);
+    const to = toNum(req.query.to);
+    if (isNum(from) || isNum(to)) {
+      q.year = {
+        ...(q.year || {}),
+        ...(isNum(from) ? { $gte: Number(from) } : {}),
+        ...(isNum(to) ? { $lte: Number(to) } : {})
+      };
+    }
+
+    // Paginación
+    const offset = Number.parseInt(req.query.offset ?? 0) || 0;
+    const limit = Math.min(Number.parseInt(req.query.limit ?? 1000) || 1000, 10000);
+
+    db1.find(q, { _id: 0 }).skip(offset).limit(limit).exec((err, docs) => {
+      if (err) return res.sendStatus(500);
+      res.status(200).json(docs);
+    });
+  });
+
+  // GET recurso concreto /:country/:year -> objeto
+  app.get(`${BASE_URL}/:country/:year`, (req, res) => {
+    const country = req.params.country;
+    const year = Number(req.params.year);
+    if (Number.isNaN(year)) return res.sendStatus(400);
+    db1.findOne({ country_name_en: ciEq(country), year }, { _id: 0 }, (err, doc) => {
+      if (err) return res.sendStatus(500);
+      if (!doc) return res.sendStatus(404);
+      res.status(200).json(doc);
+    });
+  });
+
+  // GET por país (opcional ?year= o ?from=&to=) -> array
+  app.get(`${BASE_URL}/:country`, (req, res) => {
+    const country = req.params.country;
+    const year = toNum(req.query.year);
+    const from = toNum(req.query.from);
+    const to = toNum(req.query.to);
+
+    const q = { country_name_en: ciEq(country) };
+    if (isNum(year)) q.year = Number(year);
+    if (isNum(from) || isNum(to)) {
+      q.year = {
+        ...(q.year || {}),
+        ...(isNum(from) ? { $gte: Number(from) } : {}),
+        ...(isNum(to) ? { $lte: Number(to) } : {})
+      };
+    }
+
+    db1.find(q, { _id: 0 }).exec((err, docs) => {
+      if (err) return res.sendStatus(500);
+      if (!docs || docs.length === 0) return res.sendStatus(404);
+      res.status(200).json(docs);
+    });
+  });
+
+  // POST colección: crea, valida y evita duplicados (country_name_en, year, item)
+  app.post(`${BASE_URL}`, (req, res) => {
+    const body = req.body || {};
+    const required = [
+      "faostat","m49_code","country_name_en","item_code","item","year",
+      "opening_stocks_tonnes","production_tonnes","import_quantity_tonnes",
+      "stock_variation_tonnes","export_quantity_tonnes"
+    ];
+    const missing = required.filter(k => !(k in body));
+    if (missing.length) return res.status(400).json({ error: "Missing fields", missing });
+
+    db1.findOne(
+      { country_name_en: body.country_name_en, year: Number(body.year), item: body.item },
+      (err, exists) => {
+        if (err) return res.sendStatus(500);
+        if (exists) return res.sendStatus(409);
+        const doc = { ...body, year: Number(body.year) };
+        delete doc._id;
+        db1.insert(doc, (e) => (e ? res.sendStatus(500) : res.sendStatus(201)));
+      }
+    );
+  });
+
+  // PUT colección no permitido
+  app.put(`${BASE_URL}`, (_req, res) => res.sendStatus(405));
+
+  // POST sobre recurso concreto no permitido
+  app.post(`${BASE_URL}/:country`, (_req, res) => res.sendStatus(405));
+  app.post(`${BASE_URL}/:country/:year`, (_req, res) => res.sendStatus(405));
+
+  // PUT recurso concreto: sustituye/actualiza
+  app.put(`${BASE_URL}/:country/:year`, (req, res) => {
+    const country = req.params.country;
+    const year = Number(req.params.year);
+    const body = req.body || {};
+    const required = [
+      "faostat","m49_code","country_name_en","item_code","item","year",
+      "opening_stocks_tonnes","production_tonnes","import_quantity_tonnes",
+      "stock_variation_tonnes","export_quantity_tonnes"
+    ];
+    const missing = required.filter(k => !(k in body));
+    if (Number.isNaN(year) || missing.length) return res.status(400).json({ error: "Bad Request", missing });
+
+    if (String(body.country_name_en).toLowerCase() !== String(country).toLowerCase()) {
+      return res.status(400).json({ error: "country_name_en mismatch" });
+    }
+    if (Number(body.year) !== year) {
+      return res.status(400).json({ error: "year mismatch" });
+    }
+
+    delete body._id;
+    body.year = Number(body.year);
+
+    db1.update({ country_name_en: ciEq(country), year }, { $set: body }, {}, (err, n) => {
+      if (err) return res.sendStatus(500);
+      if (n === 0) return res.sendStatus(404);
+      res.sendStatus(200);
+    });
+  });
+
+  // DELETE todos
+  app.delete(`${BASE_URL}`, (_req, res) => {
+    db1.remove({}, { multi: true }, (err, removed) => {
+      if (err) return res.sendStatus(500);
+      if (removed === 0) return res.sendStatus(404);
+      res.sendStatus(200);
+    });
+  });
+
+  // DELETE por país (todos los registros del país)
+  app.delete(`${BASE_URL}/:country`, (req, res) => {
+    const country = req.params.country;
+    db1.remove({ country_name_en: ciEq(country) }, { multi: true }, (err, removed) => {
+      if (err) return res.sendStatus(500);
+      if (removed === 0) return res.sendStatus(404);
+      res.sendStatus(200);
+    });
+  });
+
+}
+
+export function load_MCS_API_V2(app) {
+  const BASE_URL = "/api/v2/food-supply-utilization-accounts";
 
   // Redirección a documentación (Postman)
   app.get(`${BASE_URL}/docs`, (_req, res) => {
@@ -317,12 +504,20 @@ export function BackendMCS(app) {
   });
 
   // DELETE por país (todos los registros del país)
-  app.delete(`${BASE_URL}/:country`, (req, res) => {
-    const country = req.params.country;
-    db.remove({ country_name_en: ciEq(country) }, { multi: true }, (err, removed) => {
-      if (err) return res.sendStatus(500);
-      if (removed === 0) return res.sendStatus(404);
-      res.sendStatus(200);
-    });
+  
+app.delete(`${BASE_URL}/:country`, (req, res) => {
+  const country = req.params.country;
+  const year = Number(req.query.year);
+
+  const q = { country_name_en: ciEq(country) };
+  if (!Number.isNaN(year)) q.year = year;
+
+  db.remove(q, { multi: true }, (err, removed) => {
+    if (err) return res.sendStatus(500);
+    if (removed === 0) return res.sendStatus(404);
+    res.sendStatus(200);
   });
+});
+
+
 }

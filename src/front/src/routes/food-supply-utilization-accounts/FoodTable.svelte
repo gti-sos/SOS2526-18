@@ -6,26 +6,26 @@
     messageType = $bindable("danger") 
   } = $props();
 
-  async function deleteRecord(country, year, item) {
-    const res = await fetch(`/api/v1/food-supply-utilization-accounts/${encodeURIComponent(country)}/${year}/${encodeURIComponent(item)}`, {
-      method: "DELETE"
-    });
+  
+async function deleteRecord(country, year) {
+  const url = `/api/v2/food-supply-utilization-accounts/${encodeURIComponent(country)}?year=${year}`;
 
-    if (res.ok) {
-      message = `El registro de ${country} / ${year} / ${item} ha sido eliminado correctamente.`;
-      messageType = "success";
-      await getFSUA?.();
-    } else {
-      messageType = "danger";
-      if (res.status === 404) {
-        message = `No existe un registro para ${country} / ${year} / ${item}.`;
-      } else if (res.status === 400) {
-        message = "La petición no es válida. Revisa los datos.";
-      } else {
-        message = `Error inesperado al intentar borrar (código ${res.status}).`;
-      }
-    }
+  const res = await fetch(url, { method: "DELETE" });
+
+  if (res.ok) {
+    message = `Borrado correctamente ${country} / ${year}`;
+    messageType = "success";
+    await getFSUA();
+  } else if (res.status === 404) {
+    message = `No existen datos de ${country} en ${year}.`;
+    messageType = "danger";
+  } else {
+    message = `Error inesperado (${res.status}).`;
+    messageType = "danger";
   }
+}
+``
+
 </script>
 
 <div class="table-container">
@@ -61,11 +61,11 @@
           <td>{r.stock_variation_tonnes}</td>
           <td>{r.export_quantity_tonnes}</td>
           <td class="actions">
-            <a href={`/datos/editar/${encodeURIComponent(r.country_name_en)}/${r.year}/${encodeURIComponent(r.item)}`}>
+            <a href={`/datos/editar/${encodeURIComponent(r.country_name_en)}/${r.year}`}>
               <button class="btn-edit">Editar</button>
             </a>
             <button 
-              onclick={() => deleteRecord(r.country_name_en, r.year, r.item)} 
+              onclick={() => deleteRecord(r.country_name_en, r.year)} 
               class="btn-delete">
               Borrar
             </button>
