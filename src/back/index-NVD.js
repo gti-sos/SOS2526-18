@@ -237,7 +237,7 @@ export function load_NVD_API(app){
 
         //paginación
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 15;
+        const limit = parseInt(req.query.limit) || 100;
         const skip = (page - 1)*limit;
 
         db.find(query, { _id: 0 }).sort({country:1, year:1}).skip(skip).limit(limit).exec((err,docs) =>{
