@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (APIs + E2E Playwright)
+name: CI-CD_Pipeline_D02
 
 on:
   push:
@@ -22,24 +22,25 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: npm install && npx playwright install --with-deps
+      run: |
+        npm install
+        npx playwright install --with-deps
 
     - name: Run Backend and API Tests
       run: |
         npm start & 
-        sleep 10 # Damos tiempo a que el servidor y la base de datos arranquen
-        npm test # Aquí se ejecutan los tests de Postman/Newman (Requisito 1.a)
+        sleep 15
+        npm test
 
     - name: Run Playwright E2E Tests
-      run: npx playwright test # Tests de Svelte de cada miembro (Requisito 1.b)
+      run: npx playwright test
 
     - name: Deploy to Render
-      [cite_start]
-      if: success() # Solo si las APIs Y los E2E son correctos 
+      if: success()
       run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
 
     - name: Upload Playwright Report
-      if: failure() # Solo si algo falla, para poder arreglarlo rápido
+      if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report
