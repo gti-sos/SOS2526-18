@@ -1,28 +1,47 @@
-name: Node.js CI #Nombre del proceso que saldrá en la pestaña "Actions"
+name: CI/CD Pipeline (APIs + E2E Playwright)
 
-on: [push] #Disparador, se comprueba cada vez que se hace un push
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  build: #Nombre de este grupo de tareas
-    runs-on: ubuntu-latest #Le dice a GitHub que alquile un ordenador virtual con Linux (Ubuntu) para ejecutar el código
+  test-and-deploy:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4 #El robot "clona" el repositorio. Descarga el código desde GitHub a ese ordenador virtual para poder trabajar con él.
-    
-    - name: Use Node.js 20 #Instala la versión 20 de Node.js
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 20
-        
-    - name: Install dependencies #Isnstala todas las librerías necesarias, incluyendo Express y NeDB
-      run: npm install
-        
-    - name: Run server and tests
-      run: | 
-        npm start &  #Arranca servidor
-        sleep 5 #Espera 5 segundos
-        npm test #Lanza Newman y newman ejecuta los tests de Postman contra el servidor que acabas de arrancar
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install && npx playwright install --with-deps
+
+    - name: Run Backend and API Tests
+      run: |
+        npm start & 
+        sleep 10 # Damos tiempo a que el servidor y la base de datos arranquen
+        npm test # Aquí se ejecutan los tests de Postman/Newman (Requisito 1.a)
+
+    - name: Run Playwright E2E Tests
+      run: npx playwright test # Tests de Svelte de cada miembro (Requisito 1.b)
 
     - name: Deploy to Render
-      if: success() # Solo se ejecuta si el check de Newman es verde
+      [cite_start]
+      if: success() # Solo si las APIs Y los E2E son correctos 
       run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+    - name: Upload Playwright Report
+      if: failure() # Solo si algo falla, para poder arreglarlo rápido
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 7
