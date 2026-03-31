@@ -15,7 +15,7 @@
     "start-jlav": "node src/back/index-JLAV.js",
     "start-mcs": "node src/back/index-MCS.js",
     "start-nvd": "node src/back/index-NVD.js",
-    "e2e": "cd src/front && npx playwright test tests/e2e --headed"
+    "e2e": "npx playwright test tests/e2e --project=chromium --workers=1"
   },
   "repository": {
     "type": "git",

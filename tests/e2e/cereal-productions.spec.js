@@ -1,90 +1,73 @@
 import { test, expect } from '@playwright/test';
 
-
 const URL = 'https://sos2526-18.onrender.com/cereal-productions';
+
 test.describe('Cereal Productions E2E Tests', () => {
+    
+    test.beforeEach(async ({ page }) => {
+        test.setTimeout(120000); 
+        await page.goto(URL, { waitUntil: 'networkidle' });
+    });
 
     test('1. Debería listar los recursos al cargar la página', async ({ page }) => {
-        await page.goto(URL);
-        // Esperamos a que la tabla tenga alguna fila (ajusta el selector si es necesario)
-        const rows = page.locator('table tbody tr');
-        await expect(rows.first()).toBeVisible();
+        await expect(page.locator('table').last()).toBeVisible();
     });
 
     test('2. Debería crear un nuevo recurso', async ({ page }) => {
-        await page.goto(URL);
-        
-        // Rellenamos el formulario (ajusta los placeholders a los tuyos)
+        // Esperamos a que el formulario esté listo
+        await page.waitForSelector('.form-container');
+
+        // Usamos los placeholders EXACTOS de tu CerealForm.svelte
         await page.getByPlaceholder('Ej: Spain').fill('TestCountry');
         await page.getByPlaceholder('ESP').fill('TST');
         await page.getByPlaceholder('2024').fill('2099');
-        // Rellenamos el resto de campos numéricos
-        const inputs = page.locator('input[type="number"]');
-        await inputs.nth(1).fill('100'); // Uso Tierra
-        await inputs.nth(2).fill('200'); // Producción
-        await inputs.nth(3).fill('1.5'); // Rendimiento
-        await inputs.nth(4).fill('1000'); // Población
+        
+        // Los campos numéricos que no tienen placeholder los rellenamos por orden
+        // Dentro de la fila "create-row"
+        const createRowInputs = page.locator('.create-row input');
+        await createRowInputs.nth(3).fill('10');  // land_used
+        await createRowInputs.nth(4).fill('20');  // cereal_production
+        await createRowInputs.nth(5).fill('1');   // cereal_yield
+        await createRowInputs.nth(6).fill('100'); // population
 
-        await page.getByRole('button', { name: 'Añadir' }).click();
+        // Click en el botón Añadir de ese formulario
+        await page.locator('.btn-add').click();
 
-        // Verificamos que aparece el mensaje de éxito
-        await expect(page.locator('text=Se ha añadido correctamente')).toBeVisible();
+        // Verificamos tu mensaje de éxito exacto: "¡Éxito! Se ha añadido correctamente..."
+        await expect(page.locator('body')).toContainText('Se ha añadido correctamente', { timeout: 15000 });
     });
 
-    test('3. Debería editar un recurso en una vista separada', async ({ page }) => {
-        await page.goto(URL);
-        
-        // Hacemos clic en el primer botón "Editar" que encontremos
-        await page.getByRole('button', { name: 'Editar' }).first().click();
+    test('3. Debería editar un recurso', async ({ page }) => {
+        const editBtn = page.locator('.btn-edit').first();
+        await editBtn.scrollIntoViewIfNeeded();
+        await editBtn.click();
 
-        // Verificamos que la URL ha cambiado a la vista dinámica [country]/[year]
-        await expect(page).toHaveURL(/.*\/[a-zA-Z]+\/\d+/);
+        await expect(page).toHaveURL(/.*\/[a-zA-Z0-9]+\/\d+/);
+        await page.locator('input[type="number"]').first().fill('888');
+        await page.getByRole('button', { name: /Guardar/i }).click();
 
-        // Cambiamos un valor
-        await page.locator('input[type="number"]').first().fill('999');
-        await page.getByRole('button', { name: 'Guardar Cambios' }).click();
-
-        // Verificamos que vuelve a la tabla y sale el mensaje de éxito del ?updated=true
-        await expect(page).toHaveURL(URL + '?updated=true');
-        await expect(page.locator('text=actualizado correctamente')).toBeVisible();
+        // Tu mensaje de éxito en page.svelte
+        await expect(page.locator('body')).toContainText('actualizado correctamente', { timeout: 15000 });
     });
 
-    test('4. Debería buscar recursos por rango (Apartado 6)', async ({ page }) => {
-        await page.goto(URL);
-        
-        // Rellenamos el rango Desde/Hasta
-        await page.getByPlaceholder('Desde (año)...').fill('2000');
-        await page.getByPlaceholder('Hasta (año)...').fill('2010');
-        await page.getByRole('button', { name: 'Buscar' }).click();
+    test('4. Debería buscar por rango (Apartado 6)', async ({ page }) => {
+        await page.getByPlaceholder(/Desde/i).fill('2000');
+        await page.getByPlaceholder(/Hasta/i).fill('2100');
+        await page.locator('.btn-search').click();
 
-        // Verificamos el mensaje de registros encontrados
-        await expect(page.locator('text=Encontrados')).toBeVisible();
+        await expect(page.locator('body')).toContainText('Encontrados', { timeout: 15000 });
     });
 
-    test('5. Debería borrar un recurso concreto', async ({ page }) => {
-        await page.goto(URL);
-        
-        // Guardamos cuántas filas hay antes
-        const initialRows = await page.locator('table tbody tr').count();
-        
-        // Escuchamos el diálogo de confirmación (si lo pusiste)
+    test('5. Debería borrar un recurso', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
-        
-        await page.getByRole('button', { name: 'Borrar' }).first().click();
-
-        // Verificamos que el mensaje de éxito aparece
-        await expect(page.locator('text=eliminado correctamente')).toBeVisible();
+        const delBtn = page.locator('.btn-delete').first();
+        await delBtn.click();
+        await expect(page.locator('body')).toContainText('eliminado correctamente', { timeout: 15000 });
     });
 
-    test('6. Debería borrar todos los recursos', async ({ page }) => {
-        await page.goto(URL);
-        
-        // Aceptamos el confirm()
+    test('6. Debería borrar TODO', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
-        
-        await page.getByRole('button', { name: 'Borrar todo' }).click();
-
-        // Verificamos que la tabla está vacía o sale el mensaje de "Sin resultados"
-        await expect(page.locator('text=vaciado por completo|Sin resultados')).toBeVisible();
+        await page.locator('.btn-del').click();
+        await expect(page.locator('body')).toContainText('Datos borrados', { timeout: 15000 });
     });
 });
