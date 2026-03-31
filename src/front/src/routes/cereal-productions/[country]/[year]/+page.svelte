@@ -30,7 +30,7 @@
 
     // Función para guardar (PUT)
     async function updateCereal(event) {
-        event.preventDefault(); // Evita que la página recargue sola
+        event.preventDefault(); 
         
         const res = await fetch(`/api/v2/cereal-productions/${country}/${year}`, {
             method: "PUT",
@@ -61,22 +61,22 @@
 
     <label>
         Uso de Tierra: 
-        <input type="number" bind:value={cereal.land_used}>
+        <input type="number" step="any" bind:value={cereal.land_used}>
     </label>
 
     <label>
         Producción: 
-        <input type="number" bind:value={cereal.cereal_production}>
+        <input type="number" step="any" bind:value={cereal.cereal_production}>
     </label>
 
     <label>
         Rendimiento: 
-        <input type="number" bind:value={cereal.cereal_yield}>
+        <input type="number" step="any" bind:value={cereal.cereal_yield}>
     </label>
 
     <label>
         Población: 
-        <input type="number" bind:value={cereal.population}>
+        <input type="number" step="any" bind:value={cereal.population}>
     </label>
 
     <div class="actions">
