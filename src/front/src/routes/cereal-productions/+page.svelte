@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte'; 
+    import { page } from '$app/state'; // IMPORTANTE: Para leer la URL
     import Message from './Message.svelte';
     import CerealForm from './CerealForm.svelte';
     import CerealTable from './CerealTable.svelte';
@@ -13,12 +14,27 @@
     let sCountry = $state("");
     let sYear = $state("");
 
+    // --- NUEVO BLOQUE: DETECTAR ACTUALIZACIÓN ---
+    $effect(() => {
+        // Si la URL contiene ?updated=true, mostramos mensaje de éxito
+        if (page.url.searchParams.get('updated') === 'true') {
+            message = "¡El registro se ha actualizado correctamente!";
+            messageType = "success";
+            
+            // Limpiamos la URL para que el mensaje no repita si refrescas (F5)
+            window.history.replaceState({}, '', window.location.pathname);
+            
+            // Refrescamos la lista para ver los cambios
+            getCereals();
+        }
+    });
+    // --------------------------------------------
+
     // 1. OBTENER TODO (GET general)
     async function getCereals() {
         const res = await fetch("/api/v2/cereal-productions");
         if (res.ok) {
             cereals = await res.json();
-            // Limpiamos la búsqueda al resetear la tabla
             sCountry = ""; 
             sYear = "";
         } else {
@@ -27,9 +43,8 @@
         }
     }
 
-    // 2. BUSCADOR INTELIGENTE (Acceso concreto + Filtrado)
+    // 2. BUSCADOR INTELIGENTE
     async function fetchSpecific() {
-        // CASO A: RECURSO CONCRETO (País + Año) -> Requisito del examen (404)
         if (sCountry && sYear) {
             const res = await fetch(`/api/v2/cereal-productions/${sCountry}/${sYear}`);
             if (res.ok) {
@@ -38,13 +53,11 @@
                 message = `Se ha localizado el registro de '${sCountry}' para el año ${sYear}.`;
                 messageType = "success";
             } else if (res.status === 404) {
-                // Mensaje tipo "Pedro" (Comprensible y no técnico)
                 message = `No existe ningún registro de producción para el país '${sCountry}' en el año ${sYear}.`;
                 messageType = "danger";
                 cereals = [];
             }
         } 
-        // CASO B: FILTRADO (Solo uno de los dos) -> Lo que tú querías
         else if (sCountry || sYear) {
             let query = "";
             if (sCountry) query += `country=${sCountry}&`;
@@ -62,7 +75,6 @@
                 }
             }
         } 
-        // CASO C: VACÍO -> Cargar todo
         else {
             await getCereals();
         }
@@ -126,48 +138,18 @@
 </main>
 
 <style>
-    main { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        padding: 20px; 
-        max-width: 1200px; 
-        margin: 0 auto; 
-    }
-    
+    /* El CSS se queda igual, estaba perfecto */
+    main { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
     h1 { border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #2c3e50; }
-    
-    /* Diseño de la barra superior */
-    .top-bar { 
-        display: flex; 
-        justify-content: space-between; 
-        margin-bottom: 25px;
-        gap: 15px;
-        align-items: center;
-        background: #fdfdfd;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
+    .top-bar { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 15px; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 8px; }
     .main-btns { display: flex; gap: 10px; }
-    
-    .search-container { 
-        display: flex; 
-        gap: 8px; 
-        background: #f1f3f5; 
-        padding: 8px; 
-        border-radius: 6px; 
-        border: 1px solid #dee2e6;
-    }
-    
+    .search-container { display: flex; gap: 8px; background: #f1f3f5; padding: 8px; border-radius: 6px; border: 1px solid #dee2e6; }
     .search-container input { border: 1px solid #ced4da; padding: 6px; border-radius: 4px; width: 130px; }
-    
-    /* Estilos de botones */
     .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
     .btn-search { background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-reset { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
-    
     .btn-load:hover { background: #218838; }
     .btn-del:hover { background: #c82333; }
-    
     hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
 </style>

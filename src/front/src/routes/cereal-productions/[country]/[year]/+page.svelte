@@ -35,8 +35,9 @@
         });
 
         if (res.ok) {
-            alert("¡Cambios guardados con éxito!");
-            window.location.href = "/cereal-productions"; 
+            // REDIRECCIÓN CON PARÁMETRO:
+            // Esto manda al usuario a la tabla pero con una "marca" en la URL
+            window.location.href = "/cereal-productions?updated=true"; 
         } else {
             alert("Error al guardar: " + res.status);
         }
@@ -82,7 +83,6 @@
 </form>
 
 <style>
-    /* Tu CSS está perfecto, no hace falta tocarlo */
     h1 { font-family: sans-serif; color: #333; }
     form { display: flex; flex-direction: column; gap: 15px; max-width: 400px; font-family: sans-serif; }
     label { display: flex; flex-direction: column; font-weight: bold; }
