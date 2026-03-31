@@ -61,9 +61,11 @@ async function deleteRecord(country, year) {
           <td>{r.stock_variation_tonnes}</td>
           <td>{r.export_quantity_tonnes}</td>
           <td class="actions">
-            <a href={`/datos/editar/${encodeURIComponent(r.country_name_en)}/${r.year}`}>
-              <button class="btn-edit">Editar</button>
-            </a>
+            
+          <a href={`/food-supply-utilization-accounts/${encodeURIComponent(r.country_name_en)}/${r.year}`}>
+            <button class="btn-edit">Editar</button>
+          </a>
+
             <button 
               onclick={() => deleteRecord(r.country_name_en, r.year)} 
               class="btn-delete">

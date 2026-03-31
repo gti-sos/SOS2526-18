@@ -1,6 +1,5 @@
 import express from "express";
 
-//test
 const datamcs = [
   {
     faostat: 41,
