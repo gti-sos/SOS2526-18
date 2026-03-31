@@ -1,0 +1,48 @@
+name: CI-CD_Pipeline_D02
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-deploy:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm' 
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npx playwright install --with-deps
+
+    - name: Run Backend and API Tests
+      run: |
+        npm start & 
+        sleep 15
+        npm test
+
+    - name: Run Playwright E2E Tests
+      run: npx playwright test
+
+    - name: Deploy to Render
+      if: success()
+      run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+    - name: Upload Playwright Report
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 7
