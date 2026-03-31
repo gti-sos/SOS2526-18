@@ -1,11 +1,9 @@
 <script>
     import { page } from '$app/state'; 
 
-    // Extraemos los identificadores de la URL
     let country = page.params.country;
     let year = page.params.year;
 
-    // Inicializamos el objeto con todos los campos de tu tabla
     let cereal = $state({
         country: country,
         country_code: "",
@@ -18,7 +16,6 @@
 
     let message = $state("");
 
-    // Al entrar, cargamos los datos actuales
     $effect(async () => {
         const res = await fetch(`/api/v2/cereal-productions/${country}/${year}`);
         if (res.ok) {
@@ -28,7 +25,6 @@
         }
     });
 
-    // Función para guardar (PUT)
     async function updateCereal(event) {
         event.preventDefault(); 
         
@@ -86,43 +82,13 @@
 </form>
 
 <style>
+    /* Tu CSS está perfecto, no hace falta tocarlo */
     h1 { font-family: sans-serif; color: #333; }
-    form { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 15px; 
-        max-width: 400px; 
-        font-family: sans-serif;
-    }
-    label {
-        display: flex;
-        flex-direction: column;
-        font-weight: bold;
-    }
-    input {
-        padding: 8px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    .actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-    .btn-save {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+    form { display: flex; flex-direction: column; gap: 15px; max-width: 400px; font-family: sans-serif; }
+    label { display: flex; flex-direction: column; font-weight: bold; }
+    input { padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    .actions { display: flex; gap: 10px; align-items: center; }
+    .btn-save { background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-save:hover { background-color: #218838; }
-    .btn-cancel {
-        text-decoration: none;
-        color: #dc3545;
-        font-weight: bold;
-    }
+    .btn-cancel { text-decoration: none; color: #dc3545; font-weight: bold; }
 </style>
