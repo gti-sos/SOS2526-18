@@ -11,7 +11,7 @@ test.describe('Cereal Productions E2E Tests', () => {
 
     test('1. Debería listar los recursos al cargar la página', async ({ page }) => {
         await expect(page.locator('table').last()).toBeVisible();
-    });
+    }); 
 
     test('2. Debería crear un nuevo recurso', async ({ page }) => {
         // Esperamos a que el formulario esté listo
