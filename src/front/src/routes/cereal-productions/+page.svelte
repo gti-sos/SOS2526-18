@@ -123,7 +123,7 @@
         max-width: 1200px; 
         margin: 0 auto; 
     }
-    
+     
     h1 { border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #2c3e50; }
     
     .top-bar { 
