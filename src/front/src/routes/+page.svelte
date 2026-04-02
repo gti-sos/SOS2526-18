@@ -17,7 +17,7 @@
         {
             name: "Manuel Castro Sánchez",
             data: "food-supply-utilization-accounts",
-            api: "/api/v1/food-supply-utilization-accounts",
+            api: "/api/v2/food-supply-utilization-accounts",
             frontend: "/food-supply-utilization-accounts",
             postman: "https://documenter.getpostman.com/view/52349546/2sBXigMDpj"
         }

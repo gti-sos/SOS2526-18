@@ -1,45 +1,37 @@
 <script>
-    import { page } from "$app/state"; 
-    import Message from "../../Message.svelte";
+    import { page } from "$app/state";
 
-    // Parámetros desde la URL (runes mode)
     let country = page.params.country;
     let year = page.params.year;
+    let ex=10
 
-    // Estado reactivo DEL FORMULARIO — se sobrescribe al GET
+    // Importante: Inicializar como null
     let record = $state(null);
 
     let message = $state("");
-    let messageType = $state("success");
-
     const API = "/api/v2/food-supply-utilization-accounts";
 
-    // 🔥 Cargar datos ORIGINALES desde la API
     $effect(async () => {
         const res = await fetch(
             `${API}/${encodeURIComponent(country)}?year=${year}`
         );
 
         if (res.ok) {
-            // 👇 ESTA LÍNEA ES LA CLAVE:
-            // record pasa a contener TODOS los datos reales del backend
-            record = await res.json();
+            record = await res.json();   // ahora no desaparece
         } else {
-            message = "No se encontraron datos para ese país y año.";
-            messageType = "danger";
+            message = "Error: No se pudo encontrar el registro.";
         }
     });
 
-    // Guardar cambios con PUT
     async function save(event) {
         event.preventDefault();
 
         const res = await fetch(
-            `${API}/${encodeURIComponent(country)}?year=${year}`,
+            `${API}/${encodeURIComponent(country)}/${year}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(record)
+                body: JSON.stringify(record[0])
             }
         );
 
@@ -63,70 +55,59 @@
 
     <label>
         FAOSTAT:
-        <input type="number" bind:value={record.faostat} disabled>
+        <input type="number" bind:value={record[0].faostat}>
     </label>
 
     <label>
         Código M49:
-        <input type="number" bind:value={record.m49_code}>
-    </label>
-
-    <label>
-        País:
-        <input type="text" bind:value={record.country_name_en}>
+        <input type="number" bind:value={record[0].m49_code}>
     </label>
 
     <label>
         Código de Ítem:
-        <input type="number" bind:value={record.item_code}>
+        <input type="number" bind:value={record[0].item_code}>
     </label>
 
     <label>
         Ítem:
-        <input type="text" bind:value={record.item}>
-    </label>
-
-    <label>
-        Año:
-        <input type="number" bind:value={record.year}>
+        <input type="text" bind:value={record[0].item}>
     </label>
 
     <label>
         Stock inicial (t):
-        <input type="number" step="any" bind:value={record.opening_stocks_tonnes}>
+        <input type="number" step="any" bind:value={record[0].opening_stocks_tonnes}>
     </label>
 
     <label>
         Producción (t):
-        <input type="number" step="any" bind:value={record.production_tonnes}>
+        <input type="number" step="any" bind:value={record[0].production_tonnes}>
     </label>
 
     <label>
         Importación (t):
-        <input type="number" step="any" bind:value={record.import_quantity_tonnes}>
+        <input type="number" step="any" bind:value={record[0].import_quantity_tonnes}>
     </label>
 
     <label>
         Variación de stock (t):
-        <input type="number" step="any" bind:value={record.stock_variation_tonnes}>
+        <input type="number" step="any" bind:value={record[0].stock_variation_tonnes}>
     </label>
 
     <label>
         Exportación (t):
-        <input type="number" step="any" bind:value={record.export_quantity_tonnes}>
+        <input type="number" step="any" bind:value={record[0].export_quantity_tonnes}>
     </label>
 
     <div class="actions">
         <button type="submit" class="btn-save">Guardar Cambios</button>
-        /food-supply-utilization-accounts
-            <span class="btn-cancel">Cancelar y volver</span>
-        
     </div>
+
 </form>
 
 {:else}
 <p>Cargando datos…</p>
 {/if}
+
 
 <style>
     h1 { font-family: sans-serif; color: #333; }
