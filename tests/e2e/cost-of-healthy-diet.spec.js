@@ -40,19 +40,22 @@ test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
         await page.waitForTimeout(2000); // damos tiempo a que cargue
 
         await page.getByPlaceholder('País...').fill('Spain');
-        await page.locator('.btn-search').click();
+        await page.getByRole('button', { name: 'Buscar' , exact: true }).click();
         await expect(page.locator('body')).toContainText('encontrado', { timeout: 15000 });
     });
 
     test('4. Debería buscar por país y año exactos', async ({ page }) => {
         await page.getByPlaceholder('País...').fill('TestCountry');
-        await page.getByPlaceholder('Año...').fill('2099');
-        await page.locator('.btn-search').click();
+        await page.getByPlaceholder('Año...', { exact:true}).fill('2099');
+        await page.getByRole('button', {name: 'Buscar', exact:true }).click();
         await expect(page.locator('body')).toContainText('encontrado', { timeout: 15000 });
     });
 
     test('5. Debería editar un recurso', async ({ page }) => {
-        await page.waitForSelector('table');
+        //await page.waitForSelector('table');
+        await page.locator('.btn-load').click();
+        await page.waitForTimeout(2000);
+
         await page.locator('.btn-edit').first().click();
         await expect(page).toHaveURL(/.*\/cost-of-healthy-diet\/.+\/\d+/);
         await page.locator('input[type="number"]').first().fill('999');
@@ -61,7 +64,10 @@ test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
     });
 
     test('6. Debería buscar por rango de años', async ({ page }) => {
-        await page.waitForSelector('table');
+        //await page.waitForSelector('table');
+        await page.locator('.btn-load').click();
+        await page.waitForTimeout(2000);
+
         await page.getByPlaceholder('Desde año...').fill('2020');
         await page.getByPlaceholder('Hasta año...').fill('2022');
         await page.getByRole('button', { name: 'Buscar rango' }).click();
