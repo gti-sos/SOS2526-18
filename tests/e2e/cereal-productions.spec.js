@@ -37,7 +37,7 @@ test.describe('Cereal Productions E2E Tests', () => {
         await expect(page.locator('body')).toContainText('Se ha añadido correctamente', { timeout: 15000 });
     });
 
-    test('3. Debería editar un recurso', async ({ page }) => {
+    test('3. Debería editar un recurso', async ({ page }) => {      
         const editBtn = page.locator('.btn-edit').first();
         await editBtn.scrollIntoViewIfNeeded();
         await editBtn.click();
