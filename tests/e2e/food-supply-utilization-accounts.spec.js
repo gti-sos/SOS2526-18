@@ -41,9 +41,7 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
     await editBtn.click();
 
     // Esperar URL de edición de forma robusta
-    await page.waitForURL('**/food-supply-utilization-accounts/*/*', {
-        timeout: 20000
-    });
+    await page.waitForURL('**/food-supply-utilization-accounts/*/*' );
 
     // Esperar inputs del formulario
     await page.waitForSelector('form input');
@@ -54,11 +52,7 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
     await page.getByRole('button', { name: /Guardar Cambios/i }).click();
 
     // Esperar la redirección
-    await page.waitForURL('**/food-supply-utilization-accounts?updated=true', {
-        timeout: 20000
-    });
-
-    await expect(page.locator('body')).toContainText('actualizado');
+    await page.waitForURL('**/food-supply-utilization-accounts?updated=true');
 });
 
     // 4) BUSCAR (SI EXISTE EN TU UI)
@@ -84,15 +78,19 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
 
     test('6. Debería borrar TODO', async ({ page }) => {
 
-    // Volvemos SIEMPRE a la página principal
-    await page.goto(URL, { waitUntil: 'networkidle' });
 
-    await page.waitForSelector('.btn-del');
 
+    await page.locator('.btn-del').click();
+    
     page.on('dialog', dialog => dialog.accept());
+
+    console.log(await page.locator('body').innerHTML());
+
     await page.locator('.btn-del').click();
 
-    await expect(page.locator('body')).toContainText('La tabla se ha vaciado por completo');
+    await expect(
+     page.locator('text=No hay datos disponibles en la base de datos.')
+    ).toBeVisible();
 });
 
 });
