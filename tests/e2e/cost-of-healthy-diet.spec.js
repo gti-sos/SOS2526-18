@@ -57,7 +57,6 @@ test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
         await expect(page.locator('body')).toContainText('encontrado', { timeout: 15000 });
     });
 
-
     test('7. Debería borrar un recurso', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
         await page.locator('.btn-delete').first().click();
