@@ -10,6 +10,8 @@
 
     let sCountry = $state("");
     let sYear = $state("");
+    let sFrom = $state('');
+    let sTo = $state('');
 
     async function getDiets() {
         const res = await fetch("/api/v1/cost-of-healthy-diet-by-countries");
@@ -94,6 +96,28 @@
     }
 
     onMount(getDiets);
+
+    async function fetchByRange() {
+        if (!sFrom && !sTo) {
+            await getDiets();
+            return;
+        }
+        let query = '';
+        if (sFrom) query += `from=${sFrom}&`;
+        if (sTo)   query += `to=${sTo}`;
+
+        const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries?${query}`);
+        if (res.ok) {
+            diets = await res.json();
+            message = diets.length > 0
+                ? `Se han encontrado ${diets.length} registro${diets.length !== 1 ? 's' : ''}.`
+                : 'No se han encontrado registros en ese rango de años.';
+            messageType = diets.length > 0 ? 'success' : 'danger';
+        } else {
+            message = 'Error al filtrar por rango. Inténtalo de nuevo.';
+            messageType = 'danger';
+        }
+    }
 </script>
 
 <main>
@@ -111,6 +135,10 @@
             <input bind:value={sYear} type="number" placeholder="Año..." />
             <button onclick={fetchSpecific} class="btn-search">Buscar</button>
             <button onclick={getDiets} class="btn-reset">Mostrar todos</button>
+            <span class="separador">|</span>
+            <input bind:value={sFrom} type="number" placeholder="Desde año..." />
+            <input bind:value={sTo}   type="number" placeholder="Hasta año..." />
+            <button onclick={fetchByRange} class="btn-search">Buscar rango</button>
         </div>
     </div>
 
@@ -210,6 +238,12 @@
         font-size: 0.88rem;
     }
     .btn-reset:hover { background: #7f8c8d; }
+
+    .separador {
+        color: #ccc;
+        font-size: 1.2rem;
+        padding: 0 4px;
+    }
 
     hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
 </style>

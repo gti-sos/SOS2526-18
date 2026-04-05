@@ -59,6 +59,7 @@
                     <td>{d.total_food_components_cost}</td>
                     <td>{categoryLabel(d.cost_category)}</td>
                     <td>
+                        <a href="/cost-of-healthy-diet/{d.country}/{d.year}" class="btn-edit">Editar</a>
                         <button onclick={() => deleteDiet(d.country, d.year)} class="btn-delete">
                             Eliminar
                         </button>
@@ -100,4 +101,15 @@
         font-size: 0.82rem;
     }
     .btn-delete:hover { background: #c0392b; }
+    .btn-edit {
+        background: #2980b9;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        text-decoration: none;
+        margin-right: 4px;
+    }
 </style>
