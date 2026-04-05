@@ -64,7 +64,7 @@ test.describe('Cereal Productions E2E Tests', () => {
         await delBtn.click();
         await expect(page.locator('body')).toContainText('eliminado correctamente', { timeout: 15000 });
     });
-
+       
     test('6. Debería borrar TODO', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
         await page.locator('.btn-del').click();
