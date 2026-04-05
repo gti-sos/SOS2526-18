@@ -70,4 +70,4 @@ test.describe('Cereal Productions E2E Tests', () => {
         await page.locator('.btn-del').click();
         await expect(page.locator('body')).toContainText('Datos borrados', { timeout: 15000 });
     });
-});
+});   
