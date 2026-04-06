@@ -5,48 +5,57 @@ const URL = 'https://sos2526-18.onrender.com/cereal-productions';
 test.describe('Cereal Productions E2E Tests', () => {
     
     test.beforeEach(async ({ page }) => {
+        // Aumentamos el timeout porque Render (donde está la web) puede tardar en "despertar"
         test.setTimeout(120000); 
         await page.goto(URL, { waitUntil: 'networkidle' });
     });
 
     test('1. Debería listar los recursos al cargar la página', async ({ page }) => {
-        await expect(page.locator('table').last()).toBeVisible();
+        // Esperamos a que la tabla sea visible para asegurar que la API respondió
+        await expect(page.locator('table').last()).toBeVisible({ timeout: 20000 });
     }); 
 
     test('2. Debería crear un nuevo recurso', async ({ page }) => {
-        // Esperamos a que el formulario esté listo
-        await page.waitForSelector('.form-container');
+        // Esperamos a que el formulario esté listo antes de escribir
+        await page.waitForSelector('.form-container', { state: 'visible' });
 
-        // Usamos los placeholders EXACTOS de tu CerealForm.svelte
         await page.getByPlaceholder('Ej: Spain').fill('TestCountry');
         await page.getByPlaceholder('ESP').fill('TST');
         await page.getByPlaceholder('2024').fill('2099');
         
-        // Los campos numéricos que no tienen placeholder los rellenamos por orden
-        // Dentro de la fila "create-row"
         const createRowInputs = page.locator('.create-row input');
         await createRowInputs.nth(3).fill('10');  // land_used
         await createRowInputs.nth(4).fill('20');  // cereal_production
         await createRowInputs.nth(5).fill('1');   // cereal_yield
         await createRowInputs.nth(6).fill('100'); // population
 
-        // Click en el botón Añadir de ese formulario
         await page.locator('.btn-add').click();
 
-        // Verificamos tu mensaje de éxito exacto: "¡Éxito! Se ha añadido correctamente..."
+        // Verificamos mensaje de éxito
         await expect(page.locator('body')).toContainText('Se ha añadido correctamente', { timeout: 15000 });
     });
 
     test('3. Debería editar un recurso', async ({ page }) => {      
+        // Buscamos el primer botón de editar y esperamos a que sea clicable
         const editBtn = page.locator('.btn-edit').first();
-        await editBtn.scrollIntoViewIfNeeded();
+        await editBtn.waitFor({ state: 'visible' });
         await editBtn.click();
 
-        await expect(page).toHaveURL(/.*\/[a-zA-Z0-9]+\/\d+/);
-        await page.locator('input[type="number"]').first().fill('888');
+        // ESPERA CLAVE 1: Esperar a que la URL cambie a la de edición
+        await expect(page).toHaveURL(/.*\/[a-zA-Z0-9]+\/\d+/, { timeout: 15000 });
+
+        // ESPERA CLAVE 2: Esperar a que los inputs del formulario de edición aparezcan
+        const firstInput = page.locator('input[type="number"]').first();
+        await firstInput.waitFor({ state: 'visible' });
+
+        // ESPERA CLAVE 3: Asegurarse de que el input NO esté vacío (indica que los datos de la API ya cargaron)
+        // Esto evita que Playwright escriba antes de que Svelte pinte los datos reales
+        await expect(firstInput).not.toHaveValue('', { timeout: 10000 });
+
+        await firstInput.fill('888');
         await page.getByRole('button', { name: /Guardar/i }).click();
 
-        // Tu mensaje de éxito en page.svelte
+        // Verificamos tu mensaje de éxito
         await expect(page.locator('body')).toContainText('actualizado correctamente', { timeout: 15000 });
     });
 
@@ -55,19 +64,28 @@ test.describe('Cereal Productions E2E Tests', () => {
         await page.getByPlaceholder(/Hasta/i).fill('2100');
         await page.locator('.btn-search').click();
 
+        // Verificamos que aparezca el texto de resultados encontrados
         await expect(page.locator('body')).toContainText('Encontrados', { timeout: 15000 });
     });
 
     test('5. Debería borrar un recurso', async ({ page }) => {
+        // Manejador del confirm de JS
         page.on('dialog', dialog => dialog.accept());
+        
         const delBtn = page.locator('.btn-delete').first();
+        await delBtn.waitFor({ state: 'visible' });
         await delBtn.click();
+        
         await expect(page.locator('body')).toContainText('eliminado correctamente', { timeout: 15000 });
     });
-       
+        
     test('6. Debería borrar TODO', async ({ page }) => { 
         page.on('dialog', dialog => dialog.accept());    
-        await page.locator('.btn-del').click();
+        
+        const delAllBtn = page.locator('.btn-del');
+        await delAllBtn.waitFor({ state: 'visible' });
+        await delAllBtn.click();
+        
         await expect(page.locator('body')).toContainText('Datos borrados', { timeout: 15000 });
     });
-});   
+});
