@@ -8,22 +8,23 @@ test.describe('Cereal Productions E2E Tests', () => {
         // Aumentamos el timeout porque Render (donde está la web) puede tardar en "despertar"
         test.setTimeout(120000); 
         await page.goto(URL, { waitUntil: 'networkidle' });
-        // Miramos si la tabla está vacía buscando el mensaje "No hay datos"
-        const noData = page.locator('text=/No hay datos|Sin resultados/i');
-        
-        if (await noData.isVisible()) {
-            console.log("Tabla vacía, cargando datos iniciales...");
-            const loadBtn = page.locator('.btn-load'); // O el selector de tu botón de carga
-            await loadBtn.click();
-            // Esperamos un momento a que la API responda y la tabla se llene
-            await page.waitForResponse(resp => resp.url().includes('/loadInitialData') && resp.status() === 200);
-        }
     });
 
-    test('1. Debería listar los recursos al cargar la página', async ({ page }) => {
-        // Esperamos a que la tabla sea visible para asegurar que la API respondió
-        await expect(page.locator('table').last()).toBeVisible({ timeout: 20000 });
-    }); 
+    test('1. Debería cargar y listar los recursos', async ({ page }) => {
+        // 1. Miramos si la tabla está vacía
+        const rows = page.locator('table tbody tr');
+        
+        // 2. Si no hay filas (o solo está el mensaje de "No hay datos"), cargamos
+        if (await rows.count() <= 1) { 
+            await page.locator('.btn-load').click();
+            // Esperamos a que aparezca al menos una fila real
+            await expect(page.locator('.btn-edit').first()).toBeVisible({ timeout: 10000 });
+        }
+        
+        // 3. Ahora sí, verificamos que la tabla tiene contenido
+        await expect(page.locator('table').last()).toBeVisible();
+        console.log("Datos listados correctamente.");
+    });
 
     test('2. Debería crear un nuevo recurso', async ({ page }) => {
         // Esperamos a que el formulario esté listo antes de escribir
