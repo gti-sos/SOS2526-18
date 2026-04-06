@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const URL = 'https://sos2526-18.onrender.com/cereal-productions';
 
 test.describe('Cereal Productions E2E Tests', () => {
-    
+      
     test.beforeEach(async ({ page }) => {
         // Aumentamos el timeout porque Render (donde está la web) puede tardar en "despertar"
         test.setTimeout(120000); 
