@@ -150,7 +150,7 @@ async function fetchSpecific() {
                 <option value="High Cost">Coste alto</option>
             </select>
 
-            <input bind:value={sCountryCode} type="number" placeholder="Cód. país..." />
+            <input bind:value={sCountryCode} type="number" placeholder="Código ..." />
             <button onclick={fetchSpecific} class="btn-search">Buscar</button>
             <button onclick={getDiets} class="btn-reset">Mostrar todos</button>
             <span class="separador">|</span>
