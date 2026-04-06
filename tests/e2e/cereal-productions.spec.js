@@ -73,7 +73,7 @@ test.describe('Cereal Productions E2E Tests', () => {
     });
 
     test('4. Debería buscar por rango (Apartado 6)', async ({ page }) => {
-        await page.getByPlaceholder(/Desde/i).fill('2000'); 
+        await page.getByPlaceholder(/Desde/i).fill('2000');  
         await page.getByPlaceholder(/Hasta/i).fill('2100');
         await page.locator('.btn-search').click();
 
