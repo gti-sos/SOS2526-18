@@ -34,7 +34,28 @@ test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
         await expect(page.locator('body')).toContainText('añadido correctamente', { timeout: 15000 });
     });
 
-    
+    test('3. Debería buscar por país', async ({ page }) => {
+        // Aseguramos que hay datos antes de buscar
+        await page.locator('.btn-load').click();
+        await page.waitForTimeout(2000); // damos tiempo a que cargue
+
+        await page.getByPlaceholder('País...').fill('Spain');
+        await page.getByRole('button', { name: 'Buscar' , exact: true }).click();
+        await expect(page.locator('body')).toContainText('encontrado', { timeout: 15000 });
+    });
+
+    test('4. Debería buscar por país y año exactos', async ({ page }) => {
+        page.on('dialog', dialog => dialog.accept());
+        await page.locator('.btn-del').click();
+        await page.waitForTimeout(1000);
+        await page.locator('.btn-load').click();
+        await page.waitForTimeout(2000);
+        
+        await page.getByPlaceholder('País...').fill('Spain');
+        await page.getByPlaceholder('Año...', { exact:true}).fill('2020');
+        await page.getByRole('button', {name: 'Buscar', exact:true }).click();
+        await expect(page.locator('body')).toContainText('encontrado', { timeout: 15000 });
+    });
 
     test('5. Debería editar un recurso', async ({ page }) => {
         //await page.waitForSelector('table');
