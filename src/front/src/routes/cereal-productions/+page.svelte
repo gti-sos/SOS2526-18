@@ -13,11 +13,15 @@
     let limit = 10;
     let offset = $state(0);
 
-    // Variables de búsqueda
+    // Variables de búsqueda (Ampliadas para cumplir con el Backlog)
     let sCountry = $state("");
     let sYear = $state("");
     let sFrom = $state(""); 
-    let sTo = $state("");   
+    let sTo = $state("");
+    let sLand = $state("");  // Nuevo
+    let sProd = $state("");  // Nuevo
+    let sYield = $state(""); // Nuevo
+    let sPop = $state("");   // Nuevo
 
     // DETECTAR ACTUALIZACIÓN
     $effect(() => {
@@ -60,6 +64,7 @@
 
     function resetSearch() {
         sCountry = ""; sYear = ""; sFrom = ""; sTo = "";
+        sLand = ""; sProd = ""; sYield = ""; sPop = ""; // Limpiar nuevos campos
         offset = 0;
         getCereals();
         message = "Búsqueda limpiada.";
@@ -72,6 +77,12 @@
         if (sYear) params.append("year", sYear);
         if (sFrom) params.append("from", sFrom);
         if (sTo) params.append("to", sTo);
+        
+        // --- NUEVOS PARÁMETROS PARA LA API ---
+        if (sLand) params.append("land_used", sLand);
+        if (sProd) params.append("cereal_production", sProd);
+        if (sYield) params.append("cereal_yield", sYield);
+        if (sPop) params.append("population", sPop);
         
         offset = 0;
 
@@ -134,12 +145,20 @@
         </div>
 
         <div class="search-container">
-            <input bind:value={sCountry} placeholder="Filtrar por país..." />
-            <input bind:value={sYear} type="number" placeholder="Filtrar por año..." />
-            <input bind:value={sFrom} type="number" placeholder="Desde año..." style="width: 100px;"/>
-            <input bind:value={sTo} type="number" placeholder="Hasta año..." style="width: 100px;"/>
-            <button onclick={fetchSpecific} class="btn-search">Buscar</button>
-            <button onclick={resetSearch} class="btn-reset">Limpiar</button>
+            <div class="search-row">
+                <input bind:value={sCountry} placeholder="País..." />
+                <input bind:value={sYear} type="number" placeholder="Año..." />
+                <input bind:value={sFrom} type="number" placeholder="Desde año..." />
+                <input bind:value={sTo} type="number" placeholder="Hasta año..." />
+            </div>
+            <div class="search-row">
+                <input bind:value={sLand} type="number" placeholder="Uso tierra..." />
+                <input bind:value={sProd} type="number" placeholder="Producción..." />
+                <input bind:value={sYield} type="number" placeholder="Rendimiento..." />
+                <input bind:value={sPop} type="number" placeholder="Población..." />
+                <button onclick={fetchSpecific} class="btn-search">Buscar</button>
+                <button onclick={resetSearch} class="btn-reset">Limpiar</button>
+            </div>
         </div>
     </div>
 
@@ -172,25 +191,30 @@
     
     .top-bar { 
         display: flex; 
-        justify-content: space-between; 
-        margin-bottom: 25px; 
+        flex-direction: column;
         gap: 15px; 
-        align-items: center; 
+        margin-bottom: 25px; 
         background: #fdfdfd; 
-        padding: 10px; 
+        padding: 15px; 
         border-radius: 8px;
-        flex-wrap: wrap;
+        border: 1px solid #eee;
     }
 
     .main-btns { display: flex; gap: 10px; }
     
     .search-container { 
         display: flex; 
-        gap: 8px; 
+        flex-direction: column;
+        gap: 10px; 
         background: #f1f3f5; 
-        padding: 8px; 
+        padding: 12px; 
         border-radius: 6px; 
         border: 1px solid #dee2e6;
+    }
+
+    .search-row {
+        display: flex;
+        gap: 8px;
         flex-wrap: wrap;
     }
     
@@ -198,16 +222,13 @@
         border: 1px solid #ced4da; 
         padding: 6px; 
         border-radius: 4px; 
-        width: 130px; 
+        width: 140px; 
     }
     
-    .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-    .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+    .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-search { background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-reset { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
-    
-    .btn-load:hover { background: #218838; }
-    .btn-del:hover { background: #c82333; }
     
     hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
 
@@ -231,22 +252,11 @@
         border-radius: 5px;
         cursor: pointer;
         font-weight: 600;
-        transition: 0.3s;
-    }
-
-    .btn-page:hover:not(:disabled) {
-        background-color: #007bff;
-        color: white;
     }
 
     .btn-page:disabled {
         color: #adb5bd;
         border-color: #dee2e6;
         cursor: not-allowed;
-    }
-
-    .page-indicator {
-        font-size: 1.1rem;
-        color: #495057;
     }
 </style>
