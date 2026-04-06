@@ -144,12 +144,6 @@
         <div class="search-area">
             <input bind:value={sCountry} placeholder="País..." />
             <input bind:value={sYear} type="number" placeholder="Año..." />
-            <button onclick={fetchSpecific} class="btn-search">Buscar</button>
-            <button onclick={getDiets} class="btn-reset">Mostrar todos</button>
-            <span class="separador">|</span>
-            <input bind:value={sFrom} type="number" placeholder="Desde año..." />
-            <input bind:value={sTo}   type="number" placeholder="Hasta año..." />
-            <button onclick={fetchByRange} class="btn-search">Buscar rango</button>
             <select bind:value={sRegion}>
                 <option value="">Región...</option>
                 <option value="Africa">Africa</option>
@@ -166,7 +160,14 @@
                 <option value="High Cost">Coste alto</option>
             </select>
 
-        <input bind:value={sCountryCode} type="number" placeholder="Cód. país..." />
+            <input bind:value={sCountryCode} type="number" placeholder="Cód. país..." />
+            <button onclick={fetchSpecific} class="btn-search">Buscar</button>
+            <button onclick={getDiets} class="btn-reset">Mostrar todos</button>
+            <span class="separador">|</span>
+            <input bind:value={sFrom} type="number" placeholder="Desde año..." />
+            <input bind:value={sTo}   type="number" placeholder="Hasta año..." />
+            <button onclick={fetchByRange} class="btn-search">Buscar rango</button>
+            
         </div>
     </div>
 
