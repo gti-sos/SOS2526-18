@@ -143,14 +143,12 @@ async function fetchSpecific() {
                 <option value="Europe">Europe</option>
                 <option value="Oceania">Oceania</option>
             </select>
-
             <select bind:value={sCostCategory}>
                 <option value="">Categoría...</option>
                 <option value="Low Cost">Coste bajo</option>
                 <option value="Medium Cost">Coste medio</option>
                 <option value="High Cost">Coste alto</option>
             </select>
-
             <input bind:value={sCountryCode} type="number" placeholder="Código..." />
             <button onclick={fetchSpecific} class="btn-search">Buscar</button>
             <button onclick={getDiets} class="btn-reset">Mostrar todos</button>
