@@ -68,7 +68,6 @@ async function fetchSpecific() {
     }
 }
 
-
     async function loadInitialData() {
         const res = await fetch("/api/v1/cost-of-healthy-diet-by-countries/loadInitialData");
         if (res.ok) {
