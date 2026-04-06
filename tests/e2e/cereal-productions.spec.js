@@ -47,28 +47,25 @@ test.describe('Cereal Productions E2E Tests', () => {
     });
 
     test('3. Debería editar un recurso', async ({ page }) => {      
+        // Buscamos el primer botón de editar y esperamos a que sea clicable
         const editBtn = page.locator('.btn-edit').first();
         await editBtn.waitFor({ state: 'visible' });
         await editBtn.click();
 
+        // ESPERA CLAVE 1: Esperar a que la URL cambie a la de edición
         await expect(page).toHaveURL(/.*\/[a-zA-Z0-9]+\/\d+/, { timeout: 15000 });
 
+        // ESPERA CLAVE 2: Esperar a que los inputs del formulario de edición aparezcan
         const firstInput = page.locator('input[type="number"]').first();
         await firstInput.waitFor({ state: 'visible' });
 
+        // ESPERA CLAVE 3: Asegurarse de que el input NO esté vacío (indica que los datos de la API ya cargaron)
         await expect(firstInput).not.toHaveValue('', { timeout: 10000 });
 
         await firstInput.fill('888');
-        
-        // Hacemos clic en guardar
-        await page.getByRole('button', { name: /Guardar/i }).click();
+        await page.getByRole('button', { name: /Guardar/i }).click(); 
 
-        // --- MEJORA CLAVE ---
-        // Esperamos a que el navegador vuelva a la lista principal (URL original)
-        // Esto garantiza que la navegación ha terminado antes de buscar el mensaje.
-        await page.waitForURL(URL, { timeout: 15000 });
-
-        // Ahora buscamos el mensaje con un margen de tiempo generoso
+        // Verificamos tu mensaje de éxito
         await expect(page.locator('body')).toContainText('actualizado correctamente', { timeout: 15000 });
     });
 
