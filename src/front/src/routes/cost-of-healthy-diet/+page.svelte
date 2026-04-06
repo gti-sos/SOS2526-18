@@ -168,6 +168,7 @@ async function fetchSpecific() {
     <DietTable {diets} {getDiets} bind:message bind:messageType />
 </main>
 
+
 <style>
     main {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

@@ -33,7 +33,7 @@ jobs:
         npm test
 
     - name: Run Playwright E2E Tests
-      run: npx playwright test --retries=0
+      run: npx playwright test --retries=0 --project=chromium
 
     - name: Deploy to Render
       if: success()
