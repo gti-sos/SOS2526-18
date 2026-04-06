@@ -9,11 +9,23 @@
   let messageType = $state("danger");
 
   let sCountry = $state("");
+  let sYear = $state("");
+  let sYearFrom = $state("");
+  let sYearTo = $state("");
 
-  // NUEVOS FILTROS
-  let sYear = $state("");       // búsqueda por año específico
-  let sYearFrom = $state("");   // rango desde
-  let sYearTo = $state("");     // rango hasta
+  let sFaostat = $state("");
+  let sM49 = $state("");
+  let sItemCode = $state("");
+  let sItem = $state("");
+  let sOpening = $state("");
+  let sProduction = $state("");
+  let sImport = $state("");
+  let sStockVariation = $state("");
+  let sExport = $state("");
+
+  let limit = 5;
+  let offset = 0;
+  let total = 0;
 
   const BASE = "/api/v2/food-supply-utilization-accounts";
 
@@ -29,57 +41,65 @@
     }
   }
 
-  async function getFSUA() {
-    const res = await fetch(`${BASE}`);
-    if (res.ok) {
-      fsua = await res.json();
-      sCountry = "";
-      sYear = "";
-      sYearFrom = "";
-      sYearTo = "";
-    } else {
-      showMessage("No se ha podido cargar la lista de datos.", "danger", 7000);
-    }
-  }
-
-  async function fetchSpecific() {
-
+  async function fetchFSUA() {
     const params = new URLSearchParams();
 
-    if (sCountry.trim()) {
-      params.set("country_name_en", sCountry.trim());
-    }
+    const addParam = (key, value) => {
+      if (value !== null && value !== undefined && String(value).trim() !== "") {
+        params.set(key, value);
+      }
+    };
 
-    // ✅ Año específico
-    if (String(sYear).trim()) {
-      params.set("year", Number(sYear));
-    }
+    addParam("country_name_en", sCountry);
+    addParam("year", sYear);
+    addParam("from", sYearFrom);
+    addParam("to", sYearTo);
 
-    // ✅ Rango desde / hasta
-    if (String(sYearFrom).trim()) {
-      params.set("from", Number(sYearFrom));
-    }
-    if (String(sYearTo).trim()) {
-      params.set("to", Number(sYearTo));
-    }
+    addParam("faostat", sFaostat);
+    addParam("m49_code", sM49);
+    addParam("item_code", sItemCode);
+    addParam("item", sItem);
 
-    // Si no hay filtros → obtener todo
-    if ([sCountry, sYear, sYearFrom, sYearTo].every(v => !String(v).trim())) {
-      await getFSUA();
-      return;
-    }
+    addParam("opening_stocks_tonnes", sOpening);
+    addParam("production_tonnes", sProduction);
+    addParam("import_quantity_tonnes", sImport);
+    addParam("stock_variation_tonnes", sStockVariation);
+    addParam("export_quantity_tonnes", sExport);
+
+    params.set("limit", limit);
+    params.set("offset", offset);
 
     const res = await fetch(`${BASE}?${params.toString()}`);
 
     if (res.ok) {
-      fsua = await res.json();
+      const data = await res.json();
+      fsua = data.data || data;
+      total = data.total ?? fsua.length;
+
       if (fsua.length > 0) {
         showMessage(`Encontrados ${fsua.length} registros.`, "success");
       } else {
-        showMessage("No se han encontrado resultados.", "danger", 7000);
+        showMessage("No se encontraron resultados.", "danger", 4000);
       }
     } else {
-      showMessage(`Error en búsqueda (código ${res.status}).`, "danger", 7000);
+      showMessage(`Error (código ${res.status}).`, "danger", 6000);
+    }
+  }
+
+  async function getFSUA() {
+    offset = 0;
+    await fetchFSUA();
+  }
+
+  function nextPage() {
+    offset += limit;
+    fetchFSUA();
+  }
+
+  function prevPage() {
+    if (offset >= limit) {
+      offset -= limit;
+      fetchFSUA();
     }
   }
 
@@ -90,20 +110,20 @@
       showMessage("Datos iniciales cargados.", "success");
     } else if (res.status === 409) {
       await getFSUA();
-      showMessage("Los datos ya estaban cargados.", "danger", 5000);
+      showMessage("Los datos ya estaban cargados.", "danger");
     } else {
-      showMessage("Error inesperado al cargar datos.", "danger", 7000);
+      showMessage("Error inesperado.", "danger");
     }
   }
 
   async function deleteAll() {
     if (confirm("¿Vaciar toda la tabla?")) {
-      const res = await fetch(`${BASE}`, { method: "DELETE" });
+      const res = await fetch(BASE, { method: "DELETE" });
       if (res.ok) {
         await getFSUA();
         showMessage("Tabla vaciada.", "success");
       } else {
-        showMessage("Error al borrar.", "danger", 7000);
+        showMessage("Error al borrar.", "danger");
       }
     }
   }
@@ -122,23 +142,48 @@
       <button on:click={deleteAll} class="btn-del">Borrar todo</button>
     </div>
 
-    <div class="search-container">
-  <input bind:value={sCountry} placeholder="País (country_name_en)..." />
+<div class="search-container" style="flex-wrap: wrap;">
 
-  <input bind:value={sYear} type="number" placeholder="Año exacto..." />
+  <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%;">
+    <input bind:value={sCountry} placeholder="País (country_name_en)..." />
+    <input bind:value={sYear} type="number" placeholder="Año exacto..." />
+    <input bind:value={sYearFrom} type="number" placeholder="Desde año..." />
+    <input bind:value={sYearTo} type="number" placeholder="Hasta año..." />
+  </div>
 
-  <input bind:value={sYearFrom} type="number" placeholder="Desde año..." />
-  <input bind:value={sYearTo} type="number" placeholder="Hasta año..." />
+  <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%; margin-top: 5px;">
+    <input bind:value={sFaostat} type="number" placeholder="faostat..." />
+    <input bind:value={sM49} type="number" placeholder="m49_code..." />
+    <input bind:value={sItemCode} type="number" placeholder="item_code..." />
+    <input bind:value={sItem} placeholder="item..." />
 
-  <button on:click={fetchSpecific} class="btn-search">Buscar</button>
+    <input bind:value={sOpening} type="number" placeholder="opening_stocks_tonnes..." />
+    <input bind:value={sProduction} type="number" placeholder="production_tonnes..." />
+    <input bind:value={sImport} type="number" placeholder="import_quantity_tonnes..." />
+    <input bind:value={sStockVariation} type="number" placeholder="stock_variation_tonnes..." />
+    <input bind:value={sExport} type="number" placeholder="export_quantity_tonnes..." />
+  </div>
+
+  <button on:click={fetchFSUA} class="btn-search">Buscar</button>
   <button on:click={getFSUA} class="btn-reset">Limpiar</button>
+
 </div>
-``
+
   </div>
 
   <FoodForm {getFSUA} bind:message bind:messageType />
   <hr />
   <FoodTable {fsua} {getFSUA} bind:message bind:messageType />
+
+  <div style="margin-top: 15px; display: flex; gap: 10px;">
+    <button on:click={prevPage} class="btn-search" disabled={offset === 0}>
+      ⟵ Anterior
+    </button>
+
+    <button on:click={nextPage} class="btn-search" disabled={fsua.length < limit}>
+      Siguiente ⟶
+    </button>
+  </div>
 </main>
 
 <style>
@@ -177,4 +222,3 @@
   .btn-del:hover { background: #c82333; }
   hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
 </style>
-``
