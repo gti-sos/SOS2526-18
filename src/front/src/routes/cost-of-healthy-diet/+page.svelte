@@ -12,6 +12,9 @@
     let sYear = $state("");
     let sFrom = $state('');
     let sTo = $state('');
+    let sRegion = $state("");
+    let sCostCategory = $state("");
+    let sCountryCode = $state("");
 
     async function getDiets() {
         const res = await fetch("/api/v1/cost-of-healthy-diet-by-countries");
@@ -30,6 +33,14 @@
             await getDiets();
             return;
         }
+
+        //Búsqueda por región, costcategory y country_code
+        if (sRegion)       
+            query += `region=${encodeURIComponent(sRegion)}&`;
+        if (sCostCategory) 
+            query += `cost_category=${encodeURIComponent(sCostCategory)}&`;
+        if (sCountryCode)  
+            query += `country_code=${sCountryCode}&`;
 
         // Búsqueda exacta por país Y año
         if (sCountry && sYear) {
@@ -139,6 +150,23 @@
             <input bind:value={sFrom} type="number" placeholder="Desde año..." />
             <input bind:value={sTo}   type="number" placeholder="Hasta año..." />
             <button onclick={fetchByRange} class="btn-search">Buscar rango</button>
+            <select bind:value={sRegion}>
+                <option value="">Región...</option>
+                <option value="Africa">Africa</option>
+                <option value="Americas">Americas</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="Oceania">Oceania</option>
+            </select>
+
+            <select bind:value={sCostCategory}>
+                <option value="">Categoría...</option>
+                <option value="Low Cost">Coste bajo</option>
+                <option value="Medium Cost">Coste medio</option>
+                <option value="High Cost">Coste alto</option>
+            </select>
+
+        <input bind:value={sCountryCode} type="number" placeholder="Cód. país..." />
         </div>
     </div>
 
