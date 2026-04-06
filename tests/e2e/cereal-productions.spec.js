@@ -3,11 +3,21 @@ import { test, expect } from '@playwright/test';
 const URL = 'https://sos2526-18.onrender.com/cereal-productions';
 
 test.describe('Cereal Productions E2E Tests', () => {
-      
+    
     test.beforeEach(async ({ page }) => {
         // Aumentamos el timeout porque Render (donde está la web) puede tardar en "despertar"
         test.setTimeout(120000); 
         await page.goto(URL, { waitUntil: 'networkidle' });
+        // Miramos si la tabla está vacía buscando el mensaje "No hay datos"
+        const noData = page.locator('text=/No hay datos|Sin resultados/i');
+        
+        if (await noData.isVisible()) {
+            console.log("Tabla vacía, cargando datos iniciales...");
+            const loadBtn = page.locator('.btn-load'); // O el selector de tu botón de carga
+            await loadBtn.click();
+            // Esperamos un momento a que la API responda y la tabla se llene
+            await page.waitForResponse(resp => resp.url().includes('/loadInitialData') && resp.status() === 200);
+        }
     });
 
     test('1. Debería listar los recursos al cargar la página', async ({ page }) => {
