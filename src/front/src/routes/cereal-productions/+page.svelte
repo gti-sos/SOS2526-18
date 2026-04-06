@@ -31,12 +31,9 @@
 
     // Función de carga con PAGINACIÓN
     async function getCereals() {
-        // Añadimos limit y offset a la URL
         const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-            // No reseteamos los campos aquí para que el usuario vea qué buscó, 
-            // pero si la tabla viene vacía y el offset > 0, avisamos.
             if (cereals.length === 0 && offset > 0) {
                 message = "No hay más registros en esta página.";
                 messageType = "warning";
@@ -47,7 +44,6 @@
         }
     }
 
-    // Navegación de páginas
     function nextPage() {
         if (cereals.length >= limit) {
             offset += limit;
@@ -62,7 +58,6 @@
         }
     }
 
-    // Resetear todo
     function resetSearch() {
         sCountry = ""; sYear = ""; sFrom = ""; sTo = "";
         offset = 0;
@@ -71,7 +66,6 @@
         messageType = "success";
     }
 
-    // BUSCADOR MEJORADO
     async function fetchSpecific() {
         let params = new URLSearchParams();
         if (sCountry) params.append("country", sCountry);
@@ -79,7 +73,6 @@
         if (sFrom) params.append("from", sFrom);
         if (sTo) params.append("to", sTo);
         
-        // Al buscar, siempre volvemos a la página 1 (offset 0)
         offset = 0;
 
         if (sCountry && sYear) {
@@ -141,19 +134,17 @@
         </div>
 
         <div class="search-container">
-            <input bind:value={sCountry} placeholder="País..." />
-            <input bind:value={sYear} type="number" placeholder="Año..." />
-            <input bind:value={sFrom} type="number" placeholder="Desde (año)" style="width: 100px;"/>
-            <input bind:value={sTo} type="number" placeholder="Hasta (año)" style="width: 100px;"/>
+            <input bind:value={sCountry} placeholder="Filtrar por país..." />
+            <input bind:value={sYear} type="number" placeholder="Filtrar por año..." />
+            <input bind:value={sFrom} type="number" placeholder="Desde año..." style="width: 100px;"/>
+            <input bind:value={sTo} type="number" placeholder="Hasta año..." style="width: 100px;"/>
             <button onclick={fetchSpecific} class="btn-search">Buscar</button>
             <button onclick={resetSearch} class="btn-reset">Limpiar</button>
         </div>
     </div>
 
     <CerealForm {getCereals} bind:message bind:messageType />
-    
     <hr />
-    
     <CerealTable {cereals} {getCereals} bind:message bind:messageType />
 
     <div class="pagination-controls">
@@ -220,7 +211,6 @@
     
     hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
 
-    /* ESTILOS NUEVOS DE PAGINACIÓN */
     .pagination-controls {
         display: flex;
         justify-content: center;
