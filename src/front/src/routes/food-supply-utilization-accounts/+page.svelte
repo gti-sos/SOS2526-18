@@ -4,30 +4,27 @@
   import FoodForm from './FoodForm.svelte';
   import FoodTable from './FoodTable.svelte';
 
-  // Estados (Svelte runes)
   let fsua = $state([]);
   let message = $state("");
   let messageType = $state("danger");
 
-  let sCountry = $state("");   // country_name_en (texto)
-  let sYear = $state("");      // year (número)
-  let sItem = $state("");      // item (texto) - opcional para búsqueda exacta v2
+  let sCountry = $state("");
+
+  // NUEVOS FILTROS
+  let sYear = $state("");       // búsqueda por año específico
+  let sYearFrom = $state("");   // rango desde
+  let sYearTo = $state("");     // rango hasta
 
   const BASE = "/api/v2/food-supply-utilization-accounts";
 
-  // Helper para mostrar mensajes con auto-ocultado y protección contra carreras
   let lastMsgId = 0;
   function showMessage(text, type = "success", timeoutMs = 5000) {
     const id = ++lastMsgId;
     message = text;
     messageType = type;
-
     if (timeoutMs > 0) {
       setTimeout(() => {
-        // Sólo borra el mensaje si no se ha mostrado uno más reciente
-        if (id === lastMsgId) {
-          message = "";
-        }
+        if (id === lastMsgId) message = "";
       }, timeoutMs);
     }
   }
@@ -36,85 +33,77 @@
     const res = await fetch(`${BASE}`);
     if (res.ok) {
       fsua = await res.json();
-      // Limpia filtros, pero NO toques 'message' aquí
       sCountry = "";
       sYear = "";
-      sItem = "";
+      sYearFrom = "";
+      sYearTo = "";
     } else {
-      showMessage("No se ha podido cargar la lista de datos desde el servidor.", "danger", 7000);
+      showMessage("No se ha podido cargar la lista de datos.", "danger", 7000);
     }
   }
 
   async function fetchSpecific() {
-    const hasCountry = !!sCountry?.trim();
-    const hasYear = !!String(sYear).trim();
-    const hasItem = !!sItem?.trim();
 
-    // Búsqueda exacta por 3 parámetros
-    if (hasCountry && hasYear && hasItem) {
-      const url = `${BASE}/${encodeURIComponent(sCountry)}/${Number(sYear)}/${encodeURIComponent(sItem)}`;
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        fsua = [data];
-        showMessage(`Se ha localizado el registro de '${sCountry}' / ${sYear} / '${sItem}'.`, "success");
-      } else if (res.status === 404) {
-        fsua = [];
-        showMessage(`No existe ningún registro para '${sCountry}' / ${sYear} / '${sItem}'.`, "danger", 7000);
-      } else {
-        showMessage(`Error inesperado (código ${res.status}).`, "danger", 7000);
-      }
+    const params = new URLSearchParams();
+
+    if (sCountry.trim()) {
+      params.set("country_name_en", sCountry.trim());
+    }
+
+    // ✅ Año específico
+    if (String(sYear).trim()) {
+      params.set("year", Number(sYear));
+    }
+
+    // ✅ Rango desde / hasta
+    if (String(sYearFrom).trim()) {
+      params.set("from", Number(sYearFrom));
+    }
+    if (String(sYearTo).trim()) {
+      params.set("to", Number(sYearTo));
+    }
+
+    // Si no hay filtros → obtener todo
+    if ([sCountry, sYear, sYearFrom, sYearTo].every(v => !String(v).trim())) {
+      await getFSUA();
       return;
     }
 
-    // Búsqueda por país y/o año
-    if (hasCountry || hasYear) {
-      const params = new URLSearchParams();
-      if (hasCountry) params.set("country_name_en", sCountry);
-      if (hasYear) params.set("year", String(Number(sYear)));
+    const res = await fetch(`${BASE}?${params.toString()}`);
 
-      const res = await fetch(`${BASE}?${params.toString()}`);
-      if (res.ok) {
-        fsua = await res.json();
-        if (fsua.length > 0) {
-          showMessage(`Búsqueda finalizada: se han encontrado ${fsua.length} registros.`, "success");
-        } else {
-          showMessage("No se han encontrado resultados para esa búsqueda.", "danger", 7000);
-        }
+    if (res.ok) {
+      fsua = await res.json();
+      if (fsua.length > 0) {
+        showMessage(`Encontrados ${fsua.length} registros.`, "success");
       } else {
-        showMessage(`No se ha podido realizar la búsqueda (código ${res.status}).`, "danger", 7000);
+        showMessage("No se han encontrado resultados.", "danger", 7000);
       }
-      return;
+    } else {
+      showMessage(`Error en búsqueda (código ${res.status}).`, "danger", 7000);
     }
-
-    // Si no hay filtros, carga todo
-    await getFSUA();
   }
 
   async function loadInitialData() {
     const res = await fetch(`${BASE}/loadInitialData`);
     if (res.ok) {
-      await getFSUA(); // primero actualizamos datos
-      showMessage("¡Éxito! Los datos de ejemplo se han cargado correctamente.", "success");
+      await getFSUA();
+      showMessage("Datos iniciales cargados.", "success");
     } else if (res.status === 409) {
       await getFSUA();
-      showMessage("Los datos ya estaban presentes.", "danger", 5000);
+      showMessage("Los datos ya estaban cargados.", "danger", 5000);
     } else {
-      showMessage("Aviso: el servidor no respondió como se esperaba al cargar iniciales.", "danger", 7000);
+      showMessage("Error inesperado al cargar datos.", "danger", 7000);
     }
   }
 
   async function deleteAll() {
-    if (confirm("¿Estás seguro de que quieres vaciar toda la tabla?")) {
+    if (confirm("¿Vaciar toda la tabla?")) {
       const res = await fetch(`${BASE}`, { method: "DELETE" });
       if (res.ok) {
         await getFSUA();
-        showMessage("La tabla se ha vaciado por completo.", "success");
-      } else if (res.status === 404) {
-        await getFSUA();
-        showMessage("No hay registros que borrar.", "danger", 5000);
+        showMessage("Tabla vaciada.", "success");
       } else {
-        showMessage("Error: no se ha podido realizar la limpieza de datos.", "danger", 7000);
+        showMessage("Error al borrar.", "danger", 7000);
       }
     }
   }
@@ -134,12 +123,17 @@
     </div>
 
     <div class="search-container">
-      <input bind:value={sCountry} placeholder="País (country_name_en)..." />
-      <input bind:value={sYear} type="number" placeholder="Año..." />
-      <input bind:value={sItem} placeholder="Ítem (opcional)..." />
-      <button on:click={fetchSpecific} class="btn-search">Buscar</button>
-      <button on:click={getFSUA} class="btn-reset">Limpiar</button>
-    </div>
+  <input bind:value={sCountry} placeholder="País (country_name_en)..." />
+
+  <input bind:value={sYear} type="number" placeholder="Año exacto..." />
+
+  <input bind:value={sYearFrom} type="number" placeholder="Desde año..." />
+  <input bind:value={sYearTo} type="number" placeholder="Hasta año..." />
+
+  <button on:click={fetchSpecific} class="btn-search">Buscar</button>
+  <button on:click={getFSUA} class="btn-reset">Limpiar</button>
+</div>
+``
   </div>
 
   <FoodForm {getFSUA} bind:message bind:messageType />
