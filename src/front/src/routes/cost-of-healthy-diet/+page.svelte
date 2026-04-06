@@ -28,55 +28,46 @@
         }
     }
 
-    async function fetchSpecific() {
-        if (!sCountry && !sYear) {
-            await getDiets();
-            return;
-        }
-
-        //Búsqueda por región, costcategory y country_code
-        if (sRegion)       
-            query += `region=${encodeURIComponent(sRegion)}&`;
-        if (sCostCategory) 
-            query += `cost_category=${encodeURIComponent(sCostCategory)}&`;
-        if (sCountryCode)  
-            query += `country_code=${sCountryCode}&`;
-
-        // Búsqueda exacta por país Y año
-        if (sCountry && sYear) {
-            const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries/${sCountry}/${sYear}`);
-            if (res.ok) {
-                diets = [await res.json()];
-                message = `Se ha encontrado el registro de '${sCountry}' para el año ${sYear}.`;
-                messageType = "success";
-            } else if (res.status === 404) {
-                message = `No existe ningún registro para el país '${sCountry}' en el año ${sYear}.`;
-                messageType = "danger";
-                diets = [];
-            } else {
-                message = "Ha ocurrido un problema al realizar la búsqueda. Inténtalo de nuevo.";
-                messageType = "danger";
-            }
-            return;
-        }
-
-        // Filtrado por uno solo
-        let query = "";
-        if (sCountry) query += `country=${encodeURIComponent(sCountry)}&`;
-        if (sYear)    query += `year=${sYear}`;
-
-        const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries?${query}`);
+async function fetchSpecific() {
+    // Si hay país Y año exactos, usa la ruta /:country/:year
+    if (sCountry && sYear && !sRegion && !sCostCategory && !sCountryCode) {
+        const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries/${encodeURIComponent(sCountry)}/${sYear}`);
         if (res.ok) {
-            diets = await res.json();
-            message = diets.length > 0
-                ? `Se han encontrado ${diets.length} registro${diets.length !== 1 ? 's' : ''}.`
-                : "No se han encontrado registros con esos criterios de búsqueda.";
-            messageType = diets.length > 0 ? "success" : "danger";
+            diets = [await res.json()];
+            message = `Se ha encontrado el registro de '${sCountry}' para el año ${sYear}.`;
+            messageType = "success";
+        } else if (res.status === 404) {
+            message = `No existe ningún registro para '${sCountry}' en el año ${sYear}.`;
+            messageType = "danger";
+            diets = [];
         } else {
-            message = "Ha ocurrido un problema al filtrar los datos. Inténtalo de nuevo.";
+            message = "Ha ocurrido un problema al realizar la búsqueda.";
             messageType = "danger";
         }
+        return;
     }
+
+    // En cualquier otro caso, usa query params con todos los filtros
+    const params = new URLSearchParams();
+    if (sCountry)      params.append("country", sCountry);
+    if (sYear)         params.append("year", sYear);
+    if (sRegion)       params.append("region", sRegion);
+    if (sCostCategory) params.append("cost_category", sCostCategory);
+    if (sCountryCode)  params.append("country_code", sCountryCode);
+
+    const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries?${params.toString()}`);
+    if (res.ok) {
+        diets = await res.json();
+        message = diets.length > 0
+            ? `Se han encontrado ${diets.length} registro${diets.length !== 1 ? 's' : ''}.`
+            : "No se han encontrado registros con esos criterios.";
+        messageType = diets.length > 0 ? "success" : "danger";
+    } else {
+        message = "Ha ocurrido un problema al filtrar los datos.";
+        messageType = "danger";
+    }
+}
+
 
     async function loadInitialData() {
         const res = await fetch("/api/v1/cost-of-healthy-diet-by-countries/loadInitialData");
