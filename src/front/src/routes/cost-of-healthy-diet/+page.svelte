@@ -98,6 +98,7 @@ async function fetchSpecific() {
 
     onMount(getDiets);
 
+
     async function fetchByRange() {
         if (!sFrom && !sTo) {
             await getDiets();
