@@ -41,50 +41,54 @@
     }
   }
 
-  async function fetchFSUA() {
-    const params = new URLSearchParams();
 
-    const addParam = (key, value) => {
-      if (value !== null && value !== undefined && String(value).trim() !== "") {
-        params.set(key, value);
-      }
-    };
+async function fetchFSUA(showSearchMessage = false) {
+  const params = new URLSearchParams();
 
-    addParam("country_name_en", sCountry);
-    addParam("year", sYear);
-    addParam("from", sYearFrom);
-    addParam("to", sYearTo);
+  const addParam = (key, value) => {
+    if (value !== null && value !== undefined && String(value).trim() !== "") {
+      params.set(key, value);
+    }
+  };
 
-    addParam("faostat", sFaostat);
-    addParam("m49_code", sM49);
-    addParam("item_code", sItemCode);
-    addParam("item", sItem);
+  addParam("country_name_en", sCountry);
+  addParam("year", sYear);
+  addParam("from", sYearFrom);
+  addParam("to", sYearTo);
+  addParam("faostat", sFaostat);
+  addParam("m49_code", sM49);
+  addParam("item_code", sItemCode);
+  addParam("item", sItem);
+  addParam("opening_stocks_tonnes", sOpening);
+  addParam("production_tonnes", sProduction);
+  addParam("import_quantity_tonnes", sImport);
+  addParam("stock_variation_tonnes", sStockVariation);
+  addParam("export_quantity_tonnes", sExport);
 
-    addParam("opening_stocks_tonnes", sOpening);
-    addParam("production_tonnes", sProduction);
-    addParam("import_quantity_tonnes", sImport);
-    addParam("stock_variation_tonnes", sStockVariation);
-    addParam("export_quantity_tonnes", sExport);
+  params.set("limit", limit);
+  params.set("offset", offset);
 
-    params.set("limit", limit);
-    params.set("offset", offset);
+  const res = await fetch(`${BASE}?${params.toString()}`);
 
-    const res = await fetch(`${BASE}?${params.toString()}`);
+  if (!res.ok) {
+    showMessage(`Error (código ${res.status})`, "danger", 6000);
+    return;
+  }
 
-    if (res.ok) {
-      const data = await res.json();
-      fsua = data.data || data;
-      total = data.total ?? fsua.length;
+  const data = await res.json();
+  fsua = data.data || data;
+  total = data.total ?? fsua.length;
 
-      if (fsua.length > 0) {
-        showMessage(`Encontrados ${fsua.length} registros.`, "success");
-      } else {
-        showMessage("No se encontraron resultados.", "danger", 4000);
-      }
+ 
+  if (showSearchMessage) {
+    if (fsua.length > 0) {
+      showMessage(`Encontrados ${fsua.length} registros.`, "success");
     } else {
-      showMessage(`Error (código ${res.status}).`, "danger", 6000);
+      showMessage("No se encontraron resultados.", "danger", 4000);
     }
   }
+}
+
 
   async function getFSUA() {
     offset = 0;
@@ -127,6 +131,33 @@
       }
     }
   }
+  function clearSearch() {
+  // Campos de búsqueda principales
+  sCountry = "";
+  sYear = "";
+  sYearFrom = "";
+  sYearTo = "";
+
+  // Campos adicionales
+  sFaostat = "";
+  sM49 = "";
+  sItemCode = "";
+  sItem = "";
+  sOpening = "";
+  sProduction = "";
+  sImport = "";
+  sStockVariation = "";
+  sExport = "";
+
+  // Reset de paginación
+  offset = 0;
+
+  // Recargar datos sin filtros
+  fetchFSUA();
+
+  // Mensaje opcional
+  showMessage("Filtros limpiados.", "success", 3000);
+}
 
   onMount(getFSUA);
 </script>
@@ -164,8 +195,8 @@
     <input bind:value={sExport} type="number" placeholder="export_quantity_tonnes..." />
   </div>
 
-  <button on:click={fetchFSUA} class="btn-search">Buscar</button>
-  <button on:click={getFSUA} class="btn-reset">Limpiar</button>
+  <button on:click={fetchFSUA(true)} class="btn-search">Buscar</button>
+  <button on:click={clearSearch} class="btn-reset">Limpiar</button>
 
 </div>
 
