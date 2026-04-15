@@ -29,7 +29,7 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
         await page.getByPlaceholder('5497.24').fill('3');
         await page.getByPlaceholder('125.76').fill('4');
         await page.getByPlaceholder('89.23').fill('5');
-
+  
         await page.locator('.btn-add').click();
 
     });
