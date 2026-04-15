@@ -62,7 +62,7 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
     await limpiarBtn.click();
   }
 });
-
+ 
     test('5. Debería borrar un registro', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
         await page.locator('.btn-delete').first().click();
