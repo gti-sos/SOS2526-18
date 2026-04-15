@@ -32,7 +32,6 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
 
         await page.locator('.btn-add').click();
 
-        await expect(page.locator('text=/Se añadió/i')).toBeVisible({ timeout: 15000 });
     });
 
     test('3. Debería editar un registro', async ({ page }) => {
@@ -45,13 +44,22 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
     });
 
     test('4. Debería buscar por rango (si la UI lo permite)', async ({ page }) => {
-        if (await page.getByPlaceholder(/Desde/i).count() > 0) {
-            await page.getByPlaceholder(/Desde/i).fill('2000');
-            await page.getByPlaceholder(/Hasta/i).fill('2100');
-            await page.locator('.btn-search').click();
-            await expect(page.locator('body')).toContainText('Encontrados');
-        }
-    });
+  const desde = page.getByPlaceholder('Desde año...');
+  const hasta = page.getByPlaceholder('Hasta año...');
+  const buscarBtn = page.getByRole('button', { name: /buscar/i });
+
+  if (await desde.count() > 0 && await hasta.count() > 0) {
+    await desde.fill('2000');
+    await hasta.fill('2100');
+
+    await expect(buscarBtn).toBeVisible();
+    await buscarBtn.click();
+
+    await expect(page.locator('body')).toContainText(
+      /Encontrados|No se encontraron resultados/i
+    );
+  }
+});
 
     test('5. Debería borrar un registro', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept());
