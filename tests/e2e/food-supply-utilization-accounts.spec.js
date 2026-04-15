@@ -106,7 +106,7 @@ test.describe('Food Supply Utilization Accounts - E2E Tests', () => {
   await expect(deleteBtn).toBeVisible({ timeout: 15000 });
   await deleteBtn.click();
 
-});
+}); 
 
 test('6. Debería borrar TODO', async ({ page }) => {
   page.on('dialog', dialog => dialog.accept());
