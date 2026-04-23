@@ -1,5 +1,65 @@
 const data = [
     {
+        country_code: 724, 
+        country: "Spain", 
+        region: "Europe", 
+        year: 2017, 
+        cost_healthy_diet_ppp_usd: 2.53, 
+        annual_cost_healthy_diet_usd: 923.45, 
+        cost_vegetables_ppp_usd: 0.79, 
+        cost_fruits_ppp_usd: 0.56,  
+        total_food_components_cost: 1.32, 
+        cost_category: "High Cost"
+    },
+    {
+        country_code: 724, 
+        country: "Spain", 
+        region: "Europe", 
+        year: 2018, 
+        cost_healthy_diet_ppp_usd: 2.57, 
+        annual_cost_healthy_diet_usd: 938.05, 
+        cost_vegetables_ppp_usd: 0.78, 
+        cost_fruits_ppp_usd: 0.7,  
+        total_food_components_cost: 1.38, 
+        cost_category: "High Cost"
+    },
+    {
+        country_code: 724, 
+        country: "Spain", 
+        region: "Europe", 
+        year: 2019, 
+        cost_healthy_diet_ppp_usd: 2.7, 
+        annual_cost_healthy_diet_usd: 985.5, 
+        cost_vegetables_ppp_usd: 0.72, 
+        cost_fruits_ppp_usd: 0.64,  
+        total_food_components_cost: 1.62, 
+        cost_category: "High Cost"
+    },
+    {
+        country_code: 724, 
+        country: "Spain", 
+        region: "Europe", 
+        year: 2023, 
+        cost_healthy_diet_ppp_usd: 3.83, 
+        annual_cost_healthy_diet_usd: 1397.95, 
+        cost_vegetables_ppp_usd: 0.84, 
+        cost_fruits_ppp_usd: 0.65,  
+        total_food_components_cost: 1.25, 
+        cost_category: "High Cost"
+    },
+    {
+        country_code: 724, 
+        country: "Spain", 
+        region: "Europe", 
+        year: 2024, 
+        cost_healthy_diet_ppp_usd: 3.98, 
+        annual_cost_healthy_diet_usd: 1452.7, 
+        cost_vegetables_ppp_usd: 0.8, 
+        cost_fruits_ppp_usd: 0.63,  
+        total_food_components_cost: 1.4, 
+        cost_category: "High Cost"
+    },
+    {
         country_code: 156, 
         country: "China, mainland", 
         region: "Asia", 
