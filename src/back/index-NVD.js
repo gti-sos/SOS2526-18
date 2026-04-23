@@ -242,6 +242,7 @@ const data = [
 ];
 
 
+
 //Carga API
 import Datastore from "@seald-io/nedb";
 
