@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Project focused on cereal productions, food supply utilization and cost of healthy diet",
   "main": "index.js",
-  "scripts": { 
+  "scripts": {
     "start": "node index.js",
     "build": "cd src/front && npm install && npm run build",
     "dev-front": "cd src/front && npm run dev -- --  open",
