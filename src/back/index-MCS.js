@@ -2,6 +2,203 @@ import express from "express";
 
 const datamcs = [
   {
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2020,
+  opening_stocks_tonnes: 26988.82,
+  production_tonnes: 416950.0,
+  import_quantity_tonnes: 12585.58,
+  stock_variation_tonnes: -780.65,
+  export_quantity_tonnes: 6771.36
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2011,
+  opening_stocks_tonnes: null,
+  production_tonnes: 208800.0,
+  import_quantity_tonnes: 1627.0,
+  stock_variation_tonnes: null,
+  export_quantity_tonnes: 600.0
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2012,
+  opening_stocks_tonnes: null,
+  production_tonnes: 211700.0,
+  import_quantity_tonnes: 3734.0,
+  stock_variation_tonnes: null,
+  export_quantity_tonnes: 494.0
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2013,
+  opening_stocks_tonnes: null,
+  production_tonnes: 143081.0,
+  import_quantity_tonnes: 1138.0,
+  stock_variation_tonnes: null,
+  export_quantity_tonnes: 664.0
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2014,
+  opening_stocks_tonnes: 28711.0,
+  production_tonnes: 195704.0,
+  import_quantity_tonnes: 3631.6,
+  stock_variation_tonnes: 0.0,
+  export_quantity_tonnes: 1599.51
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2015,
+  opening_stocks_tonnes: 28711.0,
+  production_tonnes: 211084.0,
+  import_quantity_tonnes: 1616.8,
+  stock_variation_tonnes: 0.0,
+  export_quantity_tonnes: 4607.42
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2017,
+  opening_stocks_tonnes: 28711.0,
+  production_tonnes: 255503.0,
+  import_quantity_tonnes: 3355.05,
+  stock_variation_tonnes: 0.0,
+  export_quantity_tonnes: 2002.78
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2018,
+  opening_stocks_tonnes: 28711.0,
+  production_tonnes: 339033.0,
+  import_quantity_tonnes: 2348.59,
+  stock_variation_tonnes: -1722.18,
+  export_quantity_tonnes: 4868.58
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2019,
+  opening_stocks_tonnes: 26988.82,
+  production_tonnes: 340420.0,
+  import_quantity_tonnes: 17485.27,
+  stock_variation_tonnes: 0.0,
+  export_quantity_tonnes: 5497.64
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2021,
+  opening_stocks_tonnes: 26208.17,
+  production_tonnes: 365210.0,
+  import_quantity_tonnes: 31055.82,
+  stock_variation_tonnes: -1164.57,
+  export_quantity_tonnes: 11366.46
+},
+
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2016,
+  opening_stocks_tonnes: 28711.0,
+  production_tonnes: 199167.0,
+  import_quantity_tonnes: 1901.75,
+  stock_variation_tonnes: 0.0,
+  export_quantity_tonnes: 2013.93
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2010,
+  opening_stocks_tonnes: null,
+  production_tonnes: 222518.0,
+  import_quantity_tonnes: 3019.0,
+  stock_variation_tonnes: null,
+  export_quantity_tonnes: 2100.0
+},
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2022,
+  opening_stocks_tonnes: 25043.6,
+  production_tonnes: 245990.0,
+  import_quantity_tonnes: 28881.39,
+  stock_variation_tonnes: -570.6,
+  export_quantity_tonnes: 7973.63
+},
+  {
+    faostat: 27,
+    m49_code: 100,
+    country_name_en: "Bulgaria",
+    item_code: 221,
+    item: "Almonds, in shell",
+    year: 2019,
+    opening_stocks_tonnes: 95.85,
+    production_tonnes: 720,
+    import_quantity_tonnes: 16.42,
+    stock_variation_tonnes: 11.61,
+    export_quantity_tonnes: 23.44
+  },
+
+{
+  faostat: 203,
+  m49_code: 724,
+  country_name_en: "Spain",
+  item_code: 221,
+  item: "Almonds, in shell",
+  year: 2023,
+  opening_stocks_tonnes: 24473.0,
+  production_tonnes: 297660.0,
+  import_quantity_tonnes: 15065.82,
+  stock_variation_tonnes: -476.87,
+  export_quantity_tonnes: 3133.76
+},
+  {
     faostat: 41,
     m49_code: 156,
     country_name_en: "China, mainland",
@@ -20,25 +217,26 @@ const datamcs = [
     country_name_en: "China, mainland",
     item_code: 221,
     item: "Almonds, in shell",
-    year: 2014,
-    opening_stocks_tonnes: 9912.8,
-    production_tonnes: 42905.09,
-    import_quantity_tonnes: 1115.41,
-    stock_variation_tonnes: -71.66,
-    export_quantity_tonnes: 0.12
-  },
-  {
-    faostat: 41,
-    m49_code: 156,
-    country_name_en: "China, mainland",
-    item_code: 221,
-    item: "Almonds, in shell",
     year: 2016,
     opening_stocks_tonnes: 9904.78,
     production_tonnes: 43212.01,
     import_quantity_tonnes: 4115.63,
     stock_variation_tonnes: 47.11,
     export_quantity_tonnes: 309.36
+  },
+  
+  {
+    faostat: 41,
+    m49_code: 156,
+    country_name_en: "China, mainland",
+    item_code: 221,
+    item: "Almonds, in shell",
+    year: 2014,
+    opening_stocks_tonnes: 9912.8,
+    production_tonnes: 42905.09,
+    import_quantity_tonnes: 1115.41,
+    stock_variation_tonnes: -71.66,
+    export_quantity_tonnes: 0.12
   },
   {
     faostat: 52,
@@ -117,19 +315,6 @@ const datamcs = [
     import_quantity_tonnes: 531,
     stock_variation_tonnes: -450.93,
     export_quantity_tonnes: 38
-  },
-  {
-    faostat: 27,
-    m49_code: 100,
-    country_name_en: "Bulgaria",
-    item_code: 221,
-    item: "Almonds, in shell",
-    year: 2019,
-    opening_stocks_tonnes: 95.85,
-    production_tonnes: 720,
-    import_quantity_tonnes: 16.42,
-    stock_variation_tonnes: 11.61,
-    export_quantity_tonnes: 23.44
   }
 ];
 
@@ -146,7 +331,6 @@ const db1 = new Datastore({
   autoload: true
 });
 
-// ⚠️ Se asume que existe: const datamcs = [ { ... }, ... ];
 
 export function load_MCS_API_V1(app) {
   const BASE_URL = "/api/v1/food-supply-utilization-accounts";
@@ -162,7 +346,6 @@ export function load_MCS_API_V1(app) {
       if (err) return res.sendStatus(500);
       if (count > 0) return res.sendStatus(409);
       const src = Array.isArray(datamcs) ? datamcs : [];
-      const toInsert = src.length >= 10 ? src.slice(0, 10) : src;
       const docs = toInsert.map(({ _id, ...doc }) => ({ ...doc })); // sin _id
       if (docs.length === 0) return res.status(200).json({ inserted: 0 });
       db1.insert(docs, (e) => (e ? res.sendStatus(500) : res.status(201).json({ inserted: docs.length })));
@@ -345,7 +528,7 @@ export function load_MCS_API_V2(app) {
       if (err) return res.sendStatus(500);
       if (count > 0) return res.sendStatus(409);
       const src = Array.isArray(datamcs) ? datamcs : [];
-      const toInsert = src.length >= 10 ? src.slice(0, 10) : src;
+      const toInsert = src;
       const docs = toInsert.map(({ _id, ...doc }) => ({ ...doc })); // sin _id
       if (docs.length === 0) return res.status(200).json({ inserted: 0 });
       db.insert(docs, (e) => (e ? res.sendStatus(500) : res.status(201).json({ inserted: docs.length })));
