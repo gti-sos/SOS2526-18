@@ -81,4 +81,4 @@
 <style>
     #container { width: 100%; height: 500px; margin: 0 auto; }
     main { text-align: center; padding: 20px; }
-</style>
+</style> 
