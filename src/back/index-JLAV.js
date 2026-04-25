@@ -15,7 +15,12 @@ let initialData = [
     { country: "Paraguay", country_code: "PRY", year: 2002, land_used: 740979, cereal_production: 1548965, cereal_yield: 2.09, population: 5261334 },
     { country: "Paraguay", country_code: "PRY", year: 2003, land_used: 821259, cereal_production: 1908170, cereal_yield: 2.32, population: 5326437 },
     { country: "Paraguay", country_code: "PRY", year: 2004, land_used: 803935, cereal_production: 1979103, cereal_yield: 2.46, population: 5388181 },
-    { country: "Paraguay", country_code: "PRY", year: 2005, land_used: 806850, cereal_production: 1749200, cereal_yield: 2.16, population: 5448100 }
+    { country: "Paraguay", country_code: "PRY", year: 2005, land_used: 806850, cereal_production: 1749200, cereal_yield: 2.16, population: 5448100 },
+    { country: "Spain", country_code: "ESP", year: 2017, land_used: 6011747, cereal_production: 16653669, cereal_yield: 27.702, population: 46868594 },
+    { country: "Spain", country_code: "ESP", year: 2018, land_used: 6027610, cereal_production: 25348920, cereal_yield: 42.055, population: 47092817 },
+    { country: "Spain", country_code: "ESP", year: 2019, land_used: 5975710, cereal_production: 20589030, cereal_yield: 34455.001, population: 47435121 },
+    { country: "Spain", country_code: "ESP", year: 2020, land_used: 6069230, cereal_production: 27320900, cereal_yield: 45.015, population: 47679482 },
+    { country: "Spain", country_code: "ESP", year: 2021, land_used: 6034580, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 }
 ];
 
 

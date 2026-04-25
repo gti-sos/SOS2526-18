@@ -56,6 +56,15 @@
             {/each}
         </tbody>
     </table>
+
+    <div class="analytics-section">
+        <hr>
+        <h2>Visualizaciones Integradas</h2>
+        <p>Análisis conjunto de los datos de todos los miembros del grupo utilizando Highcharts.</p>
+        <a href="/analytics">
+            <button class="btn-analytics">Ver Gráfica de Integración Grupal</button>
+        </a>
+    </div>
 </main>
 
 <style>
@@ -76,4 +85,30 @@
     th { background-color: #f4f4f4; }
     .repo-link { margin: 20px; font-weight: bold; }
     code { background: #eee; padding: 2px 4px; }
+
+    /* Estilos para el nuevo botón */
+    .analytics-section {
+        margin-top: 40px;
+        padding: 20px;
+    }
+    .btn-analytics {
+        background-color: #ff5722;
+        color: white;
+        padding: 15px 30px;
+        font-size: 1.1em;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-weight: bold;
+    }
+    .btn-analytics:hover {
+        background-color: #e64a19;
+    }
+    hr {
+        width: 60%;
+        margin: 20px auto;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
 </style>
