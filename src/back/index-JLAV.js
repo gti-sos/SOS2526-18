@@ -22,7 +22,7 @@ let initialData = [
     { country: "Spain", country_code: "ESP", year: 2020, land_used: 6069230, cereal_production: 27320900, cereal_yield: 45.015, population: 47679482 },
     { country: "Spain", country_code: "ESP", year: 2021, land_used: 6034580, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 }
 ];
-
+  
 
 
 
