@@ -25,7 +25,7 @@
             window.history.replaceState({}, '', window.location.pathname);
             getCereals();
         } 
-    });
+    }); 
 
     async function getCereals() {
         const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
