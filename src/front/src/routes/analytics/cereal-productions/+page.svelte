@@ -25,7 +25,7 @@
             countries.forEach(countryName => {
                 const countryData = apiData.filter(d => d.country === countryName);
                 processedSeries.push({
-                    name: countryName,
+                    name: countryName, 
                     color: palette[colorIdx % palette.length],
                     data: countryData.map(d => {
                         const landVal = Number(d.land_used);
