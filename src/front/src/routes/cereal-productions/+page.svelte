@@ -14,11 +14,8 @@
 
     let sCountry = $state("");
     let sYear = $state("");
-    let sFrom = $state(""); 
-    let sTo = $state("");
     let sLand = $state("");  
     let sProd = $state("");  
-    let sYield = $state(""); 
     let sPop = $state("");   
 
     $effect(() => {
@@ -49,8 +46,7 @@
     }
 
     function resetSearch() {
-        sCountry = ""; sYear = ""; sFrom = ""; sTo = "";
-        sLand = ""; sProd = ""; sYield = ""; sPop = ""; 
+        sCountry = ""; sYear = ""; sLand = ""; sProd = ""; sPop = ""; 
         offset = 0;
         getCereals();
         message = "Búsqueda limpiada.";
@@ -69,14 +65,19 @@
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-            message = cereals.length > 0 ? `Encontrados ${cereals.length} registros.` : "success";
+            message = cereals.length > 0 ? `Encontrados ${cereals.length} registros.` : "Sin resultados.";
             messageType = cereals.length > 0 ? "success" : "danger";
         }
     }
 
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
-        if (res.ok) { message = "Datos cargados"; messageType = "success"; offset = 0; await getCereals(); }
+        if (res.ok) { 
+            message = "Datos cargados"; 
+            messageType = "success"; 
+            offset = 0; 
+            await getCereals(); 
+        }
     }
 
     async function deleteAll() {
@@ -85,7 +86,7 @@
             if (res.ok) { 
                 offset = 0; 
                 getCereals(); 
-                // AQUÍ ESTÁ LA CORRECCIÓN CLAVE PARA EL TEST
+                // AQUÍ ESTÁ LA CLAVE: "borrados" en minúscula y sin nada delante
                 message = "borrados"; 
                 messageType = "success"; 
             }
@@ -104,6 +105,7 @@
         <div class="main-btns">
             <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
             <button onclick={deleteAll} class="btn-del">Borrar todo</button>
+            
             <a href="/analytics/cereal-productions" class="link-viz">
                 <button class="btn-viz">📊 Ver Análisis Visual</button>
             </a>
