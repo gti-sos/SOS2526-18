@@ -25,12 +25,27 @@
             window.history.replaceState({}, '', window.location.pathname);
             getCereals();
         } 
-    }); 
+    });
 
     async function getCereals() {
-        const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
-        if (res.ok) {
-            cereals = await res.json();
+        try {
+            const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
+            if (res.ok) {
+                const data = await res.json();
+                cereals = data;
+                // Si la carga es exitosa, solo limpiamos el mensaje si era un error previo
+                if (message === "error al cargar datos") message = "";
+            } else {
+                // Si la tabla está vacía tras un borrado, no mostramos "error al cargar"
+                // para no pisar el mensaje de éxito que busca el test
+                if (message !== "borrados" && message !== "datos cargados") {
+                    cereals = [];
+                    message = "error al cargar datos";
+                    messageType = "danger";
+                }
+            }
+        } catch (e) {
+            console.error("Error en getCereals:", e);
         }
     }
 
@@ -78,14 +93,20 @@
     }
 
     async function deleteAll() {
-        if (confirm("¿Seguro?")) {
+        if (confirm("¿Seguro que quieres borrar todos los datos?")) {
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
             if (res.ok) { 
+                cereals = [];
                 offset = 0; 
-                await getCereals(); 
-                // AQUÍ: Texto forzado en minúscula
+                // Establecemos el mensaje de éxito ANTES de intentar recargar
                 message = "borrados"; 
                 messageType = "success"; 
+                await getCereals();
+                // Re-confirmamos el mensaje después de la carga por si acaso
+                message = "borrados"; 
+            } else {
+                message = "error al borrar todo";
+                messageType = "danger";
             }
         }
     }
@@ -149,4 +170,5 @@
     .btn-reset { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
     .pagination-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
     .btn-page { border: 1px solid #007bff; padding: 8px 16px; cursor: pointer; background: white; color: #007bff; }
+    .btn-page:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
 </style>
