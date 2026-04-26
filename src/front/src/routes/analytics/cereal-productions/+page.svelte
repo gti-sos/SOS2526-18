@@ -13,7 +13,16 @@
             console.error("Error API", e); 
         }
 
+<<<<<<< HEAD
         // 2. LÓGICA DE SERIES
+=======
+        // Datos de respaldo
+        const finalData = apiData.length > 0 ? apiData : [
+            
+        ];
+
+        // 2. LÓGICA DE COLORES Y SERIES
+>>>>>>> df8e8a95674228a042bd66a6dc0e481ab46195bb
         const palette = ['#FF4136', '#0074D9', '#2ECC40', '#B10DC9', '#FF851B', '#7FDBFF'];
         let colorIdx = 0;
         let processedSeries = [];
