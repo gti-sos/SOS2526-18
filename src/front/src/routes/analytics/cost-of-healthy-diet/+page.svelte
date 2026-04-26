@@ -49,7 +49,6 @@
         const avgVeg    = countries.map(c => parseFloat((countryMap[c].veg   / countryMap[c].count).toFixed(2)));
         const avgFruit  = countries.map(c => parseFloat((countryMap[c].fruit / countryMap[c].count).toFixed(2)));
 
-
         Highcharts.chart('container-diet', {
             chart: {
                 type: 'bar',
