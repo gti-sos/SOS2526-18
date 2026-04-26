@@ -325,7 +325,7 @@ export function load_JLAV_API_V2(app) {
     //Borra todos los recursos
     app.delete(BASE_URL_V2, (req, res) => {
         db.remove({}, { multi: true }, (err, numRemoved) => {
-            res.sendStatus(200).send("borrados"); //200 Ok
+            res.status(200).send("borrados"); //200 Ok
         });
     });
 
