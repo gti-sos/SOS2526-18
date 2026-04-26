@@ -8,11 +8,10 @@
     let cereals = $state([]); 
     let message = $state("");
     let messageType = $state("danger"); 
-
     let limit = 10;
     let offset = $state(0);
 
-    // Para el test de edición (actualizado correctamente)
+    // TEST 3: Captura el mensaje cuando vuelves de editar
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente";
@@ -41,8 +40,7 @@
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
             if (res.ok) { 
                 await getCereals(); 
-                // AQUÍ: "borrados" en minúscula y punto
-                message = "borrados"; 
+                message = "borrados"; // TEST 6: En minúscula
                 messageType = "success"; 
             }
         }
@@ -53,15 +51,12 @@
 
 <main>
     <h1>Producción de Cereales (JLAV)</h1>
-
     <Message bind:message bind:type={messageType} />
 
     <div class="top-bar">
         <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
         <button onclick={deleteAll} class="btn-del">Borrar todo</button>
-        <a href="/analytics/cereal-productions">
-            <button class="btn-viz">📊 Ver Gráfica</button>
-        </a>
+        <a href="/analytics/cereal-productions"><button class="btn-viz">📊 Gráfica</button></a>
     </div>
 
     <CerealForm {getCereals} bind:message bind:messageType />
@@ -70,8 +65,7 @@
 </main>
 
 <style>
-    main { font-family: sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
-    h1 { border-bottom: 2px solid #007bff; color: #2c3e50; }
+    main { padding: 20px; max-width: 1200px; margin: 0 auto; font-family: sans-serif; }
     .top-bar { display: flex; gap: 10px; margin-bottom: 20px; }
     .btn-load { background: #28a745; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
