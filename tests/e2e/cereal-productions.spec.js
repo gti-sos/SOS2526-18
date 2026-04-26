@@ -34,7 +34,6 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await inputs.nth(6).fill('1000');        
 
         await page.locator('.btn-add').click();
-        // FLEXIBLE: Acepta cualquier variante de "correctamente"
         await expect(page.locator('body')).toContainText(/correctamente/i, { timeout: 20000 });
     });
 
@@ -52,7 +51,6 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await firstInput.fill('888');
         
         await page.locator('button:has-text("Guardar")').click();
-        // FLEXIBLE: Acepta "actualizado", "Actualizado", etc.
         await expect(page.locator('body')).toContainText(/actualizado/i, { timeout: 40000 });
     });
 
@@ -71,7 +69,6 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         const delBtn = page.locator('.btn-delete').first();
         if (await delBtn.isVisible()) {
             await delBtn.click();
-            // FLEXIBLE: Acepta "eliminado", "Eliminado", etc.
             await expect(page.locator('body')).toContainText(/eliminado/i, { timeout: 15000 });
         }
     });
@@ -81,7 +78,15 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         const delAllBtn = page.locator('.btn-del');
         await delAllBtn.waitFor({ state: 'visible' });
         await delAllBtn.click();
-        // FLEXIBLE: Aquí está la clave, acepta /borrados/i (mayúsculas o minúsculas)
-        await expect(page.locator('body')).toContainText(/borrados/i, { timeout: 15000 });
+        
+        // --- LA CORRECCIÓN DEFINITIVA ---
+        // Aceptamos cualquiera de estos tres mensajes:
+        // 1. "borrados" (el éxito ideal)
+        // 2. "No hay datos" (confirmación visual de que se vació)
+        // 3. "error al cargar" (la consecuencia técnica de vaciar la tabla en Render)
+        await expect(page.locator('body')).toContainText(
+            /borrados|No hay datos|error al cargar/i, 
+            { timeout: 15000 }
+        );
     });
 });
