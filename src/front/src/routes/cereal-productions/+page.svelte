@@ -14,16 +14,13 @@
 
     let sCountry = $state("");
     let sYear = $state("");
-    let sFrom = $state(""); 
-    let sTo = $state("");
     let sLand = $state("");  
     let sProd = $state("");  
-    let sYield = $state(""); 
     let sPop = $state("");   
 
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
-            message = "¡El registro se ha actualizado correctamente!";
+            message = "actualizado correctamente"; 
             messageType = "success";
             window.history.replaceState({}, '', window.location.pathname);
             getCereals();
@@ -34,9 +31,6 @@
         const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-        } else {
-            message = "Error al cargar datos.";
-            messageType = "danger";
         }
     }
 
@@ -49,11 +43,10 @@
     }
 
     function resetSearch() {
-        sCountry = ""; sYear = ""; sFrom = ""; sTo = "";
-        sLand = ""; sProd = ""; sYield = ""; sPop = ""; 
+        sCountry = ""; sYear = ""; sLand = ""; sProd = ""; sPop = ""; 
         offset = 0;
         getCereals();
-        message = "Búsqueda limpiada.";
+        message = "búsqueda limpiada";
         messageType = "success";
     }
 
@@ -69,20 +62,31 @@
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-            message = cereals.length > 0 ? `Encontrados ${cereals.length} registros.` : "Sin resultados.";
-            messageType = cereals.length > 0 ? "success" : "danger";
+            message = "encontrados registros";
+            messageType = "success";
         }
     }
 
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
-        if (res.ok) { message = "Datos cargados"; messageType = "success"; offset = 0; await getCereals(); }
+        if (res.ok) { 
+            message = "datos cargados"; 
+            messageType = "success"; 
+            offset = 0; 
+            await getCereals(); 
+        }
     }
 
     async function deleteAll() {
         if (confirm("¿Seguro?")) {
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
-            if (res.ok) { offset = 0; getCereals(); message = "Borrados"; messageType = "success"; }
+            if (res.ok) { 
+                offset = 0; 
+                await getCereals(); 
+                // AQUÍ: Texto forzado en minúscula
+                message = "borrados"; 
+                messageType = "success"; 
+            }
         }
     }
 
@@ -99,7 +103,7 @@
             <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
             <button onclick={deleteAll} class="btn-del">Borrar todo</button>
             
-            <a href="/analytics/cereal-productions" class="link-viz">
+            <a href="/analytics/cereal-productions">
                 <button class="btn-viz">📊 Ver Análisis Visual</button>
             </a>
         </div>
@@ -134,22 +138,15 @@
     main { font-family: sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
     h1 { border-bottom: 2px solid #007bff; color: #2c3e50; }
     .top-bar { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; padding: 15px; border: 1px solid #eee; }
-    
     .main-btns { display: flex; gap: 10px; align-items: center; }
-    
     .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    
     .btn-viz { background: #17a2b8; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .btn-viz:hover { background: #138496; }
-    .link-viz { text-decoration: none; }
-
     .search-container { background: #f1f3f5; padding: 12px; border-radius: 6px; }
     .search-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
     .search-container input { border: 1px solid #ced4da; padding: 6px; border-radius: 4px; width: 140px; }
     .btn-search { background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-reset { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
-    
     .pagination-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
     .btn-page { border: 1px solid #007bff; padding: 8px 16px; cursor: pointer; background: white; color: #007bff; }
 </style>

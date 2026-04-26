@@ -9,7 +9,9 @@
         try {
             const res = await fetch('/api/v2/cereal-productions');
             apiData = res.ok ? await res.json() : [];
-        } catch (e) { console.error("Error API"); }
+        } catch (e) { 
+            console.error("Error API", e); 
+        }
 
         // Datos de respaldo
         const finalData = apiData.length > 0 ? apiData : [
@@ -19,35 +21,42 @@
         // 2. LÓGICA DE COLORES Y SERIES
         const palette = ['#FF4136', '#0074D9', '#2ECC40', '#B10DC9', '#FF851B', '#7FDBFF'];
         let colorIdx = 0;
+        let processedSeries = [];
 
-        const processedSeries = [];
-        const countries = [...new Set(finalData.map(d => d.country))];
-        
-        countries.forEach(countryName => {
-            const countryData = finalData.filter(d => d.country === countryName);
+        // Si hay datos, creamos las series por país
+        if (apiData.length > 0) {
+            const countries = [...new Set(apiData.map(d => d.country))];
             
-            processedSeries.push({
-                name: countryName,
-                color: palette[colorIdx % palette.length],
-                data: countryData.map(d => {
-                    const landVal = Number(d.land_used);
-                    const calcRadius = Math.sqrt(landVal / 40000) + 4;
-
-                    return {
-                        x: Number(d.year),
-                        y: Number(d.cereal_production),
-                        land: d.land_used,
-                        pop: d.population,
-                        name: d.country,
-                        marker: {
-                            radius: calcRadius > 35 ? 35 : calcRadius,
-                            symbol: 'circle'
-                        }
-                    };
-                })
+            countries.forEach(countryName => {
+                const countryData = apiData.filter(d => d.country === countryName);
+                processedSeries.push({
+                    name: countryName, 
+                    color: palette[colorIdx % palette.length],
+                    data: countryData.map(d => {
+                        const landVal = Number(d.land_used);
+                        const calcRadius = Math.sqrt(landVal / 40000) + 4;
+                        return {
+                            x: Number(d.year),
+                            y: Number(d.cereal_production),
+                            land: d.land_used,
+                            pop: d.population,
+                            name: d.country,
+                            marker: {
+                                radius: calcRadius > 35 ? 35 : calcRadius,
+                                symbol: 'circle'
+                            }
+                        };
+                    })
+                });
+                colorIdx++;
             });
-            colorIdx++;
-        });
+        } else {
+            // SI NO HAY DATOS: Metemos una serie vacía para que el gráfico pinte los ejes
+            processedSeries = [{
+                name: 'Sin datos',
+                data: []
+            }];
+        }
 
         // 3. CONFIGURACIÓN DEL GRÁFICO
         Highcharts.chart('container-uso-tierra', {
@@ -59,11 +68,14 @@
             title: { text: 'Análisis de Producción (Tamaño = Uso de Tierra)' },
             xAxis: { 
                 title: { text: 'Año' }, 
-                gridLineWidth: 1 
+                gridLineWidth: 1,
+                min: 1960, // Ponemos un rango mínimo para que no se vea raro vacío
+                max: 2025
             },
             yAxis: { 
                 title: { text: 'Producción Total (Toneladas)' },
-                type: 'logarithmic'
+                type: 'logarithmic',
+                min: 1 // Evita errores en escala logarítmica cuando está vacío
             },
             tooltip: {
                 useHTML: true,
@@ -89,11 +101,8 @@
 </main>
 
 <style>
-    main {
-        padding: 20px;
-    }
+    main { padding: 20px; }
 
-    /* Tamaño original restaurado */
     #container-uso-tierra {
         width: 100%;
         height: 600px;
@@ -101,12 +110,10 @@
         border: 1px solid #eee;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background-color: white; /* Asegura que el contenedor se vea */
     }
 
-    .navigation {
-        margin-top: 20px;
-        text-align: center;
-    }
+    .navigation { margin-top: 20px; text-align: center; }
 
     .btn-back {
         padding: 10px 30px;
@@ -116,9 +123,5 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
-    }
-
-    .btn-back:hover {
-        background-color: #555;
     }
 </style>
