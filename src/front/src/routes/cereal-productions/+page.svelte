@@ -40,6 +40,7 @@
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
             if (res.ok) { 
                 await getCereals(); 
+                // AQUÍ: Minúscula total y sin espacios
                 message = "borrados"; 
                 messageType = "success"; 
             }
