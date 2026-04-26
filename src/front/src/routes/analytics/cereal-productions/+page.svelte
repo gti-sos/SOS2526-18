@@ -13,9 +13,7 @@
 
         // Datos de respaldo
         const finalData = apiData.length > 0 ? apiData : [
-            {country: "Spain", year: 1961, cereal_production: 7000000, land_used: 5000000, population: 30580000},
-            {country: "Spain", year: 2020, cereal_production: 27320900, land_used: 6069230, population: 47450000},
-            {country: "Oman", year: 2021, cereal_production: 14621, land_used: 5628, population: 4500000}
+            
         ];
 
         // 2. LÓGICA DE COLORES Y SERIES
