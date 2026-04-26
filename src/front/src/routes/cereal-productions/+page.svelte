@@ -12,14 +12,12 @@
     let limit = 10;
     let offset = $state(0);
 
-    // Variables de búsqueda que tenías
     let sCountry = $state("");
     let sYear = $state("");
     let sLand = $state("");  
     let sProd = $state("");  
     let sPop = $state("");   
 
-    // Arreglo para el Test 3 (Edición)
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente"; 
@@ -33,9 +31,6 @@
         const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-        } else {
-            message = "error al cargar datos";
-            messageType = "danger";
         }
     }
 
@@ -67,8 +62,8 @@
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-            message = cereals.length > 0 ? `encontrados ${cereals.length} registros` : "sin resultados";
-            messageType = cereals.length > 0 ? "success" : "danger";
+            message = "encontrados registros";
+            messageType = "success";
         }
     }
 
@@ -88,7 +83,7 @@
             if (res.ok) { 
                 offset = 0; 
                 await getCereals(); 
-                // CORRECCIÓN CRÍTICA PARA TEST 6: minúsculas
+                // AQUÍ: Texto forzado en minúscula
                 message = "borrados"; 
                 messageType = "success"; 
             }
@@ -108,7 +103,7 @@
             <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
             <button onclick={deleteAll} class="btn-del">Borrar todo</button>
             
-            <a href="/analytics/cereal-productions" class="link-viz">
+            <a href="/analytics/cereal-productions">
                 <button class="btn-viz">📊 Ver Análisis Visual</button>
             </a>
         </div>
@@ -147,7 +142,6 @@
     .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-viz { background: #17a2b8; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .link-viz { text-decoration: none; }
     .search-container { background: #f1f3f5; padding: 12px; border-radius: 6px; }
     .search-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
     .search-container input { border: 1px solid #ced4da; padding: 6px; border-radius: 4px; width: 140px; }
