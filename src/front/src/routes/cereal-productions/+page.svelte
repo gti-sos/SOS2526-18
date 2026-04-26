@@ -29,26 +29,15 @@
 
     async function getCereals() {
         const res = await fetch(`/api/v2/cereal-productions?limit=${limit}&offset=${offset}`);
-        if (res.ok) {
-            cereals = await res.json();
-        } else {
-            message = "Error al cargar datos.";
-            messageType = "danger";
-        }
+        if (res.ok) { cereals = await res.json(); }
     }
 
-    function nextPage() {
-        if (cereals.length >= limit) { offset += limit; getCereals(); }
-    }
-
-    function prevPage() {
-        if (offset >= limit) { offset -= limit; getCereals(); }
-    }
+    function nextPage() { if (cereals.length >= limit) { offset += limit; getCereals(); } }
+    function prevPage() { if (offset >= limit) { offset -= limit; getCereals(); } }
 
     function resetSearch() {
         sCountry = ""; sYear = ""; sLand = ""; sProd = ""; sPop = ""; 
-        offset = 0;
-        getCereals();
+        offset = 0; getCereals();
         message = "Búsqueda limpiada.";
         messageType = "success";
     }
@@ -60,7 +49,6 @@
         if (sLand) params.append("land_used", sLand);
         if (sProd) params.append("cereal_production", sProd);
         if (sPop) params.append("population", sPop);
-        
         offset = 0;
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
@@ -72,12 +60,7 @@
 
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
-        if (res.ok) { 
-            message = "Datos cargados"; 
-            messageType = "success"; 
-            offset = 0; 
-            await getCereals(); 
-        }
+        if (res.ok) { message = "Datos cargados"; messageType = "success"; offset = 0; await getCereals(); }
     }
 
     async function deleteAll() {
@@ -86,8 +69,7 @@
             if (res.ok) { 
                 offset = 0; 
                 getCereals(); 
-                // AQUÍ ESTÁ LA CLAVE: "borrados" en minúscula y sin nada delante
-                message = "borrados"; 
+                message = "borrados"; // <--- MINÚSCULA TOTAL
                 messageType = "success"; 
             }
         }
@@ -105,7 +87,6 @@
         <div class="main-btns">
             <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
             <button onclick={deleteAll} class="btn-del">Borrar todo</button>
-            
             <a href="/analytics/cereal-productions" class="link-viz">
                 <button class="btn-viz">📊 Ver Análisis Visual</button>
             </a>
@@ -131,9 +112,9 @@
     <CerealTable {cereals} {getCereals} bind:message bind:messageType />
 
     <div class="pagination-controls">
-        <button onclick={prevPage} disabled={offset === 0} class="btn-page"> &laquo; Anterior </button>
-        <span class="page-indicator"> Página <strong>{(offset / limit) + 1}</strong> </span>
-        <button onclick={nextPage} disabled={cereals.length < limit} class="btn-page"> Siguiente &raquo; </button>
+        <button onclick={prevPage} disabled={offset === 0} class="btn-page"> Anterior </button>
+        <span class="page-indicator"> Página {(offset / limit) + 1} </span>
+        <button onclick={nextPage} disabled={cereals.length < limit} class="btn-page"> Siguiente </button>
     </div>
 </main>
 

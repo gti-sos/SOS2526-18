@@ -1,5 +1,4 @@
 <script>
-    // Svelte 5: Usamos $props para recibir los datos
     let { message = $bindable(""), type = $bindable("danger") } = $props();
 </script>
 
