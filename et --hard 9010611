@@ -1,0 +1,169 @@
+[33meb4c803[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m8ed1103[m Añadida navegación entre tabla y gráfica de cereales
+[33m1410f71[m F10.1
+[33m289db29[m .
+[33m0183357[m .
+[33ma14f77a[m analytics nvd
+[33mbcaf5a1[m Añadida navegación entre tabla y gráfica de cereales
+[33m58572dc[m Añadida navegación entre tabla y gráfica de cereales
+[33m838e600[m Añadida navegación entre tabla y gráfica de cereales
+[33m4e8d816[m Añadida navegación entre tabla y gráfica de cereales
+[33mfb0bf64[m Añadida navegación entre tabla y gráfica de cereales
+[33me521097[m Añadida navegación entre tabla y gráfica de cereales
+[33mcadfe80[m Añadida navegación entre tabla y gráfica de cereales
+[33m5af2253[m Añadida navegación entre tabla y gráfica de cereales
+[33mba7d96f[m Añadida navegación entre tabla y gráfica de cereales
+[33mc44a34e[m Añadida navegación entre tabla y gráfica de cereales
+[33mcf2f174[m Añadida navegación entre tabla y gráfica de cereales
+[33ma2b2239[m Corregido mensaje de borrado y componentes para test e2e
+[33md8c5600[m Añadida navegación entre tabla y gráfica de cereales
+[33m7644672[m Añadida navegación entre tabla y gráfica de cereales
+[33m41942b8[m Añadida navegación entre tabla y gráfica de cereales
+[33m25c5d0d[m Añadida navegación entre tabla y gráfica de cereales
+[33mffc299e[m Añadida navegación entre tabla y gráfica de cereales
+[33md3bb31d[m Añadida navegación entre tabla y gráfica de cereales
+[33m2de3453[m error tabla vacia solucionado
+[33m9010611[m Añadida navegación entre tabla y gráfica de cereales
+[33ma35b2c1[m prueba
+[33m836ff42[m prueba
+[33md6cecf3[m prueba
+[33m69d6bd5[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m7f86907[m prueba
+[33mf8a80e8[m e2e
+[33m9ae22a6[m e2e
+[33m21fa92b[m test v2
+[33me557550[m .
+[33m01b2d92[m datos Spain
+[33mafbcf69[m adjustements
+[33mda409ce[m backend new values
+[33ma5d73e6[m error cereales
+[33mb6fc74b[m test
+[33m9d7e648[m 
+[33me227c86[m test
+[33m779d21b[m tests
+[33m6a7825c[m 
+[33m1a7ee5e[m correccion de tests
+[33m3a1c81d[m d02.4 test
+[33m92148ee[m d02.4
+[33mf3f9f97[m prueba
+[33m26eb3fe[m tests
+[33m278c31c[m cambios
+[33m8280541[m .
+[33m566eaff[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m61d0936[m prueba
+[33m1b95004[m .
+[33m33f62a9[m .
+[33m71c7afa[m .
+[33md808fda[m .
+[33mce701f6[m .
+[33mad6f661[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33mdc32a5e[m .
+[33m0d30f95[m prueba
+[33m8f9f242[m .
+[33mffc2b58[m búsquedas
+[33mcc948df[m pruebaaa
+[33m134bf88[m pruebaa
+[33m625ba9c[m pruebaa
+[33m1584959[m pruebaa
+[33m4b1130f[m pruebaa
+[33m04b4a61[m pruebaa
+[33m15c76e5[m test
+[33mb98993e[m d02.3.2 from to
+[33m0caa0e5[m prueba
+[33ma5cb048[m prueba
+[33mc253d8e[m prueba
+[33m70708a9[m prueba
+[33m9fdb22a[m prueba
+[33mfb6ecb1[m prueba
+[33m5e2a398[m d02.3.1
+[33m5d98119[m d02.3
+[33m3a2fc82[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m99cb2f7[m .
+[33m025b239[m cambios tests e2e
+[33m20716ef[m .
+[33m3f3ef08[m cambio tests
+[33m242010d[m cambio retries
+[33mb93c3da[m corrección test e2e
+[33m2385fd5[m tests e2e nvd
+[33m9cc2c6e[m cambios búsqueda rango años
+[33m410f126[m vista separada de editar
+[33mcb83a95[m test e2e nvd
+[33m98e62c2[m d02.3
+[33m29fb3af[m d02.2
+[33m8e5eff9[m d02.1
+[33m159ba59[m prueba
+[33m48ccb50[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33mba0c624[m D02.0.1
+[33md260a0a[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33mf33fc4e[m Fixes #60
+[33m3fb96ae[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m09e86e2[m Final: Suite E2E completa 8/8 pasando en Render
+[33me1819bd[m Fixes #59
+[33m5505b2e[m Fixes #58
+[33m795275d[m editar
+[33m314f823[m editar
+[33ma8984ae[m editar
+[33ma8e5577[m editar
+[33m8afccf9[m editar
+[33m72c0c56[m editar
+[33mde8bc34[m Fixes #57
+[33mc1dcee7[m Fixes 57
+[33m3f7358a[m Fixes 57
+[33mea5aaa5[m Fixes 57
+[33m794dc5c[m playwright
+[33m4d8743c[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m71850a4[m f07.2.2 mensajes permanentes
+[33m4f444a8[m cambios paginacion
+[33mb17f4d9[m F07.2.1 nuevo postman
+[33m3c8e57b[m f07.2
+[33m94820fe[m F07.1
+[33mbefe5f0[m actualizacion test con version 2
+[33mc3390a4[m front-end jlav
+[33m998a4d3[m Fixes #51
+[33m4734127[m cambios form
+[33m50156a5[m cambio form
+[33m673c08d[m correcciones
+[33m2fcfe5b[m svelte nvd
+[33m8a81e13[m front-end jlav
+[33m6cb2e4c[m front-end jlav
+[33m861553e[m front-end jlav
+[33m964cca2[m front-end jlav
+[33mdc1d2de[m front-end jlav
+[33mb0e1e6d[m front-end jlav
+[33mcbfbeb0[m front-end jlav
+[33m5278a47[m front-end jlav
+[33mc2a989d[m front-end jlav
+[33ma0294e8[m front-end jlav
+[33mf462abe[m front-end jlav
+[33mf2a092f[m front-end jlav
+[33m04a1198[m front-end jlav
+[33m25df99b[m front-end jlav
+[33mf64d9f0[m front-end jlav
+[33meaa4516[m front-end jlav
+[33m67db604[m front-end jlav
+[33me70b8ca[m front-end jlav
+[33mc91e9e1[m api v2 Fixes #52
+[33mee4cf48[m api v2
+[33m5f9cc02[m api v2
+[33me8b8fcf[m api v2
+[33m0700b9c[m api v2
+[33m1cbaec2[m api v2
+[33m5c8f150[m api v2
+[33m6b7c8f8[m api v2
+[33m6d238ee[m svelte
+[33m862aeed[m svelte
+[33md8e1da8[m svelte
+[33m63fa87f[m svelte
+[33m7325d2b[m svelte
+[33m65b4ad4[m svelte
+[33m04ba113[m svelte
+[33m197c75a[m svelte
+[33m2ccfe00[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m44a1c0d[m f06 cambios finales
+[33ma024b8c[m cambio nombre test
+[33m731c9ea[m cambio
+[33mbf21699[m Merge branch 'main' of https://github.com/gti-sos/SOS2526-18
+[33m8bd9044[m f06.5.1 renombrar test
+[33m3897022[m correccion nombre test
+[33m2f9a1c4[m f06.5 reordenar postman
+[33m5e905ba[m correccion nombre test
