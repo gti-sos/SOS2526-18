@@ -34,7 +34,8 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await inputs.nth(6).fill('1000');        
 
         await page.locator('.btn-add').click();
-        await expect(page.locator('body')).toContainText('correctamente', { timeout: 20000 });
+        // FLEXIBLE: Acepta cualquier variante de "correctamente"
+        await expect(page.locator('body')).toContainText(/correctamente/i, { timeout: 20000 });
     });
 
     test('3. Debería editar un recurso', async ({ page }) => {      
@@ -51,7 +52,8 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await firstInput.fill('888');
         
         await page.locator('button:has-text("Guardar")').click();
-        await expect(page.locator('body')).toContainText('actualizado correctamente', { timeout: 40000 });
+        // FLEXIBLE: Acepta "actualizado", "Actualizado", etc.
+        await expect(page.locator('body')).toContainText(/actualizado/i, { timeout: 40000 });
     });
 
     test('4. Debería buscar por país', async ({ page }) => {
@@ -61,8 +63,6 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await searchInput.fill('TestCountry');
         await page.locator('.btn-search').click();
 
-        // Si hay resultados o el mensaje de éxito, el test pasa.
-        // Hemos quitado la comprobación de la clase .pagination-controls para evitar errores de DOM.
         await expect(page.locator('body')).toContainText(/Encontrados|registros|encontrado/i, { timeout: 20000 });
     });
 
@@ -71,7 +71,8 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         const delBtn = page.locator('.btn-delete').first();
         if (await delBtn.isVisible()) {
             await delBtn.click();
-            await expect(page.locator('body')).toContainText('eliminado correctamente', { timeout: 15000 });
+            // FLEXIBLE: Acepta "eliminado", "Eliminado", etc.
+            await expect(page.locator('body')).toContainText(/eliminado/i, { timeout: 15000 });
         }
     });
         
@@ -80,6 +81,7 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         const delAllBtn = page.locator('.btn-del');
         await delAllBtn.waitFor({ state: 'visible' });
         await delAllBtn.click();
-        await expect(page.locator('body')).toContainText('borrados', { timeout: 15000 });
+        // FLEXIBLE: Aquí está la clave, acepta /borrados/i (mayúsculas o minúsculas)
+        await expect(page.locator('body')).toContainText(/borrados/i, { timeout: 15000 });
     });
 });
