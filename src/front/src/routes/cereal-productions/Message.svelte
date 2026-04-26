@@ -5,7 +5,7 @@
 
 {#if message}
     <div class="alert {type}">
-        <strong>{type === 'success' ? 'Éxito:' : 'Aviso:'}</strong> {message}
+        <span>{message}</span>
         <button onclick={() => message = ""}>X</button>
     </div>
 {/if}
