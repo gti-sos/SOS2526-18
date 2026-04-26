@@ -12,6 +12,7 @@
     let limit = 10;
     let offset = $state(0);
 
+    // CRUCIAL PARA EL TEST 3: Captura el mensaje tras editar
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente";
@@ -40,7 +41,7 @@
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
             if (res.ok) { 
                 await getCereals(); 
-                // AQUÍ: Minúscula total y sin espacios
+                // CRUCIAL PARA EL TEST 6: Texto exacto en minúsculas
                 message = "borrados"; 
                 messageType = "success"; 
             }
@@ -58,7 +59,9 @@
     <div class="top-bar">
         <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
         <button onclick={deleteAll} class="btn-del">Borrar todo</button>
-        <a href="/analytics/cereal-productions"><button class="btn-viz">📊 Gráfica</button></a>
+        <a href="/analytics/cereal-productions">
+            <button class="btn-viz">📊 Ver Análisis Visual</button>
+        </a>
     </div>
 
     <CerealForm {getCereals} bind:message bind:messageType />
