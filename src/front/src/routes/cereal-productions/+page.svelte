@@ -24,7 +24,7 @@
             messageType = "success";
             window.history.replaceState({}, '', window.location.pathname);
             getCereals();
-        }
+        } 
     });
 
     async function getCereals() {
