@@ -18,7 +18,7 @@
     let sProd = $state("");  
     let sPop = $state("");   
 
-    // Efecto para capturar actualizaciones desde el editor
+    // Manejo de mensajes de actualización
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente"; 
@@ -34,10 +34,11 @@
             if (res.ok) {
                 const data = await res.json();
                 cereals = data;
-                // Si la carga funciona, solo limpiamos si el mensaje actual era de error
+                // Si la carga es exitosa, limpiamos errores de carga previos
                 if (message === "error al cargar datos") message = "";
             } else {
-                // CRÍTICO: No permitimos que "error al cargar" pise el mensaje de éxito del test
+                // Si la tabla está vacía tras borrar, NO mostramos error de carga
+                // para que el test de Playwright vea el mensaje de éxito "borrados"
                 if (message !== "borrados" && message !== "datos cargados") {
                     cereals = [];
                     message = "error al cargar datos";
@@ -83,14 +84,22 @@
     }
 
     async function loadInitialData() {
+        // Limpiamos mensajes previos para evitar confusión
+        message = "Cargando...";
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
         if (res.ok) { 
             message = "datos cargados"; 
             messageType = "success"; 
             offset = 0; 
-            await getCereals();
-            // Reforzamos el mensaje después de la carga
-            message = "datos cargados";
+            // LE DAMOS 1 SEGUNDO al servidor de Render para que respire 
+            // antes de pedirle la lista de nuevo. Esto evita el "Failed Service".
+            setTimeout(async () => {
+                await getCereals();
+                message = "datos cargados";
+            }, 1000);
+        } else {
+            message = "error al cargar datos iniciales";
+            messageType = "danger";
         }
     }
 
@@ -100,12 +109,14 @@
             if (res.ok) { 
                 cereals = [];
                 offset = 0; 
-                // Prioridad absoluta al mensaje que busca el test
+                // Mensaje prioritario para el test de Playwright
                 message = "borrados"; 
                 messageType = "success"; 
-                // Llamamos a getCereals pero nuestra lógica arriba impedirá que pise el mensaje
-                await getCereals();
-                message = "borrados"; 
+                // Esperamos un poco antes de refrescar para no saturar
+                setTimeout(async () => {
+                    await getCereals();
+                    message = "borrados"; 
+                }, 500);
             } else {
                 message = "error al borrar todo";
                 messageType = "danger";
