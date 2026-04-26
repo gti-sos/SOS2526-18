@@ -12,13 +12,14 @@
     let limit = 10;
     let offset = $state(0);
 
+    // Variables de búsqueda que tenías
     let sCountry = $state("");
     let sYear = $state("");
     let sLand = $state("");  
     let sProd = $state("");  
     let sPop = $state("");   
 
-    // Manejo de mensaje post-edición (Test 3)
+    // Arreglo para el Test 3 (Edición)
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente"; 
@@ -86,8 +87,8 @@
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
             if (res.ok) { 
                 offset = 0; 
-                getCereals(); 
-                // Mensaje exacto para el Test 6
+                await getCereals(); 
+                // CORRECCIÓN CRÍTICA PARA TEST 6: minúsculas
                 message = "borrados"; 
                 messageType = "success"; 
             }
@@ -146,7 +147,6 @@
     .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-viz { background: #17a2b8; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .btn-viz:hover { background: #138496; }
     .link-viz { text-decoration: none; }
     .search-container { background: #f1f3f5; padding: 12px; border-radius: 6px; }
     .search-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
