@@ -8,15 +8,12 @@
         let apiData = [];
         try {
             const res = await fetch('/api/v2/cereal-productions');
-            apiData = res.ok ? await res.json() : [];
+            let rawData = res.ok ? await res.json() : [];
+            // Filtramos para evitar datos de test en la gráfica
+            apiData = rawData.filter(d => d.country !== "TestCountry");
         } catch (e) { 
             console.error("Error API", e); 
         }
-
-        // Datos de respaldo
-        const finalData = apiData.length > 0 ? apiData : [
-            
-        ];
 
         // 2. LÓGICA DE COLORES Y SERIES
         const palette = ['#FF4136', '#0074D9', '#2ECC40', '#B10DC9', '#FF851B', '#7FDBFF'];
@@ -51,9 +48,9 @@
                 colorIdx++;
             });
         } else {
-            // SI NO HAY DATOS: Metemos una serie vacía para que el gráfico pinte los ejes
+            // SI NO HAY DATOS: Serie vacía para mantener los ejes
             processedSeries = [{
-                name: 'Sin datos',
+                name: 'Sin datos disponibles',
                 data: []
             }];
         }
@@ -69,13 +66,13 @@
             xAxis: { 
                 title: { text: 'Año' }, 
                 gridLineWidth: 1,
-                min: 1960, // Ponemos un rango mínimo para que no se vea raro vacío
+                min: 1960,
                 max: 2025
             },
             yAxis: { 
                 title: { text: 'Producción Total (Toneladas)' },
                 type: 'logarithmic',
-                min: 1 // Evita errores en escala logarítmica cuando está vacío
+                min: 1 
             },
             tooltip: {
                 useHTML: true,
@@ -110,7 +107,7 @@
         border: 1px solid #eee;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        background-color: white; /* Asegura que el contenedor se vea */
+        background-color: white;
     }
 
     .navigation { margin-top: 20px; text-align: center; }
