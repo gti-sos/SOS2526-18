@@ -33,11 +33,10 @@
             if (res.ok) {
                 const data = await res.json();
                 cereals = data;
-                // Si la carga es exitosa, solo limpiamos el mensaje si era un error previo
+                // Si carga bien, solo quitamos el mensaje si era un error de carga previo
                 if (message === "error al cargar datos") message = "";
             } else {
-                // Si la tabla está vacía tras un borrado, no mostramos "error al cargar"
-                // para no pisar el mensaje de éxito que busca el test
+                // Si la tabla queda vacía, NO ponemos error si acabamos de borrar o cargar iniciales
                 if (message !== "borrados" && message !== "datos cargados") {
                     cereals = [];
                     message = "error al cargar datos";
@@ -98,11 +97,11 @@
             if (res.ok) { 
                 cereals = [];
                 offset = 0; 
-                // Establecemos el mensaje de éxito ANTES de intentar recargar
+                // Prioridad absoluta al mensaje que busca el test
                 message = "borrados"; 
                 messageType = "success"; 
                 await getCereals();
-                // Re-confirmamos el mensaje después de la carga por si acaso
+                // Lo repetimos por si getCereals es más lento que el render
                 message = "borrados"; 
             } else {
                 message = "error al borrar todo";
