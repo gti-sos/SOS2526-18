@@ -163,4 +163,4 @@
     
     .pagination-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
     .btn-page { border: 1px solid #007bff; padding: 8px 16px; cursor: pointer; background: white; color: #007bff; }
-</style>
+</style> 
