@@ -15,11 +15,20 @@
     let sRegion = $state("");
     let sCostCategory = $state("");
     let sCountryCode = $state("");
+    let currentPage = $state(1);
+    const pageSize = 10;
+    let pagedDiets = $derived(diets.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+    let totalPages = $derived(Math.max(1, Math.ceil(diets.length / pageSize)));
+
+    function prevPage() { if (currentPage > 1) currentPage--; }
+    function nextPage() { if (currentPage < totalPages) currentPage++; }
+    function resetPage() {currentPage = 1; }
 
     async function getDiets() {
         const res = await fetch("/api/v1/cost-of-healthy-diet-by-countries");
         if (res.ok) {
             diets = await res.json();
+            resetPage();
             sCountry = "";
             sYear = "";
         } else {
@@ -34,6 +43,7 @@ async function fetchSpecific() {
         const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries/${encodeURIComponent(sCountry)}/${sYear}`);
         if (res.ok) {
             diets = [await res.json()];
+            resetPage();
             message = `Se ha encontrado el registro de '${sCountry}' para el año ${sYear}.`;
             messageType = "success";
         } else if (res.status === 404) {
@@ -111,6 +121,7 @@ async function fetchSpecific() {
         const res = await fetch(`/api/v1/cost-of-healthy-diet-by-countries?${query}`);
         if (res.ok) {
             diets = await res.json();
+            resetPage();
             message = diets.length > 0
                 ? `Se han encontrado ${diets.length} registro${diets.length !== 1 ? 's' : ''}.`
                 : 'No se han encontrado registros en ese rango de años.';
@@ -164,7 +175,12 @@ async function fetchSpecific() {
 
     <hr />
 
-    <DietTable {diets} {getDiets} bind:message bind:messageType />
+    <DietTable diets={pagedDiets} {getDiets} bind:message bind:messageType />
+    <div class="pagination">
+        <button onclick={prevPage} disabled={currentPage === 1} class="btn-page">« Anterior</button>
+        <span class="page-info">Página {currentPage} de {totalPages} ({diets.length} registros)</span>
+        <button onclick={nextPage} disabled={currentPage === totalPages} class="btn-page">Siguiente »</button>
+    </div>
 </main>
 
 
