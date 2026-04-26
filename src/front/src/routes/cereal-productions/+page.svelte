@@ -76,13 +76,24 @@
 
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
-        if (res.ok) { message = "Datos cargados"; messageType = "success"; offset = 0; await getCereals(); }
+        if (res.ok) { 
+            message = "Datos cargados"; 
+            messageType = "success"; 
+            offset = 0; 
+            await getCereals(); 
+        }
     }
 
     async function deleteAll() {
         if (confirm("¿Seguro?")) {
             const res = await fetch("/api/v2/cereal-productions", { method: "DELETE" });
-            if (res.ok) { offset = 0; getCereals(); message = "Borrados"; messageType = "success"; }
+            if (res.ok) { 
+                offset = 0; 
+                getCereals(); 
+                // CORRECCIÓN PARA EL TEST: "borrados" en minúsculas
+                message = "borrados"; 
+                messageType = "success"; 
+            }
         }
     }
 
