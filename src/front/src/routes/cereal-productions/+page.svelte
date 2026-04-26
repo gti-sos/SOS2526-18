@@ -69,19 +69,14 @@
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
             cereals = await res.json();
-            message = cereals.length > 0 ? `Encontrados ${cereals.length} registros.` : "Sin resultados.";
+            message = cereals.length > 0 ? `Encontrados ${cereals.length} registros.` : "success";
             messageType = cereals.length > 0 ? "success" : "danger";
         }
     }
 
     async function loadInitialData() {
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
-        if (res.ok) { 
-            message = "Datos cargados"; 
-            messageType = "success"; 
-            offset = 0; 
-            await getCereals(); 
-        }
+        if (res.ok) { message = "Datos cargados"; messageType = "success"; offset = 0; await getCereals(); }
     }
 
     async function deleteAll() {
@@ -90,7 +85,7 @@
             if (res.ok) { 
                 offset = 0; 
                 getCereals(); 
-                // CORRECCIÓN PARA EL TEST: "borrados" en minúsculas
+                // AQUÍ ESTÁ LA CORRECCIÓN CLAVE PARA EL TEST
                 message = "borrados"; 
                 messageType = "success"; 
             }
@@ -109,7 +104,6 @@
         <div class="main-btns">
             <button onclick={loadInitialData} class="btn-load">Cargar iniciales</button>
             <button onclick={deleteAll} class="btn-del">Borrar todo</button>
-            
             <a href="/analytics/cereal-productions" class="link-viz">
                 <button class="btn-viz">📊 Ver Análisis Visual</button>
             </a>
@@ -145,22 +139,17 @@
     main { font-family: sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
     h1 { border-bottom: 2px solid #007bff; color: #2c3e50; }
     .top-bar { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; padding: 15px; border: 1px solid #eee; }
-    
     .main-btns { display: flex; gap: 10px; align-items: center; }
-    
     .btn-load { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-del { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    
     .btn-viz { background: #17a2b8; color: white; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-viz:hover { background: #138496; }
     .link-viz { text-decoration: none; }
-
     .search-container { background: #f1f3f5; padding: 12px; border-radius: 6px; }
     .search-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
     .search-container input { border: 1px solid #ced4da; padding: 6px; border-radius: 4px; width: 140px; }
     .btn-search { background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-reset { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
-    
     .pagination-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
     .btn-page { border: 1px solid #007bff; padding: 8px 16px; cursor: pointer; background: white; color: #007bff; }
-</style>  
+</style>

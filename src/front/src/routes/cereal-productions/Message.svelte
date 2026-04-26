@@ -1,11 +1,10 @@
 <script>
-    // En Svelte 5 ya no se usa "export let", se usa $props()
     let { message = $bindable(""), type = $bindable("danger") } = $props();
 </script>
 
 {#if message}
     <div class="alert {type}">
-        <span>{message}</span>
+        {message}
         <button onclick={() => message = ""}>X</button>
     </div>
 {/if}
