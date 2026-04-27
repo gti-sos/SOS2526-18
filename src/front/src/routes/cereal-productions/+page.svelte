@@ -12,13 +12,17 @@
     let limit = 10;
     let offset = $state(0);
 
+    // Filtros de búsqueda
     let sCountry = $state("");
     let sYear = $state("");
     let sLand = $state("");  
     let sProd = $state("");  
     let sPop = $state("");   
+    
+    // --- NUEVAS VARIABLES PARA EL RANGO ---
+    let sFrom = $state("");
+    let sTo = $state("");
 
-    // Manejo de mensajes de actualización
     $effect(() => {
         if (page.url.searchParams.get('updated') === 'true') {
             message = "actualizado correctamente"; 
@@ -34,11 +38,8 @@
             if (res.ok) {
                 const data = await res.json();
                 cereals = data;
-                // Si la carga es exitosa, limpiamos errores de carga previos
                 if (message === "error al cargar datos") message = "";
             } else {
-                // Si la tabla está vacía tras borrar, NO mostramos error de carga
-                // para que el test de Playwright vea el mensaje de éxito "borrados"
                 if (message !== "borrados" && message !== "datos cargados") {
                     cereals = [];
                     message = "error al cargar datos";
@@ -60,6 +61,7 @@
 
     function resetSearch() {
         sCountry = ""; sYear = ""; sLand = ""; sProd = ""; sPop = ""; 
+        sFrom = ""; sTo = ""; // Limpiar rango
         offset = 0;
         getCereals();
         message = "búsqueda limpiada";
@@ -74,6 +76,10 @@
         if (sProd) params.append("cereal_production", sProd);
         if (sPop) params.append("population", sPop);
         
+        // --- AÑADIR FROM Y TO A LOS PARÁMETROS ---
+        if (sFrom) params.append("from", sFrom);
+        if (sTo) params.append("to", sTo);
+        
         offset = 0;
         const res = await fetch(`/api/v2/cereal-productions?${params.toString()}&limit=${limit}&offset=${offset}`);
         if (res.ok) {
@@ -84,15 +90,12 @@
     }
 
     async function loadInitialData() {
-        // Limpiamos mensajes previos para evitar confusión
         message = "Cargando...";
         const res = await fetch("/api/v2/cereal-productions/loadInitialData");
         if (res.ok) { 
             message = "datos cargados"; 
             messageType = "success"; 
             offset = 0; 
-            // LE DAMOS 1 SEGUNDO al servidor de Render para que respire 
-            // antes de pedirle la lista de nuevo. Esto evita el "Failed Service".
             setTimeout(async () => {
                 await getCereals();
                 message = "datos cargados";
@@ -109,10 +112,8 @@
             if (res.ok) { 
                 cereals = [];
                 offset = 0; 
-                // Mensaje prioritario para el test de Playwright
                 message = "borrados"; 
                 messageType = "success"; 
-                // Esperamos un poco antes de refrescar para no saturar
                 setTimeout(async () => {
                     await getCereals();
                     message = "borrados"; 
@@ -145,7 +146,9 @@
         <div class="search-container">
             <div class="search-row">
                 <input bind:value={sCountry} placeholder="País..." />
-                <input bind:value={sYear} type="number" placeholder="Año..." />
+                <input bind:value={sYear} type="number" placeholder="Año concreto..." />
+                <input bind:value={sFrom} type="number" placeholder="Desde año..." />
+                <input bind:value={sTo} type="number" placeholder="Hasta año..." />
             </div>
             <div class="search-row">
                 <input bind:value={sLand} type="number" placeholder="Uso tierra..." />
