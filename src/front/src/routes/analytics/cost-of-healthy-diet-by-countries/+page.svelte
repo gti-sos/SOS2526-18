@@ -129,7 +129,7 @@
 
     <div class="navigation">
         <a href="/analytics"><button class="btn-back">← Volver a Analytics</button></a>
-        <a href="/cost-of-healthy-diet"><button class="btn-data">Ver datos</button></a>
+        <a href="/cost-of-healthy-diet-by-countries"><button class="btn-data">Ver datos</button></a>
     </div>
 </main>
 

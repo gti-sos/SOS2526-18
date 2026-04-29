@@ -11,7 +11,7 @@
             name: "Nazaret Villalba Delgado",
             data: "cost-of-healthy-diet-by-countries",
             api: "/api/v1/cost-of-healthy-diet-by-countries",
-            frontend: "/cost-of-healthy-diet",
+            frontend: "/cost-of-healthy-diet-by-countries",
             postman: "https://documenter.getpostman.com/view/52413337/2sBXigKYBy"
         },
         {

@@ -59,7 +59,7 @@
                     <td>{d.total_food_components_cost}</td>
                     <td>{categoryLabel(d.cost_category)}</td>
                     <td>
-                        <a href="/cost-of-healthy-diet/{d.country}/{d.year}" class="btn-edit">Editar</a>
+                        <a href="/cost-of-healthy-diet-by-countries/{d.country}/{d.year}" class="btn-edit">Editar</a>
                         <button onclick={() => deleteDiet(d.country, d.year)} class="btn-delete">
                             Eliminar
                         </button>
