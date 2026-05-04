@@ -20,7 +20,10 @@ let initialData = [
     { country: "Spain", country_code: "ESP", year: 2018, land_used: 6027610, cereal_production: 25348920, cereal_yield: 42.055, population: 47092817 },
     { country: "Spain", country_code: "ESP", year: 2019, land_used: 5975710, cereal_production: 20589030, cereal_yield: 34455.001, population: 47435121 },
     { country: "Spain", country_code: "ESP", year: 2020, land_used: 6069230, cereal_production: 27320900, cereal_yield: 45.015, population: 47679482 },
-    { country: "Spain", country_code: "ESP", year: 2021, land_used: 6034580, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 }
+    { country: "Spain", country_code: "ESP", year: 2021, land_used: 6034580, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 },
+    { country: "China", country_code: "CHN", year: 1961, land_used: 89712000, cereal_production: 107000000, cereal_yield: 11.927, populatio: 655773484 },
+    { country: "Russia", country_code: "RUS", year: 1995, land_used: 49309960, cereal_production: 61901840, cereal_yield: 12.554001, population: 148291406 },
+    { country: "France", country_code: "FRA", year: 1970, land_used: 9318100, cereal_production: 31443420, cereal_yield: 33.744001, population: 50813071 }
 ];
   
 
