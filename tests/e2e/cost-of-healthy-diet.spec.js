@@ -63,7 +63,7 @@ test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
         await page.waitForTimeout(2000);
 
         await page.locator('.btn-edit').first().click();
-        await expect(page).toHaveURL(/.*\/cost-of-healthy-diet\/.+\/\d+/);
+        await expect(page).toHaveURL(/.*\/cost-of-healthy-diet-by-countries\/.+\/\d+/);
         await page.locator('input[type="number"]').first().fill('999');
         await page.getByRole('button', { name: /Guardar/i }).click();
         await expect(page.locator('body')).toContainText('actualizado correctamente', { timeout: 15000 });
