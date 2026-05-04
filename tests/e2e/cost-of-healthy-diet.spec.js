@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const URL = 'https://sos2526-18.onrender.com/cost-of-healthy-diet';
+const URL = 'https://sos2526-18.onrender.com/cost-of-healthy-diet-by-countries';
 
 test.describe('Cost of Healthy Diet E2E Tests (NVD)', () => {
 
