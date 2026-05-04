@@ -25,7 +25,7 @@
                 // Tus datos (Media de producción / 100.000)
                 const myEntries = myData.filter(d => d.country === country);
                 const m = (myEntries.reduce((acc, curr) => acc + curr.cereal_production, 0) / myEntries.length) / 100000;
-                 
+                  
                 // Sus datos (Solo donde el país es SUPPLIER) 
                 const herEntries = herData.filter(h => h.supplier === country);
                 const h = herEntries.reduce((acc, curr) => acc + (curr.tiv_total_order || 0), 0) / herEntries.length;
