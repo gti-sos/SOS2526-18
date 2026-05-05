@@ -23,7 +23,17 @@ let initialData = [
     { country: "Spain", country_code: "ESP", year: 2021, land_used: 6034580, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 },
     { country: "China", country_code: "CHN", year: 1961, land_used: 89712000, cereal_production: 107000000, cereal_yield: 11.927, populatio: 655773484 },
     { country: "Russia", country_code: "RUS", year: 1995, land_used: 49309960, cereal_production: 61901840, cereal_yield: 12.554001, population: 148291406 },
-    { country: "France", country_code: "FRA", year: 1970, land_used: 9318100, cereal_production: 31443420, cereal_yield: 33.744001, population: 50813071 }
+    { country: "France", country_code: "FRA", year: 1970, land_used: 9318100, cereal_production: 31443420, cereal_yield: 33.744001, population: 50813071 },
+    {country: "Afghanistan", country_code: "AFG", year: 1990, land_use: 2253000, cereal_production: 2705000, cereal_yield: 12.006, population: 12045664},
+    {country: "Afghanistan", country_code: "AFG", year: 1991, land_use: 2345071, cereal_production: 2721302.2, cereal_yield: 11.604, population: 12238879},
+    {country: "Afghanistan", country_code: "AFG", year: 1992, land_use: 2250000, cereal_production: 2470000, cereal_yield: 10.978, population: 13278983},
+    {country: "Afghanistan", country_code: "AFG", year: 1993, land_use: 2631882, cereal_production: 2981774, cereal_yield: 11.329, population: 14943175},
+    {country: "Afghanistan", country_code: "AFG", year: 1994, land_use: 2757000, cereal_production: 3144000, cereal_yield: 11.404, population: 16250800},
+    {country: "Afghanistan", country_code: "AFG", year: 1995, land_use: 2669450, cereal_production: 3242179.2, cereal_yield: 12.145, population: 17065837},
+    {country: "Afghanistan", country_code: "AFG", year: 1996, land_use: 2691670, cereal_production: 3241914.8, cereal_yield: 12.044, population: 17763266},
+    {country: "Afghanistan", country_code: "AFG", year: 1997, land_use: 2730401, cereal_production: 3682722.5, cereal_yield: 13.488, population: 18452100},
+    {country: "Afghanistan", country_code: "AFG", year: 1998, land_use: 2792105, cereal_production: 3875506, cereal_yield: 1.388, population: 19159996}, 
+    {country: "Afghanistan", country_code: "AFG", year: 1999, land_use: 2532871, cereal_production: 3256395.8, cereal_yield: 12.857, population: 19887792}
 ];
   
 

@@ -60,9 +60,11 @@
     <div class="analytics-section">
         <hr>
         <h2>Visualizaciones Integradas</h2>
-        <p>Análisis conjunto de los datos de todos los miembros del grupo utilizando Highcharts.</p>
         <a href="/analytics">
             <button class="btn-analytics">Ver Gráfica de Integración Grupal</button>
+        </a>
+        <a href="/integrations">
+            <button class="btn-analytics">Integraciones</button>
         </a>
     </div>
 </main>

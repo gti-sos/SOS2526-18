@@ -169,6 +169,12 @@
         <span class="page-indicator"> Página <strong>{(offset / limit) + 1}</strong> </span>
         <button onclick={nextPage} disabled={cereals.length < limit} class="btn-page"> Siguiente &raquo; </button>
     </div>
+
+    <div class="navigation">
+        <a href="/">
+            <button class="btn-back">Volver</button>
+        </a>
+    </div>
 </main>
 
 <style>
@@ -187,4 +193,12 @@
     .pagination-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
     .btn-page { border: 1px solid #007bff; padding: 8px 16px; cursor: pointer; background: white; color: #007bff; }
     .btn-page:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
+    .btn-back {
+        padding: 10px 30px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;}
 </style>

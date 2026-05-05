@@ -44,7 +44,7 @@
                 subtitle: { text: 'Comparativa real con Media dibujada' },
                 xAxis: { 
                     categories: uniqueCountries,
-                    title: { text: 'Países comunes (España / Afganistán)' }
+                    title: { text: 'Países comunes' }
                 },
                 yAxis: { title: { text: 'Valor Escala Ajustada' } },
                 series: [{
