@@ -3,94 +3,86 @@
     import Highcharts from 'highcharts';
 
     let combinedData = [];
-    // Tu API de Cereales
     let miApiUrl = "https://sos2526-18.onrender.com/api/v2/cereal-productions";
-    // API del compañero
     let compañeroApiUrl = "https://soporte-sos.onrender.com/api/v1/aids-deaths-stats";
 
     async function loadData() {
-        console.log("Cargando datos para la integración...");
-
         try {
-            // 1. Fetch a tus datos (Cereales) - Filtramos por un país común, ej: Afganistán
             const resMe = await fetch(miApiUrl + "?country=Afghanistan");
             const myData = await resMe.json();
-
-            // 2. Fetch a la API del compañero (SIDA)
             const resPeer = await fetch(compañeroApiUrl + "?country=Afghanistan");
             let peerData = [];
-            if (resPeer.ok) {
-                peerData = await resPeer.json();
-            }
+            if (resPeer.ok) { peerData = await resPeer.json(); }
 
-            // 3. Cruzar los datos por año (Regla de integración: comparar ambos datasets)
-            // Buscamos años donde coincidan ambos para que la gráfica tenga sentido
             combinedData = myData.map(m => {
-                const peerPoint = peerData.find(p => p.year === m.year);
+                const p = peerData.find(p => p.year === m.year);
+                const totalDeaths = p ? (
+                    (p.death_count_hiv_aids_under_5 || 0) +
+                    (p.death_count_hiv_aids_5_14 || 0) +
+                    (p.death_count_hiv_aids_15_49 || 0) +
+                    (p.death_count_hiv_aids_50_69 || 0) +
+                    (p.death_count_hiv_aids_70_plus || 0)
+                ) : null;
                 return {
                     year: m.year,
-                    cerealProduction: m.production, // Ajusta si tu campo se llama distinto
-                    aidsDeaths: peerPoint ? peerPoint.death_count_hiv_aids_15_49 : null
+                    cerealProduction: m.cereal_production, 
+                    aidsDeaths: totalDeaths
                 };
-            }).filter(d => d.aidsDeaths !== null); // Solo mostramos si hay datos de ambos
+            }).filter(d => d.aidsDeaths !== null && d.cerealProduction !== undefined);
 
-            if (combinedData.length > 0) {
-                renderChart();
-            } else {
-                console.error("No se encontraron años comunes para el cruce de datos.");
-            }
-        } catch (error) {
-            console.error("Error cargando las APIs:", error);
-        }
+            combinedData.sort((a, b) => a.year - b.year);
+            if (combinedData.length > 0) { renderChart(); }
+        } catch (error) { console.error("Error cargando datos:", error); }
     }
 
     function renderChart() {
         Highcharts.chart('chart-combined', {
-            chart: {
-                type: 'areaspline' // El estilo de curvas suaves que pediste
-            },
-            title: {
-                text: 'Integración: Producción de Cereales vs Mortalidad VIH (Afganistán)'
-            },
+            chart: { type: 'area' },
+            title: { text: 'Integración G18 (Cereales) vs G13 (SIDA Total) - Colores Intensos' },
             xAxis: {
                 categories: combinedData.map(d => d.year),
                 title: { text: 'Año' }
             },
             yAxis: [
-                { // Eje primario (Izquierda)
-                    title: { text: 'Producción Cereales (Toneladas)', style: { color: '#2c3e50' } }
+                { // Eje Izquierdo (Cereales)
+                    title: { text: 'Producción Cereales (Toneladas)', style: { color: '#2c3e50' } },
+                    labels: { style: { color: '#2c3e50' } },
+                    min: 0
                 }, 
-                { // Eje secundario (Derecha)
-                    title: { text: 'Muertes VIH (15-49 años)', style: { color: '#32CD32' } },
-                    opposite: true
+                { // Eje Derecho (SIDA)
+                    title: { text: 'Mortalidad VIH Total', style: { color: '#32CD32' } },
+                    labels: { style: { color: '#32CD32' } },
+                    opposite: true,
+                    min: 0
                 }
             ],
             tooltip: { shared: true },
             plotOptions: {
-                areaspline: {
-                    fillColor: {
-                        linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-                        stops: [
-                            [0, '#32CD32'], // El verde "Live Data"
-                            [1, 'rgba(50, 205, 50, 0)']
-                        ]
-                    },
-                    marker: { enabled: true },
-                    lineWidth: 3
+                area: {
+                    marker: { enabled: true, radius: 4 },
+                    lineWidth: 2
                 }
             },
             series: [
                 {
-                    name: 'Producción Cereales (Mis datos)',
-                    data: combinedData.map(d => d.cerealProduction),
-                    color: '#2c3e50',
-                    dashStyle: 'ShortDash'
+                    name: 'Mortalidad VIH (G13 - Fondo)',
+                    type: 'areaspline',
+                    data: combinedData.map(d => d.aidsDeaths),
+                    yAxis: 1,
+                    color: '#32CD32', // Borde verde
+                    // NUEVA OPACIDAD: 0.6 (Se notará mucho más el color verde)
+                    fillColor: 'rgba(50, 205, 50, 0.6)', 
+                    zIndex: 0 // <--- FUNDAMENTAL: Se dibuja DETRÁS
                 },
                 {
-                    name: 'Muertes VIH (Datos Compañero)',
-                    data: combinedData.map(d => d.aidsDeaths),
-                    yAxis: 1, // Usar el eje de la derecha
-                    color: '#32CD32'
+                    name: 'Producción Cereales (G18 - Delante)',
+                    type: 'area',
+                    data: combinedData.map(d => d.cerealProduction),
+                    yAxis: 0,
+                    color: '#2c3e50', // Gris azulado oscuro
+                    // Un gris azulado con 0.7 de opacidad, para que sea sólido
+                    fillColor: 'rgba(44, 62, 80, 0.7)', 
+                    zIndex: 1 // <--- FUNDAMENTAL: Se dibuja DELANTE
                 }
             ]
         });
@@ -100,22 +92,15 @@
 </script>
 
 <main class="container">
-    <header>
-        <h1>Integración con Aids Deaths Stats</h1>
-        <p>Comparativa entre la producción agrícola y el impacto de salud pública.</p>
-    </header>
-
+    <h1>Análisis de Integración (G18 + G13)</h1>
     <div id="chart-combined"></div>
-
-   
-
     <a href="/integrations" class="btn-back">Volver al Índice</a>
 </main>
 
 <style>
-    .container { padding: 40px; font-family: sans-serif; max-width: 1000px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 30px; }
-    #chart-combined { width: 100%; height: 500px; border-radius: 10px; border: 1px solid #eee; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .info { margin-top: 30px; background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 0.9rem; }
-    .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #333; color: white; text-decoration: none; border-radius: 5px; }
+    .container { padding: 40px; max-width: 1100px; margin: 0 auto; text-align: center; font-family: sans-serif;}
+    h1 { margin-bottom: 20px; color: #333; }
+    #chart-combined { width: 100%; height: 550px; border-radius: 12px; border: 1px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;}
+    .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #333; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;}
+    .btn-back:hover { background: #555; }
 </style>

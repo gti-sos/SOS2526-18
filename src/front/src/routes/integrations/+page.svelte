@@ -10,7 +10,7 @@
 
     <section class="author-section">
         <div class="author-header">
-            <h2>📦 Integraciones de {miNombre}</h2>
+            <h2>Integraciones de {miNombre}</h2>
         </div>
         
         <div class="grid">
@@ -42,7 +42,7 @@
 
     <section class="author-section">
         <div class="author-header">
-            <h2>👥 Integraciones de Compañeros</h2>
+            <h2>Integraciones de Compañeros</h2>
         </div>
         <div class="grid">
             <div class="card pending">
