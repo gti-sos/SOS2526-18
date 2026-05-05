@@ -21,7 +21,6 @@ let initialData = [
     { country: "Spain", country_code: "ESP", year: 2019, land_used: 5975710, cereal_production: 20589030, cereal_yield: 34455.001, population: 47435121 },
     { country: "Spain", country_code: "ESP", year: 2020, land_used: 6069230, cereal_production: 27320900, cereal_yield: 45.015, population: 47679482 },
     { country: "Spain", country_code: "ESP", year: 2023, land_used: 6011747, cereal_production: 19495949, cereal_yield: 27.702, population: 46868594 },
-    { country: "Spain", country_code: "ESP", year: 2024, land_used: 6364579, cereal_production: 25888848, cereal_yield: 42.055, population: 47092817 },
     { country: "Spain", country_code: "ESP", year: 2025, land_used: 5345678, cereal_production: 20456788, cereal_yield: 34455.001, population: 47435121 },
     { country: "Spain", country_code: "ESP", year: 2022, land_used: 6378456, cereal_production: 27325678, cereal_yield: 45.015, population: 47679482 },
     { country: "Spain", country_code: "ESP", year: 2021, land_used: 6057689, cereal_production: 25510560, cereal_yield: 42274.003, population: 47735670 },
