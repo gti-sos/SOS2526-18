@@ -61,7 +61,6 @@ export function load_JLAV_API_V1(app) {
     });
 
 
-    //carga inicial
     app.get(BASE_URL_V1 + "/loadInitialData", (req, res) => {
         // Comprobamos si hay datos en la base de datos
         db.count({}, (err, count) => {
