@@ -8,72 +8,90 @@
     async function loadData() {
         if (browser) {
             try {
-                // Importación dinámica de ApexCharts
                 const module = await import('apexcharts');
                 const ApexCharts = module.default;
 
+                // 1. Cargamos tus datos
                 const resMe = await fetch(miApiUrl + "?country=Spain");
                 const myData = await resMe.json();
+                
+                // 2. Cargamos datos del compañero
                 const resG15 = await fetch(g15ApiUrl + "?country=españa");
                 let densityData = [];
                 if (resG15.ok) { densityData = await resG15.json(); }
 
-                // Formateamos los puntos para el Treemap
-                // x: nombre del cuadro, y: valor numérico
+                // 3. Cruzamos datos
                 let chartPoints = myData.map(m => {
                     const d = densityData.find(den => den.year === m.year);
                     if (d) {
                         return {
-                            x: `${m.year}`,
-                            y: d.density // Usamos la densidad para el valor/color
+                            // CAMBIO AQUÍ: Ahora incluye el País y el Año
+                            x: `${m.country} (${m.year})`, 
+                            y: m.cereal_production, 
+                            value: parseFloat(d.density) 
                         };
                     }
-                }).filter(p => p !== undefined).slice(-10);
+                }).filter(p => p !== undefined);
 
                 if (chartPoints.length > 0) {
                     renderChart(ApexCharts, chartPoints);
-                } else {
-                    console.warn("No hay datos combinados para mostrar.");
                 }
             } catch (e) {
-                console.error("Error cargando ApexCharts o datos:", e);
+                console.error("Error cargando integración:", e);
             }
         }
     }
 
     function renderChart(ApexCharts, points) {
         const options = {
-            series: [{
-                data: points
-            }],
-            legend: { show: false },
-            chart: {
-                height: 450,
-                type: 'treemap'
+            series: [{ data: points }],
+            chart: { 
+                height: 500, 
+                type: 'treemap',
+                toolbar: { show: false } // Menú oculto
             },
-            title: {
-                text: 'Integración G18 + G15: Treemap de Densidad Poblacional',
+            title: { 
+                text: 'Producción de Cereales vs Densidad Poblacional',
                 align: 'center'
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px', // Un poco más pequeña para que quepa "Spain (2022)"
+                    fontWeight: 'bold',
+                }
             },
             plotOptions: {
                 treemap: {
                     enableShades: true,
-                    shadeIntensity: 0.5,
+                    shadeIntensity: 0.8,
                     colorScale: {
                         ranges: [
-                            { from: 0, to: 91, color: '#CD363A' },     // Densidad baja (Rojo)
-                            { from: 91.001, to: 500, color: '#52B12C' } // Densidad alta (Verde)
+                            { from: 0, to: 91, color: '#FF4560', name: 'Densidad Baja' },
+                            { from: 91.001, to: 1000, color: '#00E396', name: 'Densidad Alta' }
                         ]
                     }
+                }
+            },
+            tooltip: {
+                custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    return `
+                        <div style="padding: 10px; background: #fff; border: 1px solid #ccc; border-radius: 5px;">
+                            <b style="font-size: 14px;">${data.x}</b><br/>
+                            <hr style="margin: 5px 0;">
+                            <span>🌾 Producción: <b>${data.y.toLocaleString()} tn</b></span><br/>
+                            <span>👥 Densidad: <b style="color:#007bff;">${data.value} hab/km²</b></span>
+                        </div>
+                    `;
                 }
             }
         };
 
-        // Buscamos el elemento y renderizamos
-        const chartElement = document.querySelector("#treemap-chart");
-        if (chartElement) {
-            chartElement.innerHTML = ''; // Limpiamos por si acaso
-            const chart = new ApexCharts(chartElement, options);
+        const chartDiv = document.querySelector("#treemap-chart");
+        if (chartDiv) {
+            chartDiv.innerHTML = ''; 
+            const chart = new ApexCharts(chartDiv, options);
             chart.render();
         }
     }
@@ -82,37 +100,21 @@
 </script>
 
 <main class="container">
-    <div id="treemap-chart" style="min-height: 450px;"></div>
+    <div id="treemap-chart"></div>
     
-    <div class="info">
-        <p>Cada cuadro representa un año. El color indica el rango de densidad poblacional (G15).</p>
+    <div class="info-box">
+        <p><strong>Integración G18 + G15:</strong></p>
+        <p>Cada cuadro muestra el <strong>País y Año</strong>. El tamaño indica la producción y el color la densidad poblacional.</p>
     </div>
-    
+
     <div style="margin-top: 20px;">
-        <a href="/integrations" class="btn-back">Volver</a>
+        <a href="/integrations" class="btn-back">Volver al Índice</a>
     </div>
 </main>
 
 <style>
-    .container { 
-        padding: 40px; 
-        text-align: center; 
-        max-width: 900px; 
-        margin: 0 auto; 
-    }
-    #treemap-chart { 
-        background: #fdfdfd; 
-        border: 1px solid #eee; 
-        border-radius: 8px;
-        padding: 10px;
-    }
-    .info { margin-top: 20px; color: #666; font-style: italic; }
-    .btn-back { 
-        display: inline-block; 
-        padding: 10px 20px; 
-        background: #333; 
-        color: white; 
-        text-decoration: none; 
-        border-radius: 5px; 
-    }
+    .container { padding: 30px; max-width: 950px; margin: 0 auto; font-family: sans-serif; }
+    #treemap-chart { background: white; border: 1px solid #eee; border-radius: 10px; min-height: 500px; padding: 10px; }
+    .info-box { margin-top: 20px; padding: 15px; background: #f4f4f4; border-left: 5px solid #333; text-align: left; }
+    .btn-back { display: inline-block; padding: 10px 20px; background: #333; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
 </style>

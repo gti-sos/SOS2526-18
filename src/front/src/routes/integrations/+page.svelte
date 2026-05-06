@@ -20,6 +20,18 @@
                 <span class="badge">Completada</span>
             </a>
 
+            <a href="/integrations/G15JLAVIntegration" class="card my-card">
+                <h3>Integración G15</h3>
+                <p>Cereales (G18) + Densidad (G15)</p>
+                <span class="badge">Completada</span>
+            </a>
+
+            <a href="/integrations/G21JLAVIntegration" class="card my-card">
+                <h3>Integración G21</h3>
+                <p>Cereales (G18) + Sida (G21)</p>
+                <span class="badge">Completada</span>
+            </a>
+
             <div class="card pending external-slot">
                 <h3>Integración Externa 1</h3>
                 <p>Pendiente de desarrollar</p>
