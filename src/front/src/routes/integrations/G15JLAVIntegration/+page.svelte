@@ -36,7 +36,6 @@
                     
                     const d = densityData.find(den => {
                         const denCountryClean = normalize(den.country);
-                        // Comparamos nombre directo o traducción
                         return den.year === m.year && (
                             denCountryClean === myCountryClean || 
                             denCountryClean === mapEnToEs[myCountryClean]
@@ -46,7 +45,7 @@
                     if (d) {
                         const dens = parseFloat(d.density);
                         
-                        // ASIGNACIÓN DE COLOR MANUAL (Inmune a errores de ApexCharts)
+                        // ASIGNACIÓN DE COLOR MANUAL
                         let puntoColor = '#00E396'; // Verde (Alta)
                         if (dens <= 85) puntoColor = '#FF4560';      // Rojo (Baja)
                         else if (dens <= 150) puntoColor = '#FEB019'; // Naranja (Media)
@@ -73,7 +72,6 @@
                 type: 'treemap',
                 toolbar: { show: false }
             },
-            // --- TÍTULO DE LA GRÁFICA ---
             title: {
                 text: 'Análisis de Producción de Cereales vs Densidad Poblacional',
                 align: 'center',
@@ -129,10 +127,31 @@
 
         <p style="margin-top: 10px;"><strong>Nota visual:</strong> El tamaño de cada cuadro representa la <strong>producción total en toneladas</strong>.</p>
     </div>
+
+    <div class="button-container">
+        <a href="/integrations" class="btn-back">Volver al Índice</a>
+    </div>
 </main>
 
 <style>
     .container { padding: 20px; max-width: 1000px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    
     #treemap-chart { background: white; border: 1px solid #eee; border-radius: 12px; min-height: 550px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    
     .info-box { margin-top: 20px; padding: 15px; background: #fdfdfd; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95em; line-height: 1.5; }
+    
+    .button-container { margin-top: 25px; text-align: center; }
+
+    .btn-back { 
+        display: inline-block; 
+        padding: 12px 24px; 
+        background: #2c3e50; 
+        color: white; 
+        text-decoration: none; 
+        border-radius: 6px; 
+        font-weight: bold;
+        transition: background 0.3s ease;
+    }
+
+    .btn-back:hover { background: #34495e; }
 </style>
