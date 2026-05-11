@@ -34,11 +34,10 @@
                 <p>Cereales (G18) + Rest Countries(Europa)</p>
             </a>
 
-            <div class="card pending external-slot">
+            <a href="/integrations/externa2JLAVIntegration" class="card my-card">
                 <h3>Integración Externa 2</h3>
-                <p>Pendiente de desarrollar</p>
-                <span class="status">Hueco 2 (JLAV)</span>
-            </div>
+                <p>Cereales (G18) + World Bank</p>
+            </a>
 
             <div class="card pending external-slot">
                 <h3>Integración Externa 3</h3>
