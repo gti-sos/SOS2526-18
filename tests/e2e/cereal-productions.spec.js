@@ -59,7 +59,7 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await page.locator('button:has-text("Guardar")').click();
         await expect(page.locator('body')).toContainText(/actualizado/i, { timeout: 40000 });
     });
- 
+  
     test('4. Debería buscar por país', async ({ page }) => {
         const searchInput = page.locator('.search-container input').first();
         await searchInput.waitFor({ state: 'visible' });
