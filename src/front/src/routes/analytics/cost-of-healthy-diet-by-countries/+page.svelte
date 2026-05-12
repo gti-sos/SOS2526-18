@@ -15,9 +15,9 @@
         // Si la API está vacía no se muestran datos
         const validData = apiData.filter(d =>
             d.country && 
-            d.cost_of_healthy_diet_ppp_usd !== undefined &&
-            d.cost_of_healthy_diet_ppp_usd !== null &&
-            !isNaN(parseFloat(d.cost_of_healthy_diet_ppp_usd))
+            d.cost_healthy_diet_ppp_usd !== undefined &&
+            d.cost_healthy_diet_ppp_usd !== null &&
+            !isNaN(parseFloat(d.cost_healthy_diet_ppp_usd))
         );
 
         //Agrupa por país
@@ -25,7 +25,7 @@
         validData.forEach(d => {
             const c = d.country;
             if (!countryMap[c]) countryMap[c] = { total:0, veg:0, fruit:0, count: 0};
-            countryMap[c].total += parseFloat(d.cost_of_healthy_diet_ppp_usd) || 0;
+            countryMap[c].total += parseFloat(d.cost_healthy_diet_ppp_usd) || 0;
             countryMap[c].veg += parseFloat(d.cost_vegetables_ppp_usd) || 0;
             countryMap[c].fruit += parseFloat(d.cost_fruits_ppp_usd) || 0;
             countryMap[c].count += 1;
