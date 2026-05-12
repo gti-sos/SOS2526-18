@@ -39,11 +39,10 @@
                 <p>Cereales (G18) + World Bank</p>
             </a>
 
-            <div class="card pending external-slot">
+            <a href="/integrations/externa3JLAVIntegration" class="card my-card">
                 <h3>Integración Externa 3</h3>
-                <p>Pendiente de desarrollar</p>
-                <span class="status">Hueco 3 (JLAV)</span>
-            </div>
+                <p>Cereales (G18) + Disease.sh(proxy)</p>
+            </a>
         </div>
     </section>
 

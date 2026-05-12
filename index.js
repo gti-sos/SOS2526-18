@@ -28,6 +28,25 @@ load_MCS_API_V2(app);
 load_NVD_API(app);
 
 
+
+// ==========================================
+// PROXY PARA LA API EXTERNA3 (JLAV)
+// ==========================================
+app.get("/api/v2/proxy-health", async (req, res) => {
+    // Datos históricos globales de salud (Casos por país)
+    const url = "https://disease.sh/v3/covid-19/historical?lastdays=all";
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data); 
+    } catch (error) {
+        res.status(500).send("Error en el proxy de salud");
+    }
+});
+// ==========================================
+
+
 app.use(handler)
 
 
