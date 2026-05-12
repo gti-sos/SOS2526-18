@@ -63,7 +63,7 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
     test('4. Debería buscar por país', async ({ page }) => {
         const searchInput = page.locator('.search-container input').first();
         await searchInput.waitFor({ state: 'visible' });
-         
+          
         await searchInput.fill('TestCountry');
         await page.locator('.btn-search').click();
 
