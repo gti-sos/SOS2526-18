@@ -80,7 +80,7 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
             await delBtn.click();
             await expect(page.locator('body')).toContainText(/eliminado|borrado/i, { timeout: 20000 });
         }
-    });
+    }); 
         
     test('6. Debería borrar TODO', async ({ page }) => { 
         page.on('dialog', dialog => dialog.accept());    
