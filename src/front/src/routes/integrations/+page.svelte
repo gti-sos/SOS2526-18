@@ -44,7 +44,7 @@
                 <p>Cereales (G18) + Disease.sh(proxy)</p>
             </a>
         </div>
-    </section>
+    </section> 
 
     <section class="author-section">
         <div class="author-header">
