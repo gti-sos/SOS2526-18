@@ -3,51 +3,43 @@
     import { onMount } from 'svelte';
 
     onMount(async () => {
-        const Highcharts = (await import('highcharts')).default;
 
         let apiData = [];
         try {
             const res = await fetch('/api/v1/cost-of-healthy-diet-by-countries');
-            apiData = res.ok ? await res.json() : [];
+            if (res.ok) apiData = await res.json();
         } catch (e) {
-            console.error('Error cargando API cost-of-healthy-diet', e);
+            console.error('Error cargando API cost-of-healthy-diet-by-countries', e);
         }
 
-        // Fallback con datos reales si la API falla
-        const finalData = apiData.length > 0 ? apiData : [
-            { country: 'Spain', year: 2017, cost_healthy_diet_ppp_usd: 2.53, cost_vegetables_ppp_usd: 0.79, cost_fruits_ppp_usd: 0.56 },
-            { country: 'Spain', year: 2020, cost_healthy_diet_ppp_usd: 2.75, cost_vegetables_ppp_usd: 0.71, cost_fruits_ppp_usd: 0.67 },
-            { country: 'Spain', year: 2022, cost_healthy_diet_ppp_usd: 3.40, cost_vegetables_ppp_usd: 0.76, cost_fruits_ppp_usd: 0.70 },
-            { country: 'China, mainland', year: 2020, cost_healthy_diet_ppp_usd: 3.25, cost_vegetables_ppp_usd: 0.81, cost_fruits_ppp_usd: 0.68 },
-            { country: 'China, mainland', year: 2022, cost_healthy_diet_ppp_usd: 3.41, cost_vegetables_ppp_usd: 0.74, cost_fruits_ppp_usd: 0.63 },
-            { country: 'Egypt', year: 2020, cost_healthy_diet_ppp_usd: 3.88, cost_vegetables_ppp_usd: 0.79, cost_fruits_ppp_usd: 0.73 },
-            { country: 'Egypt', year: 2022, cost_healthy_diet_ppp_usd: 4.69, cost_vegetables_ppp_usd: 0.86, cost_fruits_ppp_usd: 0.69 },
-            { country: 'Brazil', year: 2020, cost_healthy_diet_ppp_usd: 3.69, cost_vegetables_ppp_usd: 0.78, cost_fruits_ppp_usd: 0.61 },
-            { country: 'Brazil', year: 2022, cost_healthy_diet_ppp_usd: 4.39, cost_vegetables_ppp_usd: 0.78, cost_fruits_ppp_usd: 0.65 },
-            { country: 'United Kingdom', year: 2020, cost_healthy_diet_ppp_usd: 1.86, cost_vegetables_ppp_usd: 0.80, cost_fruits_ppp_usd: 0.70 },
-            { country: 'United Kingdom', year: 2022, cost_healthy_diet_ppp_usd: 2.21, cost_vegetables_ppp_usd: 0.82, cost_fruits_ppp_usd: 0.68 }
-        ];
+        // Si la API está vacía no se muestran datos
+        const validData = apiData.filter(d =>
+            d.country && 
+            d.cost_of_healthy_diet_ppp_usd !== undefined &&
+            d.cost_of_healthy_diet_ppp_usd !== null &&
+            !isNaN(parseFloat(d.cost_of_healthy_diet_ppp_usd))
+        );
 
-        // Agrupar por país: media de cost_healthy_diet_ppp_usd, cost_vegetables, cost_fruits
+        //Agrupa por país
         const countryMap = {};
-        finalData.forEach(d => {
-            const c = d.country || d.country_name_en || 'Unknown';
-            if (!countryMap[c]) countryMap[c] = { total: 0, veg: 0, fruit: 0, count: 0 };
-            countryMap[c].total += parseFloat(d.cost_healthy_diet_ppp_usd) || 0;
-            countryMap[c].veg   += parseFloat(d.cost_vegetables_ppp_usd)   || 0;
-            countryMap[c].fruit += parseFloat(d.cost_fruits_ppp_usd)        || 0;
+        validData.forEach(d => {
+            const c = d.country;
+            if (!countryMap[c]) countryMap[c] = { total:0, veg:0, fruit:0, count: 0};
+            countryMap[c].total += parseFloat(d.cost_of_healthy_diet_ppp_usd) || 0;
+            countryMap[c].veg += parseFloat(d.cost_vegetables_ppp_usd) || 0;
+            countryMap[c].fruit += parseFloat(d.cost_fruits_ppp_usd) || 0;
             countryMap[c].count += 1;
         });
 
-        const countries = Object.keys(countryMap).sort((a, b) => {
+        const countries = Object.keys(countryMap).sort((a,b) => {
             const avgA = countryMap[a].total / countryMap[a].count;
             const avgB = countryMap[b].total / countryMap[b].count;
             return avgB - avgA;
         });
 
-        const avgTotal  = countries.map(c => parseFloat((countryMap[c].total / countryMap[c].count).toFixed(2)));
-        const avgVeg    = countries.map(c => parseFloat((countryMap[c].veg   / countryMap[c].count).toFixed(2)));
-        const avgFruit  = countries.map(c => parseFloat((countryMap[c].fruit / countryMap[c].count).toFixed(2)));
+        const avgTotal = countries.map(c => parseFloat((countryMap[c].total / countryMap[c].count).toFixed(2)));
+        const avgVeg = countries.map(c => parseFloat((countryMap[c].veg / countryMap[c].count).toFixed(2)));
+        const avgFruit = countries.map(c => parseFloat((countryMap[c].fruit / countryMap[c].count).toFixed(2)));
 
         Highcharts.chart('container-diet', {
             chart: {
@@ -59,7 +51,9 @@
                 style: { fontSize: '18px' }
             },
             subtitle: {
-                text: 'Coste diario por persona (USD PPP) — API: cost-of-healthy-diet-by-countries (NVD)'
+                text: validData.length === 0
+                    ? 'Sin datos — carga primero: /api/v1/cost-of-healthy-diet-by-countries/loadInitialData'
+                    : 'Coste diario por persona (USD PPP) — API: cost-of-healthy-diet-by-countries (NVD)'
             },
             accessibility: {
                 enabled: true,
@@ -84,9 +78,7 @@
             plotOptions: {
                 bar: {
                     stacking: 'normal',
-                    dataLabels: {
-                        enabled: false
-                    }
+                    dataLabels: { enabled: false }
                 }
             },
             legend: {
