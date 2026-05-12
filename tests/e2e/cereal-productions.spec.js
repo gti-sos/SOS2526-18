@@ -54,7 +54,7 @@ test.describe('Cereal Productions E2E Tests (JLAV)', () => {
         await expect(page).toHaveURL(/.*\/[a-zA-Z0-9]+\/\d+/, { timeout: 20000 });
         const firstInput = page.locator('input[type="number"]').first();
         await firstInput.waitFor({ state: 'visible' });
-        await firstInput.fill('999');
+        await firstInput.fill('999'); 
         
         await page.locator('button:has-text("Guardar")').click();
         await expect(page.locator('body')).toContainText(/actualizado/i, { timeout: 40000 });
