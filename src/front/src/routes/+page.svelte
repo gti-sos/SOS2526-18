@@ -66,6 +66,9 @@
         <a href="/integrations">
             <button class="btn-analytics">Integraciones</button>
         </a>
+        <a href="/about">
+            <button class="btn-analytics">Vídeos</button>
+        </a>
     </div>
 </main>
 
