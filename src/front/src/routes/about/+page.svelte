@@ -16,7 +16,7 @@
             <p><strong>Recurso:</strong> <code>cereal-productions</code></p>
             <a href={videos.jlav} target="_blank" class="btn-video">Ver Vídeo</a>
         </div>
- 
+  
         <!-- Nazaret Villalba Delgado -->
         <div class="card">
             <h3>Nazaret Villalba Delgado</h3>
