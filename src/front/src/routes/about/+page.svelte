@@ -12,7 +12,7 @@
     <div class="video-grid">
         <!-- Jose Luis Alcon Del Villar -->
         <div class="card">
-            <h3>Jose Luis Alcon Del Villar</h3>
+            <h3>Jose Luis Alcon Del Villar</h3> 
             <p><strong>Recurso:</strong> <code>cereal-productions</code></p>
             <a href={videos.jlav} target="_blank" class="btn-video">Ver Vídeo</a>
         </div>
