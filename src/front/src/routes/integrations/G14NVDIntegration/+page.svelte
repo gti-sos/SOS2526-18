@@ -10,7 +10,7 @@
     onMount(async () => {
         try {
             const [dietRes, launchRes] = await Promise.all([
-                fetch("/api/v1/cost-of-healthy-diet-by-countries"),
+                fetch("https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries"),
                 fetch(G14_URL)
             ]);
  
