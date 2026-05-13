@@ -65,7 +65,7 @@
             },
             series: [
                 {
-                    name: 'Mortalidad VIH (G13 - Fondo)',
+                    name: 'Mortalidad VIH (G21 - Fondo)',
                     type: 'areaspline',
                     data: combinedData.map(d => d.aidsDeaths),
                     yAxis: 1,
@@ -92,7 +92,7 @@
 </script>
 
 <main class="container">
-    <h1>Análisis de Integración (G18 + G13)</h1>
+    <h1>Análisis de Integración (G18 + G21)</h1>
     <div id="chart-combined"></div>
     <a href="/integrations" class="btn-back">Volver al Índice</a>
 </main>
