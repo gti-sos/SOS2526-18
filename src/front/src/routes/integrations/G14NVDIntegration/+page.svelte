@@ -3,12 +3,13 @@
     import Highcharts from "highcharts";
     import HighchartsVariwide from "highcharts/modules/variwide";
     HighchartsVariwide(Highcharts); // se inicializa una vez al cargar
-    
+
     let loading = true;
     let error = null;
  
     const G14_URL = "https://sos2526-14-yjus.onrender.com/api/v2/space-launches?limit=200&offset=0";
  
+    
     onMount(async () => {
         try {
             const [dietRes, launchRes] = await Promise.all([
