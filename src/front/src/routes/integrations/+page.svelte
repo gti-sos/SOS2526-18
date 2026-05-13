@@ -55,6 +55,10 @@
                 <h3>Integración G14</h3>
                 <p>Coste dietas (G18) + Space launches (G14)</p>
             </a>
+            <a href="/integrations/G15NVDIntegration" class="card my-card">
+                <h3>Integración G15</h3>
+                <p>Coste dietas (G18) + Salario minimo (G15)</p>
+            </a>
         </div>
     </section>
 
