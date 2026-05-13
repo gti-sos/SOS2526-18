@@ -73,7 +73,7 @@
                 toolbar: { show: false }
             },
             title: {
-                text: 'Análisis de Producción de Cereales vs Densidad Poblacional',
+                text: 'Análisis de Producción de Cereales vs Densidad Poblacional (G18+G15)',
                 align: 'center',
                 style: {
                     fontSize: '20px',
@@ -98,8 +98,8 @@
                         <div style="padding:10px; background:#fff; border:1px solid #ccc; color:#333;">
                             <b>${data.x}</b><br/>
                             <hr style="margin:5px 0;">
-                            🌾 Prod: <b>${data.y.toLocaleString()} tn</b><br/>
-                            👥 Dens: <b>${data.value.toLocaleString()} hab/km²</b>
+                             Prod: <b>${data.y.toLocaleString()} tn</b><br/>
+                             Dens: <b>${data.value.toLocaleString()} hab/km²</b>
                         </div>
                     `;
                 }

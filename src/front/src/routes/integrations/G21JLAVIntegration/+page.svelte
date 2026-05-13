@@ -38,7 +38,7 @@
     function renderChart() {
         Highcharts.chart('chart-combined', {
             chart: { type: 'area' },
-            title: { text: 'Integración G18 (Cereales) vs G13 (SIDA Total) - Colores Intensos' },
+            title: { text: 'Integración G18 (Cereales) vs G21 (SIDA Total) - Afganistán' },
             xAxis: {
                 categories: combinedData.map(d => d.year),
                 title: { text: 'Año' }
