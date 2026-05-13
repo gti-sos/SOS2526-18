@@ -1,16 +1,16 @@
 <script>
     import { onMount } from "svelte";
-    import Highcharts from "highcharts";
-    import HighchartsVariwide from "highcharts/modules/variwide";
-    HighchartsVariwide(Highcharts); // se inicializa una vez al cargar
 
     let loading = true;
     let error = null;
  
     const G14_URL = "https://sos2526-14-yjus.onrender.com/api/v2/space-launches?limit=200&offset=0";
  
-    
+
     onMount(async () => {
+        const Highcharts = (await import("highcharts")).default;
+        const { default: HighchartsVariwide } = await import("highcharts/modules/variwide");
+        HighchartsVariwide(Highcharts);
         try {
             const [dietRes, launchRes] = await Promise.all([
                 fetch("https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries"),
