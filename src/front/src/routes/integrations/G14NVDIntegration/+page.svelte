@@ -7,7 +7,7 @@
     async function loadGraph() {
         try {
             const resDiet   = await fetch("https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries");
-            const resLaunch = await fetch("https://sos2526-14-yjus.onrender.com/api/v2/space-launches?limit=200&offset=0");
+            const resLaunch = await fetch("https://sos2526-14-yjus.onrender.com/api/v2/space-launches");
 
             const dietData   = await resDiet.json();
             const launchData = await resLaunch.json();
