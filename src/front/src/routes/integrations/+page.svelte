@@ -48,6 +48,18 @@
 
     <section class="author-section">
         <div class="author-header">
+            <h2>Integraciones de NVD</h2>
+        </div>
+        <div class="grid">
+            <a href="/integrations/G14NVDIntegration" class="card my-card">
+                <h3>Integración G14</h3>
+                <p>Coste dietas (G18) + Space launches (G14)</p>
+            </a>
+        </div>
+    </section>
+
+    <section class="author-section">
+        <div class="author-header">
             <h2>Integraciones de Compañeros</h2>
         </div>
         <div class="grid">
