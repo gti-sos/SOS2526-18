@@ -1,7 +1,9 @@
 <script>
     import { onMount } from "svelte";
     import Highcharts from "highcharts";
- 
+    import HighchartsVariwide from "highcharts/modules/variwide";
+    HighchartsVariwide(Highcharts); // se inicializa una vez al cargar
+    
     let loading = true;
     let error = null;
  
