@@ -16,13 +16,13 @@
             <p><strong>Recurso:</strong> <code>cereal-productions</code></p>
             <a href={videos.jlav} target="_blank" class="btn-video">Ver Vídeo</a>
         </div>
-
+ 
         <!-- Nazaret Villalba Delgado -->
         <div class="card">
             <h3>Nazaret Villalba Delgado</h3>
             <p><strong>Recurso:</strong> <code>cost-of-healthy-diet-by-countries</code></p>
             <a href={videos.nvd} target="_blank" class="btn-video">Ver Vídeo</a>
-        </div>
+        </div> 
 
         <!-- Manuel Castro Sánchez -->
         <div class="card">
