@@ -80,6 +80,25 @@ app.get("/api/v2/proxy-countries2", async (req, res) => {
         res.status(500).send("Error en el proxy de countries");
     }
 });
+// ========================================== 
+// PROXY PARA LA API EXTERNA3 (MCS)
+// ==========================================
+
+app.get("/api/v2/proxy-countries3", async (req, res) => {
+
+    const url = "https://worldfactbook.io/api/v1/countries/";
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        res.json(data);
+
+    } catch (error) {
+        res.status(500).send("Error en el proxy de countries");
+    }
+});
+
 
 
 
