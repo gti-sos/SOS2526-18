@@ -16,15 +16,12 @@
                 fetch(API_CRYPTO)
             ]);
 
-            if (!resNvd.ok)    throw new Error('Error al acceder a la API de dietas');
-            if (!resCrypto.ok) throw new Error('Error al acceder al proxy crypto');
+            if (!resNvd.ok || !resCrypto.ok) throw new Error('Error al cargar datos');
 
             const dietData   = await resNvd.json();
             const cryptoData = await resCrypto.json();
 
-            // Precio medio global de la dieta (todos los registros)
-            let totalCost = 0;
-            let count     = 0;
+            let totalCost = 0, count = 0;
             dietData.forEach(d => {
                 if (d.cost_healthy_diet_ppp_usd != null) {
                     totalCost += parseFloat(d.cost_healthy_diet_ppp_usd);
@@ -32,17 +29,14 @@
                 }
             });
 
-            if (count === 0) throw new Error('No hay datos de dieta');
-
             const avgDailyCost  = totalCost / count;
             const annualCostUSD = parseFloat((avgDailyCost * 365).toFixed(2));
 
-            // Cripto necesaria para pagar la dieta anual
-            const cryptoList = cryptoData.data.map(c => ({
-                name:       c.name,
-                symbol:     c.symbol.toUpperCase(),
-                priceUsd:   parseFloat(parseFloat(c.priceUsd).toFixed(2)),
-                amountNeeded: parseFloat((annualCostUSD / parseFloat(c.priceUsd)).toFixed(6))
+            const cryptoList = cryptoData.map(c => ({
+                name:         c.name,
+                symbol:       c.symbol.toUpperCase(),
+                priceUsd:     parseFloat(c.current_price.toFixed(2)),
+                amountNeeded: parseFloat((annualCostUSD / c.current_price).toFixed(6))
             }));
 
             const { Chart, registerables } = await import('chart.js');
@@ -57,11 +51,11 @@
                 const ctx = el.getContext('2d');
 
                 const colors = [
-                    'rgba(247, 147, 26, 0.7)',  // BTC naranja
-                    'rgba(98, 126, 234, 0.7)',   // ETH azul
-                    'rgba(153, 69, 255, 0.7)',   // SOL morado
-                    'rgba(243, 186, 47, 0.7)',   // BNB amarillo
-                    'rgba(0, 168, 232, 0.7)',    // XRP cyan
+                    'rgba(247, 147, 26, 0.7)',
+                    'rgba(98, 126, 234, 0.7)',
+                    'rgba(153, 69, 255, 0.7)',
+                    'rgba(243, 186, 47, 0.7)',
+                    'rgba(0, 168, 232, 0.7)',
                 ];
 
                 const borderColors = [
@@ -97,7 +91,7 @@
                             },
                             subtitle: {
                                 display: true,
-                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + CoinCap`,
+                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + CoinGecko`,
                                 font: { size: 11 },
                                 color: '#718096',
                                 padding: { bottom: 16 }
@@ -144,7 +138,7 @@
             Calcula el coste medio anual de una dieta saludable a nivel global
             usando todos los registros de mi API, y lo convierte a las 5
             principales criptomonedas usando precios en tiempo real de
-            CoinCap a través de un proxy propio.
+            CoinGecko a través de un proxy propio.
             Calcula cuánto Bitcoin, Ethereum, Solana, BNB o XRP necesitas para
             comer sano un año entero
         </p>
