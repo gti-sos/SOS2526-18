@@ -61,7 +61,7 @@
             </a>
             <a href="/integrations/externa1NVDIntegration" class="card my-card">
                 <h3>Integración Externa 1</h3>
-                <p>Coste dietas (G18) + Población(mundial) </p>
+                <p>Coste dietas (G18) + Población Mundial </p>
             </a>
             <a href="/integrations/externa2NVDIntegration" class="card my-card">
                 <h3>Integración Externa 2</h3>
@@ -69,7 +69,7 @@
             </a>
             <a href="/integrations/externa3NVDIntegration" class="card my-card">
                 <h3>Integración Externa 3</h3>
-                <p>Coste dietas (G18) + ??? </p>
+                <p>Coste dietas (G18) + Cryptomonedas </p>
             </a>
         </div>
     </section>

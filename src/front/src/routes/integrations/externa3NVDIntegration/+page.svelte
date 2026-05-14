@@ -1,5 +1,5 @@
 <script>
-    import { onMount,tick } from 'svelte';
+    import { onMount, onDestroy, tick } from 'svelte';
     import { browser } from '$app/environment';
 
     const API_NVD    = 'https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries';
@@ -7,10 +7,15 @@
 
     let loading  = true;
     let errorMsg = '';
+    let canvasEl;
+    let chartInstance;
 
     async function loadData() {
         if (!browser) return;
         try {
+            const { Chart, registerables } = await import('chart.js');
+            Chart.register(...registerables);
+
             const [resNvd, resCrypto] = await Promise.all([
                 fetch(API_NVD),
                 fetch(API_CRYPTO)
@@ -39,6 +44,7 @@
                 BNBUSDT: { name: 'BNB',      symbol: 'BNB' },
                 XRPUSDT: { name: 'XRP',      symbol: 'XRP' },
             };
+
             const cryptoList = cryptoData.map(c => ({
                 name:         names[c.symbol].name,
                 symbol:       names[c.symbol].symbol,
@@ -46,16 +52,13 @@
                 amountNeeded: parseFloat((annualCostUSD / parseFloat(c.price)).toFixed(6))
             }));
 
-            const { Chart, registerables } = await import('chart.js');
-            Chart.register(...registerables);
-
             loading = false;
             await tick();
 
-            const el = document.getElementById('chart-ext3');
-            if (!el) return;
+            if (!canvasEl) return;
 
-            const ctx = el.getContext('2d');
+            const existingChart = Chart.getChart(canvasEl);
+            if (existingChart) existingChart.destroy();
 
             const colors = [
                 'rgba(247, 147, 26, 0.7)',
@@ -73,7 +76,7 @@
                 'rgba(0, 168, 232, 1)',
             ];
 
-            new Chart(ctx, {
+            chartInstance = new Chart(canvasEl.getContext('2d'), {
                 type: 'polarArea',
                 data: {
                     labels: cryptoList.map(c => `${c.name} (${c.symbol})`),
@@ -127,16 +130,19 @@
                     }
                 }
             });
-        }
 
-        catch (e) {
+        } catch (e) {
+            console.error('Error completo:', e);
             errorMsg = 'Error: ' + e.message;
             loading = false;
         }
-
     }
+
     onMount(loadData);
-    
+
+    onDestroy(() => {
+        if (chartInstance) chartInstance.destroy();
+    });
 </script>
 
 <main class="container">
@@ -162,7 +168,7 @@
                 <p style="color:#721c24; background:#f8d7da; padding:20px; border-radius:8px;">{errorMsg}</p>
             </div>
         {:else}
-            <canvas id="chart-ext3"></canvas>
+            <canvas bind:this={canvasEl}></canvas>
         {/if}
     </div>
 
