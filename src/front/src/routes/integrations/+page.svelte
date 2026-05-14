@@ -59,6 +59,18 @@
                 <h3>Integración G15</h3>
                 <p>Coste dietas (G18) + Salario minimo (G15)</p>
             </a>
+            <a href="/integrations/externa1NVDIntegration" class="card my-card">
+                <h3>Integración Externa 1</h3>
+                <p>Coste dietas (G18) + Población(mundial) </p>
+            </a>
+            <a href="/integrations/externa2NVDIntegration" class="card my-card">
+                <h3>Integración Externa 2</h3>
+                <p>Coste dietas (G18) + Tipo de cambio </p>
+            </a>
+            <a href="/integrations/externa3NVDIntegration" class="card my-card">
+                <h3>Integración Externa 3</h3>
+                <p>Coste dietas (G18) + ??? </p>
+            </a>
         </div>
     </section>
 
