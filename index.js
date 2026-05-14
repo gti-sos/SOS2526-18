@@ -14,7 +14,7 @@ app.use(cors());
 
 
 app.use(express.json()); //Para que el servidor entienda datos en formato JSON
- 
+  
 
 //activacion apis jlav
 load_JLAV_API_V1(app);
