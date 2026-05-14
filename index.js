@@ -69,15 +69,14 @@ app.get("/api/v2/proxy-countries", async (req, res) => {
 // PROXY PARA LA API EXTERNA3 (NVD)
 // ==========================================
 app.get("/api/v2/proxy-crypto", async (req, res) => {
-    const ids = "bitcoin,ethereum,solana,binancecoin,ripple";
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc`;
+    const symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT"];
+    const url = `https://api.binance.com/api/v3/ticker/price?symbols=${JSON.stringify(symbols)}`;
 
     try {
         const response = await fetch(url);
-        const data = await response.json();
-        res.json(data);
+        if (!response.ok) return res.status(502).json({ error: "Error upstream" });
+        res.json(await response.json());
     } catch (error) {
-        console.error("Proxy error:", error);
         res.status(500).send("Error en el proxy de crypto");
     }
 });

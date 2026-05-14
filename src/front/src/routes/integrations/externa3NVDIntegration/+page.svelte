@@ -32,11 +32,18 @@
             const avgDailyCost  = totalCost / count;
             const annualCostUSD = parseFloat((avgDailyCost * 365).toFixed(2));
 
+            const names = {
+                BTCUSDT: { name: 'Bitcoin',  symbol: 'BTC' },
+                ETHUSDT: { name: 'Ethereum', symbol: 'ETH' },
+                SOLUSDT: { name: 'Solana',   symbol: 'SOL' },
+                BNBUSDT: { name: 'BNB',      symbol: 'BNB' },
+                XRPUSDT: { name: 'XRP',      symbol: 'XRP' },
+            };
             const cryptoList = cryptoData.map(c => ({
-                name:         c.name,
-                symbol:       c.symbol.toUpperCase(),
-                priceUsd:     parseFloat(c.current_price.toFixed(2)),
-                amountNeeded: parseFloat((annualCostUSD / c.current_price).toFixed(6))
+                name:         names[c.symbol].name,
+                symbol:       names[c.symbol].symbol,
+                priceUsd:     parseFloat(parseFloat(c.price).toFixed(2)),
+                amountNeeded: parseFloat((annualCostUSD / parseFloat(c.price)).toFixed(6))
             }));
 
             const { Chart, registerables } = await import('chart.js');
@@ -91,7 +98,7 @@
                             },
                             subtitle: {
                                 display: true,
-                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + CoinGecko`,
+                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + Binance`,
                                 font: { size: 11 },
                                 color: '#718096',
                                 padding: { bottom: 16 }
@@ -138,7 +145,7 @@
             Calcula el coste medio anual de una dieta saludable a nivel global
             usando todos los registros de mi API, y lo convierte a las 5
             principales criptomonedas usando precios en tiempo real de
-            CoinGecko a través de un proxy propio.
+            Binance a través de un proxy propio.
             Calcula cuánto Bitcoin, Ethereum, Solana, BNB o XRP necesitas para
             comer sano un año entero
         </p>
