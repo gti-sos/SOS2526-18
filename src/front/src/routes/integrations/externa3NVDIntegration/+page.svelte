@@ -1,13 +1,11 @@
 <script>
     import { onMount } from "svelte";
     import { browser } from "$app/environment";
-
     import ApexCharts from "apexcharts";
 
-    const API_NVD = "https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries";
+    const API_NVD = "https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries?country=Spain";
     const API_CRYPTO = "https://sos2526-18.onrender.com/api/v2/proxy-crypto";
 
-    let loading = true;
     let errorMsg = "";
 
     async function loadData() {
@@ -24,7 +22,7 @@
             const cryptoData = await resCrypto.json();
 
             const spainRecords = dietData.filter(
-                d => d.country === "Spain" && d.cost_healthy_diet_ppp_usd != null
+                d => d.cost_healthy_diet_ppp_usd != null
             );
 
             if (spainRecords.length === 0) throw new Error("No hay datos de Spain");
@@ -56,10 +54,9 @@
             const labels = cryptoList.map(c => c.name);
             const series = cryptoList.map(c => parseFloat(c.amountNeeded.toFixed(6)));
 
-            loading = false;
-
+            // Buscamos el contenedor directamente (al no haber #if, SIEMPRE existe)
             const chartEl = document.querySelector("#chart-donut");
-            if (!chartEl) throw new Error("No se encontró el contenedor del gráfico");
+            if (!chartEl) throw new Error("No se encontró el contenedor");
 
             const options = {
                 chart: {
@@ -90,7 +87,6 @@
         } catch (e) {
             console.error(e);
             errorMsg = e.message;
-            loading = false;
         }
     }
 
@@ -103,13 +99,11 @@
     <h2>Integración Externa 3 — Dieta Saludable España en Criptomonedas</h2>
 
     <div class="box">
-        {#if loading}
-            <p>Cargando...</p>
-        {:else if errorMsg}
+        {#if errorMsg}
             <p class="error">{errorMsg}</p>
-        {:else}
-            <div id="chart-donut"></div>
         {/if}
+
+        <div id="chart-donut" style="width: 100%;"></div>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -131,6 +125,7 @@
         border: 1px solid #ddd;
         min-height: 450px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
     }
