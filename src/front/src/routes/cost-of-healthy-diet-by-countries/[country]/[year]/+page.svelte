@@ -90,7 +90,7 @@
             </div>
 
             <div class="botones">
-                <button onclick={() => goto('/cost-of-healthy-diet')} class="btn-back">← Volver</button>
+                <button onclick={() => goto('/cost-of-healthy-diet-by-countries')} class="btn-back">← Volver</button>
                 <button onclick={guardar} class="btn-save">Guardar cambios</button>
             </div>
         </div>
