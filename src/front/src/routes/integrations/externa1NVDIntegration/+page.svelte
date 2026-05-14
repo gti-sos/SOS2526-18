@@ -11,6 +11,14 @@
     const norm = s =>
         s ? s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() : '';
 
+    const NAME_MAP = {
+        'china, mainland': 'china',
+        'united kingdom':  'united kingdom',
+        'egypt':           'egypt',
+        'brazil':          'brazil',
+        'spain':           'spain',
+    };
+
     async function loadData() {
         if (!browser) return;
         try {
@@ -32,7 +40,7 @@
                 return;
             }
 
-            // Coste medio por país en mi API
+            // Coste medio por país
             const costMap = {};
             dietData.forEach(d => {
                 const key = norm(d.country);
@@ -43,29 +51,32 @@
                 }
             });
 
-            // Población más reciente por país desde CountriesNow
+            // Población más reciente
             const popMap = {};
             popList.forEach(p => {
                 const key = norm(p.country);
                 const counts = p.populationCounts || [];
                 if (counts.length > 0) {
-                    // El último elemento es el más reciente
                     const last = counts[counts.length - 1];
                     popMap[key] = { value: last.value, year: last.year };
                 }
             });
 
-            // Cruzar
+            // Cruzar: coste anual total nacional = coste diario × 365 × población
             const combined = [];
             Object.keys(costMap).forEach(key => {
                 if (costMap[key].count === 0) return;
-                const avgCost = costMap[key].total / costMap[key].count;
-                const pop = popMap[key];
+                const avgCost   = costMap[key].total / costMap[key].count;
+                const mappedKey = NAME_MAP[key] || key;
+                const pop       = popMap[mappedKey];
+                if (!pop) return;
+                const totalAnnualCost = parseFloat((avgCost * 365 * pop.value).toFixed(0));
                 combined.push({
-                    name: costMap[key].label,
-                    avgCost: parseFloat(avgCost.toFixed(2)),
-                    population: pop ? pop.value : null,
-                    popYear: pop ? pop.year : null
+                    name:            costMap[key].label,
+                    avgCost:         parseFloat(avgCost.toFixed(2)),
+                    population:      pop.value,
+                    popYear:         pop.year,
+                    totalAnnualCost  // en USD
                 });
             });
 
@@ -75,63 +86,88 @@
                 return;
             }
 
-            combined.sort((a, b) => b.avgCost - a.avgCost);
+            combined.sort((a, b) => b.totalAnnualCost - a.totalAnnualCost);
 
-            const Highcharts = (await import('highcharts')).default;
-            const funnelMod  = await import('highcharts/modules/funnel.js');
-            (funnelMod.default || funnelMod)(Highcharts);
+            // Agrupar en sunburst por región
+            const regions = {
+                'América':  ['Brazil'],
+                'Europa':   ['Spain', 'United Kingdom'],
+                'Asia':     ['China, mainland'],
+                'África':   ['Egypt'],
+            };
 
+            const sunburstData = Object.entries(regions).map(([region, countries]) => {
+                const children = combined
+                    .filter(d => countries.includes(d.name))
+                    .map(d => ({
+                        name:       d.name,
+                        value:      d.totalAnnualCost,
+                        avgCost:    d.avgCost,
+                        population: d.population,
+                        popYear:    d.popYear
+                    }));
+                const regionTotal = children.reduce((s, c) => s + c.value, 0);
+                return {
+                    name:     region,
+                    value:    regionTotal,
+                    children
+                };
+            }).filter(r => r.children.length > 0);
+
+            const echarts = await import('echarts');
             loading = false;
 
             setTimeout(() => {
-                Highcharts.chart('chart-ext1', {
-                    chart: {
-                        type: 'pyramid',
-                        backgroundColor: '#fff',
-                        style: { fontFamily: 'Segoe UI, sans-serif' }
-                    },
+                const el = document.getElementById('chart-ext1');
+                if (!el) return;
+                const chart = echarts.init(el);
+
+                chart.setOption({
+                    backgroundColor: '#fff',
                     title: {
-                        text: 'Coste Medio de Dieta Saludable por País',
-                        align: 'center',
-                        style: { fontSize: '16px', color: '#2d3748' }
-                    },
-                    subtitle: {
-                        text: 'NVD API (coste dieta) + CountriesNow (población) | Ordenado de mayor a menor coste',
-                        align: 'center',
-                        style: { fontSize: '11px', color: '#718096' }
-                    },
-                    plotOptions: {
-                        series: {
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b> — {point.y:.2f} USD/día',
-                                softConnector: true,
-                                style: { fontSize: '11px' }
-                            },
-                            center: ['45%', '50%'],
-                            width: '52%'
-                        }
+                        text: 'Gasto Nacional Total en Dieta Saludable',
+                        subtext: 'Coste diario × 365 × Población | NVD API + CountriesNow',
+                        left: 'center',
+                        textStyle:    { fontSize: 16, color: '#2d3748' },
+                        subtextStyle: { fontSize: 11, color: '#718096' }
                     },
                     tooltip: {
-                        useHTML: true,
-                        formatter: function () {
-                            const d = combined.find(c => c.name === this.point.name);
-                            const pop = d && d.population
-                                ? `${(d.population / 1e6).toFixed(1)} M hab. (${d.popYear})`
-                                : 'No disponible';
-                            return `<b>${this.point.name}</b><br/>
-                                    Coste dieta: <b>${this.y.toFixed(2)} USD PPP/día</b><br/>
-                                    Población: <b>${pop}</b>`;
+                        trigger: 'item',
+                        formatter: params => {
+                            if (!params.data.children && params.data.value) {
+                                const billions = (params.data.value / 1e9).toFixed(1);
+                                const pop = (params.data.population / 1e6).toFixed(1);
+                                return `<b>${params.data.name}</b><br/>
+                                        Gasto nacional anual: <b>${billions} B USD</b><br/>
+                                        Coste diario: <b>${params.data.avgCost} USD PPP/día</b><br/>
+                                        Población: <b>${pop} M hab. (${params.data.popYear})</b>`;
+                            }
+                            const billions = (params.data.value / 1e9).toFixed(1);
+                            return `<b>${params.data.name}</b><br/>Total región: <b>${billions} B USD</b>`;
                         }
                     },
                     series: [{
-                        name: 'Coste dieta (USD PPP/día)',
-                        data: combined.map(d => [d.name, d.avgCost]),
-                        colorByPoint: true
-                    }],
-                    credits: { enabled: false },
-                    legend: { enabled: false }
+                        type: 'sunburst',
+                        data: sunburstData,
+                        radius: ['15%', '80%'],
+                        emphasis: { focus: 'ancestor' },
+                        levels: [
+                            {},
+                            {
+                                r0: '15%', r: '45%',
+                                label: { fontSize: 14, fontWeight: 'bold', rotate: 0 },
+                                itemStyle: { borderWidth: 2 }
+                            },
+                            {
+                                r0: '45%', r: '80%',
+                                label: { fontSize: 11, rotate: 'radial' },
+                                itemStyle: { borderWidth: 1 }
+                            }
+                        ]
+                    }]
                 });
+
+                window.addEventListener('resize', () => chart.resize());
             }, 100);
 
         } catch (e) {
@@ -145,40 +181,26 @@
 
 <main class="container">
     <div class="header-info">
-        <h2>Integración Externa 1 — Coste de Dieta × Población</h2>
+        <h2>Integración Externa 1 — Gasto Nacional en Dieta Saludable</h2>
         <p>
             Cruza el coste medio de una dieta saludable por país (mi API) con la
-            población de cada país obtenida de <strong>CountriesNow</strong>,
-            una API pública y gratuita sin autenticación. A mayor población,
-            mayor escala de demanda alimentaria y más presión sobre los precios.
+            población de cada país.
+            El resultado es el gasto nacional anual estimado que
+            supondría alimentar a toda la población con una dieta saludable
+            (coste diario × 365 × población), en USD PPP.
         </p>
     </div>
 
-    <div id="chart-ext1" style="min-height:560px; background:white; border-radius:12px; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center;">
+    <div id="chart-ext1" style="height:560px; background:white; border-radius:12px; border:1px solid #e2e8f0;">
         {#if loading}
-            <p style="color:#718096;">⏳ Cargando datos...</p>
+            <div style="display:flex; align-items:center; justify-content:center; height:560px;">
+                <p style="color:#718096;"> Cargando datos...</p>
+            </div>
         {:else if errorMsg}
-            <p style="color:#721c24; background:#f8d7da; padding:20px; border-radius:8px; margin:20px;">{errorMsg}</p>
+            <div style="display:flex; align-items:center; justify-content:center; height:560px;">
+                <p style="color:#721c24; background:#f8d7da; padding:20px; border-radius:8px; margin:20px;">{errorMsg}</p>
+            </div>
         {/if}
-    </div>
-
-    <div class="info-box">
-        <p><strong>APIs utilizadas:</strong></p>
-        <ul>
-            <li><strong>NVD API</strong> — Coste de dieta saludable por país y año (USD PPP/día)</li>
-            <li>
-                <strong>CountriesNow</strong>
-                (<code>countriesnow.space/api/v0.1/countries/population</code>) —
-                Población histórica por país. API pública, sin autenticación.
-            </li>
-        </ul>
-        <p>
-            <strong>Relación lógica:</strong> La densidad de población de un país
-            afecta a la escala de su producción alimentaria y a la competencia
-            por recursos, factores que repercuten directamente en el coste de
-            una dieta saludable.
-        </p>
-        <p><strong>Gráfico:</strong> Pirámide (Highcharts Funnel/Pyramid).</p>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -197,17 +219,6 @@
     .header-info { margin-bottom: 24px; }
     .header-info h2 { font-size: 1.5rem; color: #1a202c; margin-bottom: 6px; }
     .header-info p { color: #718096; font-size: 0.95rem; }
-    .info-box {
-        margin-top: 24px;
-        padding: 16px 20px;
-        background: #f7fafc;
-        border-left: 5px solid #4a90d9;
-        border-radius: 4px;
-        font-size: 0.9em;
-        color: #4a5568;
-    }
-    .info-box ul { margin: 8px 0 8px 20px; padding: 0; }
-    .info-box code { background: #edf2f7; padding: 2px 5px; border-radius: 3px; font-size: 0.85em; }
     .btn-back {
         display: inline-block;
         padding: 10px 22px;

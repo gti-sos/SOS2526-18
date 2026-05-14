@@ -5,14 +5,13 @@
     const API_NVD = 'https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries';
     // Frankfurter: tipos de cambio históricos gratuitos, sin API key
     // Usamos el tipo de cambio USD → moneda local de cada país de mi API
-    const API_FX = 'https://api.frankfurter.app/latest?from=USD';
+    const API_FF = 'https://api.frankfurter.dev/v1/latest?from=USD'; 
 
     // Moneda local de cada país en mi API
     const COUNTRY_CURRENCY = {
         'Spain':           'EUR',
         'United Kingdom':  'GBP',
         'China, mainland': 'CNY',
-        'Egypt':           'EGP',
         'Brazil':          'BRL'
     };
 
@@ -24,7 +23,7 @@
         try {
             const [resNvd, resFx] = await Promise.all([
                 fetch(API_NVD),
-                fetch(API_FX)
+                fetch(API_FF)
             ]);
 
             if (!resNvd.ok) throw new Error('Error al acceder a la API de dietas');
@@ -146,41 +145,19 @@
 
 <main class="container">
     <div class="header-info">
-        <h2>Integración Externa 2 — Coste de Dieta × Tipo de Cambio</h2>
+        <h2>Integración Externa 2 — Coste de Dieta × Cambio (Moneda de cada país)</h2>
         <p>
             Convierte el coste de la dieta saludable (mi API, en USD PPP/día) a la
-            moneda local de cada país usando los tipos de cambio de
-            <strong>Frankfurter</strong>, una API pública y gratuita sin autenticación.
-            El tipo de cambio refleja directamente cuánto esfuerzo económico
-            real supone la dieta para los habitantes de cada país.
+            moneda local de cada país usando los tipos de cambio.
         </p>
     </div>
 
     <div id="chart-ext2" style="height:420px; background:white; border-radius:12px; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center;">
         {#if loading}
-            <p style="color:#718096;">⏳ Cargando tipos de cambio...</p>
+            <p style="color:#718096;">Cargando tipos de cambio...</p>
         {:else if errorMsg}
             <p style="color:#721c24; background:#f8d7da; padding:20px; border-radius:8px; margin:20px;">{errorMsg}</p>
         {/if}
-    </div>
-
-    <div class="info-box">
-        <p><strong>APIs utilizadas:</strong></p>
-        <ul>
-            <li><strong>NVD API</strong> — Coste de dieta saludable por país y año (USD PPP/día)</li>
-            <li>
-                <strong>Frankfurter</strong>
-                (<code>api.frankfurter.app/latest?from=USD</code>) —
-                Tipos de cambio actualizados diariamente. API gratuita, sin API key,
-                basada en datos del Banco Central Europeo.
-            </li>
-        </ul>
-        <p>
-            <strong>Relación lógica:</strong> El coste en USD PPP no refleja lo que
-            un ciudadano paga realmente en su moneda local. Convertirlo al tipo de
-            cambio real muestra el impacto económico verdadero de la dieta en cada país.
-        </p>
-        <p><strong>Gráfico:</strong> Barras horizontales agrupadas (eCharts).</p>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -199,17 +176,6 @@
     .header-info { margin-bottom: 24px; }
     .header-info h2 { font-size: 1.5rem; color: #1a202c; margin-bottom: 6px; }
     .header-info p { color: #718096; font-size: 0.95rem; }
-    .info-box {
-        margin-top: 24px;
-        padding: 16px 20px;
-        background: #f7fafc;
-        border-left: 5px solid #38a169;
-        border-radius: 4px;
-        font-size: 0.9em;
-        color: #4a5568;
-    }
-    .info-box ul { margin: 8px 0 8px 20px; padding: 0; }
-    .info-box code { background: #edf2f7; padding: 2px 5px; border-radius: 3px; font-size: 0.85em; }
     .btn-back {
         display: inline-block;
         padding: 10px 22px;
