@@ -8,8 +8,6 @@
     let loading  = true;
     let errorMsg = '';
 
-    const COUNTRIES = ['Spain', 'United Kingdom', 'China, mainland', 'Brazil', 'Egypt'];
-
     async function loadData() {
         if (!browser) return;
         try {
@@ -24,32 +22,28 @@
             const dietData   = await resNvd.json();
             const cryptoData = await resCrypto.json();
 
-            // Precios actuales
-            const btcPrice = cryptoData.bitcoin.usd;
-            const ethPrice = cryptoData.ethereum.usd;
-
-            // Coste medio anual por país
-            const costMap = {};
+            // Precio medio global de la dieta (todos los registros)
+            let totalCost = 0;
+            let count     = 0;
             dietData.forEach(d => {
-                if (!COUNTRIES.includes(d.country)) return;
-                if (!costMap[d.country]) costMap[d.country] = { total: 0, count: 0 };
                 if (d.cost_healthy_diet_ppp_usd != null) {
-                    costMap[d.country].total += parseFloat(d.cost_healthy_diet_ppp_usd);
-                    costMap[d.country].count++;
+                    totalCost += parseFloat(d.cost_healthy_diet_ppp_usd);
+                    count++;
                 }
             });
 
-            const combined = [];
-            Object.entries(costMap).forEach(([country, info]) => {
-                if (info.count === 0) return;
-                const avgDailyCost  = info.total / info.count;
-                const annualCostUSD = parseFloat((avgDailyCost * 365).toFixed(2));
-                const btcNeeded     = parseFloat((annualCostUSD / btcPrice).toFixed(6));
-                const ethNeeded     = parseFloat((annualCostUSD / ethPrice).toFixed(6));
-                combined.push({ country, annualCostUSD, btcNeeded, ethNeeded });
-            });
+            if (count === 0) throw new Error('No hay datos de dieta');
 
-            combined.sort((a, b) => b.annualCostUSD - a.annualCostUSD);
+            const avgDailyCost  = totalCost / count;
+            const annualCostUSD = parseFloat((avgDailyCost * 365).toFixed(2));
+
+            // Cripto necesaria para pagar la dieta anual
+            const cryptoList = cryptoData.data.map(c => ({
+                name:       c.name,
+                symbol:     c.symbol.toUpperCase(),
+                priceUsd:   parseFloat(parseFloat(c.priceUsd).toFixed(2)),
+                amountNeeded: parseFloat((annualCostUSD / parseFloat(c.priceUsd)).toFixed(6))
+            }));
 
             const { Chart, registerables } = await import('chart.js');
             Chart.register(...registerables);
@@ -62,25 +56,33 @@
 
                 const ctx = el.getContext('2d');
 
+                const colors = [
+                    'rgba(247, 147, 26, 0.7)',  // BTC naranja
+                    'rgba(98, 126, 234, 0.7)',   // ETH azul
+                    'rgba(153, 69, 255, 0.7)',   // SOL morado
+                    'rgba(243, 186, 47, 0.7)',   // BNB amarillo
+                    'rgba(0, 168, 232, 0.7)',    // XRP cyan
+                ];
+
+                const borderColors = [
+                    'rgba(247, 147, 26, 1)',
+                    'rgba(98, 126, 234, 1)',
+                    'rgba(153, 69, 255, 1)',
+                    'rgba(243, 186, 47, 1)',
+                    'rgba(0, 168, 232, 1)',
+                ];
+
                 new Chart(ctx, {
                     type: 'polarArea',
                     data: {
-                        labels: combined.map(d => d.country),
-                        datasets: [
-                            {
-                                label: 'BTC necesario/año',
-                                data: combined.map(d => d.btcNeeded),
-                                backgroundColor: [
-                                    'rgba(247, 147, 26, 0.7)',
-                                    'rgba(247, 147, 26, 0.55)',
-                                    'rgba(247, 147, 26, 0.4)',
-                                    'rgba(247, 147, 26, 0.3)',
-                                    'rgba(247, 147, 26, 0.2)',
-                                ],
-                                borderColor: 'rgba(247, 147, 26, 1)',
-                                borderWidth: 1
-                            }
-                        ]
+                        labels: cryptoList.map(c => `${c.name} (${c.symbol})`),
+                        datasets: [{
+                            label: 'Cantidad de crypto necesaria',
+                            data: cryptoList.map(c => c.amountNeeded),
+                            backgroundColor: colors,
+                            borderColor: borderColors,
+                            borderWidth: 1
+                        }]
                     },
                     options: {
                         responsive: true,
@@ -88,26 +90,27 @@
                         plugins: {
                             title: {
                                 display: true,
-                                text: 'BTC necesario para costear la dieta anual por país',
-                                font: { size: 16 },
-                                color: '#2d3748'
+                                text: 'Crypto necesaria para costear la dieta saludable anual media global',
+                                font: { size: 15 },
+                                color: '#2d3748',
+                                padding: { bottom: 6 }
                             },
                             subtitle: {
                                 display: true,
-                                text: `Precio BTC: $${btcPrice.toLocaleString()} | Precio ETH: $${ethPrice.toLocaleString()} | NVD API + CoinGecko`,
+                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + CoinCap`,
                                 font: { size: 11 },
                                 color: '#718096',
-                                padding: { bottom: 10 }
+                                padding: { bottom: 16 }
                             },
                             legend: { position: 'bottom' },
                             tooltip: {
                                 callbacks: {
                                     label: ctx => {
-                                        const d = combined[ctx.dataIndex];
+                                        const c = cryptoList[ctx.dataIndex];
                                         return [
-                                            `Coste anual: $${d.annualCostUSD} USD`,
-                                            `BTC necesario: ${d.btcNeeded} BTC`,
-                                            `ETH necesario: ${d.ethNeeded} ETH`
+                                            `Precio actual: $${c.priceUsd.toLocaleString()} USD`,
+                                            `Cantidad necesaria: ${c.amountNeeded} ${c.symbol}`,
+                                            `Coste anual dieta: $${annualCostUSD} USD`
                                         ];
                                     }
                                 }
@@ -136,20 +139,21 @@
 
 <main class="container">
     <div class="header-info">
-        <h2>Integración Externa 3 — Coste de Dieta en Criptomonedas</h2>
+        <h2>Integración Externa 3 — Dieta Saludable en Criptomonedas</h2>
         <p>
-            Cruza el coste medio anual de una dieta saludable por país (mi API) con
-            el precio actual de Bitcoin y Ethereum
-            obtenido a través de un proxy propio que consulta CoinGecko.
-            El resultado muestra cuánto BTC necesitarías para alimentarte
-            durante un año entero en cada país.
+            Calcula el coste medio anual de una dieta saludable a nivel global
+            usando todos los registros de mi API, y lo convierte a las 5
+            principales criptomonedas usando precios en tiempo real de
+            CoinCap a través de un proxy propio.
+            Calcula cuánto Bitcoin, Ethereum, Solana, BNB o XRP necesitas para
+            comer sano un año entero
         </p>
     </div>
 
-    <div style="height:500px; background:white; border-radius:12px; border:1px solid #e2e8f0; padding: 20px;">
+    <div style="height:520px; background:white; border-radius:12px; border:1px solid #e2e8f0; padding:20px;">
         {#if loading}
             <div style="display:flex; align-items:center; justify-content:center; height:100%;">
-                <p style="color:#718096;"> Cargando...</p>
+                <p style="color:#718096;">Cargando...</p>
             </div>
         {:else if errorMsg}
             <div style="display:flex; align-items:center; justify-content:center; height:100%;">

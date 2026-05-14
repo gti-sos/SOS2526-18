@@ -69,8 +69,7 @@ app.get("/api/v2/proxy-countries", async (req, res) => {
 // PROXY PARA LA API EXTERNA3 (NVD)
 // ==========================================
 app.get("/api/v2/proxy-crypto", async (req, res) => {
-    const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd";
-    
+    const url = "https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,solana,binance-coin,xrp";
     try {
         const response = await fetch(url);
         const data = await response.json();
