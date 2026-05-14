@@ -51,6 +51,7 @@
 
             loading = false;
             await tick();
+            
             const el = document.getElementById('chart-ext3');
             if (!el) return;
 
