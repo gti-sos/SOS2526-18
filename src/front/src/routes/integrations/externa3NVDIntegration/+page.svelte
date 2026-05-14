@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount,tick } from 'svelte';
     import { browser } from '$app/environment';
 
     const API_NVD    = 'https://sos2526-18.onrender.com/api/v1/cost-of-healthy-diet-by-countries';
@@ -50,90 +50,88 @@
             Chart.register(...registerables);
 
             loading = false;
+            await tick();
+            const el = document.getElementById('chart-ext3');
+            if (!el) return;
 
-            setTimeout(() => {
-                const el = document.getElementById('chart-ext3');
-                if (!el) return;
+            const ctx = el.getContext('2d');
 
-                const ctx = el.getContext('2d');
+            const colors = [
+                'rgba(247, 147, 26, 0.7)',
+                'rgba(98, 126, 234, 0.7)',
+                'rgba(153, 69, 255, 0.7)',
+                'rgba(243, 186, 47, 0.7)',
+                'rgba(0, 168, 232, 0.7)',
+            ];
 
-                const colors = [
-                    'rgba(247, 147, 26, 0.7)',
-                    'rgba(98, 126, 234, 0.7)',
-                    'rgba(153, 69, 255, 0.7)',
-                    'rgba(243, 186, 47, 0.7)',
-                    'rgba(0, 168, 232, 0.7)',
-                ];
+            const borderColors = [
+                'rgba(247, 147, 26, 1)',
+                'rgba(98, 126, 234, 1)',
+                'rgba(153, 69, 255, 1)',
+                'rgba(243, 186, 47, 1)',
+                'rgba(0, 168, 232, 1)',
+            ];
 
-                const borderColors = [
-                    'rgba(247, 147, 26, 1)',
-                    'rgba(98, 126, 234, 1)',
-                    'rgba(153, 69, 255, 1)',
-                    'rgba(243, 186, 47, 1)',
-                    'rgba(0, 168, 232, 1)',
-                ];
-
-                new Chart(ctx, {
-                    type: 'polarArea',
-                    data: {
-                        labels: cryptoList.map(c => `${c.name} (${c.symbol})`),
-                        datasets: [{
-                            label: 'Cantidad de crypto necesaria',
-                            data: cryptoList.map(c => c.amountNeeded),
-                            backgroundColor: colors,
-                            borderColor: borderColors,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Crypto necesaria para costear la dieta saludable anual media global',
-                                font: { size: 15 },
-                                color: '#2d3748',
-                                padding: { bottom: 6 }
-                            },
-                            subtitle: {
-                                display: true,
-                                text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + Binance`,
-                                font: { size: 11 },
-                                color: '#718096',
-                                padding: { bottom: 16 }
-                            },
-                            legend: { position: 'bottom' },
-                            tooltip: {
-                                callbacks: {
-                                    label: ctx => {
-                                        const c = cryptoList[ctx.dataIndex];
-                                        return [
-                                            `Precio actual: $${c.priceUsd.toLocaleString()} USD`,
-                                            `Cantidad necesaria: ${c.amountNeeded} ${c.symbol}`,
-                                            `Coste anual dieta: $${annualCostUSD} USD`
-                                        ];
-                                    }
-                                }
-                            }
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: cryptoList.map(c => `${c.name} (${c.symbol})`),
+                    datasets: [{
+                        label: 'Cantidad de crypto necesaria',
+                        data: cryptoList.map(c => c.amountNeeded),
+                        backgroundColor: colors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Crypto necesaria para costear la dieta saludable anual media global',
+                            font: { size: 15 },
+                            color: '#2d3748',
+                            padding: { bottom: 6 }
                         },
-                        scales: {
-                            r: {
-                                ticks: {
-                                    backdropColor: 'transparent',
-                                    font: { size: 10 }
+                        subtitle: {
+                            display: true,
+                            text: `Coste medio diario global: $${avgDailyCost.toFixed(2)} USD | Coste anual: $${annualCostUSD} USD | Fuente: NVD API + Binance`,
+                            font: { size: 11 },
+                            color: '#718096',
+                            padding: { bottom: 16 }
+                        },
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const c = cryptoList[ctx.dataIndex];
+                                    return [
+                                        `Precio actual: $${c.priceUsd.toLocaleString()} USD`,
+                                        `Cantidad necesaria: ${c.amountNeeded} ${c.symbol}`,
+                                        `Coste anual dieta: $${annualCostUSD} USD`
+                                    ];
                                 }
                             }
                         }
+                    },
+                    scales: {
+                        r: {
+                            ticks: {
+                                backdropColor: 'transparent',
+                                font: { size: 10 }
+                            }
+                        }
                     }
-                });
-            }, 100);
+                }
+            });
+        }
 
         } catch (e) {
             errorMsg = 'Error: ' + e.message;
             loading = false;
         }
-    }
 
     onMount(loadData);
 </script>
