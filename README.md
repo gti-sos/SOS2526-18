@@ -1,4 +1,4 @@
-# SOS2526-18
+# SOS2526-18 
 
 - **Team**
   - Jose Luis Alcón Del Villar ([josalcdel1](https://github.com/josalcdel1))
