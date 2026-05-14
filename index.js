@@ -65,6 +65,21 @@ app.get("/api/v2/proxy-countries", async (req, res) => {
 
 
 
+// ==========================================
+// PROXY PARA LA API EXTERNA3 (NVD)
+// ==========================================
+app.get("/api/v2/proxy-crypto", async (req, res) => {
+    const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd";
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).send("Error en el proxy de crypto");
+    }
+});
+// =========================================
 
 app.use(handler)
 
