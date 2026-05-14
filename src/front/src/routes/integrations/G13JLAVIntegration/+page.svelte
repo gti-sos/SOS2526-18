@@ -13,20 +13,20 @@
             const myData = await resMe.json(); 
             const herData = await resHer.json();
 
-            // 1. Buscamos países donde ella sea proveedora (supplier) y tú tengas datos
+            //Buscamos países donde ella sea proveedora (supplier) y yo tengas datos
             const commonCountries = myData
                 .map(d => d.country)
                 .filter(country => herData.some(h => h.supplier === country));
             
             const uniqueCountries = [...new Set(commonCountries)];
 
-            // 2. Preparamos los datos reales (Producción vs Exportación)
+            //Preparamos los datos reales (Producción vs Exportación)
             const seriesData = uniqueCountries.map(country => {
-                // Tus datos (Media de producción / 100.000)
+                //Mis datos (Media de producción / 100.000)
                 const myEntries = myData.filter(d => d.country === country);
                 const m = (myEntries.reduce((acc, curr) => acc + curr.cereal_production, 0) / myEntries.length) / 100000;
                   
-                // Sus datos (Solo donde el país es SUPPLIER) 
+                //Sus datos (Solo donde el país es SUPPLIER) 
                 const herEntries = herData.filter(h => h.supplier === country);
                 const h = herEntries.reduce((acc, curr) => acc + (curr.tiv_total_order || 0), 0) / herEntries.length;
                 
@@ -37,7 +37,7 @@
                 return { low, median, high };
             });
 
-            // 3. Renderizado del gráfico
+            //Renderizado del gráfico
             Highcharts.chart('container-g13', {
                 chart: { type: 'lowmedhigh' },
                 title: { text: 'Integración Final G18 + G13 (Solo Proveedores)' },
@@ -85,7 +85,7 @@
                     console.error("No se pudo cargar Highcharts-More como función");
                 }
 
-                // DEFINICIÓN DEL TIPO DE GRÁFICO (Dibuja las 3 rayas)
+                //DEFINICIÓN DEL TIPO DE GRÁFICO (Dibuja las 3 rayas)
                 Highcharts.seriesType('lowmedhigh', 'boxplot', {
                     keys: ['low', 'median', 'high']
                 }, {

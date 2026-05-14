@@ -19,7 +19,7 @@
             let myData = await resMe.json();
             const extData = await resExt.json();
 
-            // VERIFICACIÓN REAL: Si no hay datos en tu API, paramos y avisamos
+            // Si no hay datos en mi API, paramos y avisamos
             if (!myData || myData.length === 0) {
                 loading = false;
                 errorMsg = "La base de datos de tu API está vacía. No hay datos para mostrar.";
@@ -28,7 +28,7 @@
 
             const normalizeName = (str) => str ? str.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
 
-            // Cruzamos los datos de tu API con la externa (SIN LÍMITES)
+            // Cruzamos los datos de mi API con la externa
             let combinedData = myData.map(m => {
                 const countryExt = extData.find(c => normalizeName(c.name.common) === normalizeName(m.country));
                 if (countryExt) {

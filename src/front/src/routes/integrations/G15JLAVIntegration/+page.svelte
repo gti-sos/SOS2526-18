@@ -11,17 +11,17 @@
                 const module = await import('apexcharts');
                 const ApexCharts = module.default;
 
-                // 1. Cargamos ambas APIs
+                //Cargamos ambas APIs
                 const [resMe, resG15] = await Promise.all([ fetch(miApiUrl), fetch(g15ApiUrl) ]);
                 const myData = await resMe.json();
                 let densityData = resG15.ok ? await resG15.json() : [];
 
-                // 2. Función para quitar tildes y pasar a minúsculas
+                // Función para quitar tildes y pasar a minúsculas
                 const normalize = (str) => {
                     return str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
                 }
 
-                // 3. Diccionario de traducción 
+                //Diccionario de traducción 
                 const mapEnToEs = {
                     "spain": "espana",
                     "germany": "alemania",
@@ -30,7 +30,7 @@
                     "italy": "italia"
                 };
 
-                // 4. Cruzamos datos
+                //Cruzamos datos
                 let chartPoints = myData.map(m => {
                     const myCountryClean = normalize(m.country);
                     
