@@ -24,7 +24,7 @@
             <a href={videos.nvd} target="_blank" class="btn-video">Ver Vídeo</a>
         </div>  
  
-        <!-- Manuel Castro Sánchez -->
+        <!-- Manuel Castro Sánchez --> 
         <div class="card">
             <h3>Manuel Castro Sánchez</h3>
             <p><strong>Recurso:</strong> <code>food-supply-utilization-accounts</code></p>
