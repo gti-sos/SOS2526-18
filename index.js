@@ -62,6 +62,25 @@ app.get("/api/v2/proxy-countries", async (req, res) => {
         res.status(500).send("Error en el proxy de countries");
     }
 });
+// ========================================== 
+// PROXY PARA LA API EXTERNA2 (MCS)
+// ==========================================
+
+app.get("/api/v2/proxy-countries2", async (req, res) => {
+
+    const url = "https://www.apicountries.com/countries";
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        res.json(data);
+
+    } catch (error) {
+        res.status(500).send("Error en el proxy de countries");
+    }
+});
+
 
 
 
