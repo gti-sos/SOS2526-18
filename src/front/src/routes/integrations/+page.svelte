@@ -76,23 +76,41 @@
 
     <section class="author-section">
         <div class="author-header">
-            <h2>Integraciones de Compañeros</h2>
+            <h2>Integraciones de Manuel</h2>
         </div>
+        
         <div class="grid">
-            <div class="card pending">
-                <h3>Integración Compañero 1</h3>
-                <p>Espacio reservado</p>
-            </div>
-            <div class="card pending">
-                <h3>Integración Compañero 2</h3>
-                <p>Espacio reservado</p>
-            </div>
-            <div class="card pending">
-                <h3>Integración Compañero 3</h3>
-                <p>Espacio reservado</p>
-            </div>
+            <a href="/integrations/G14MCSIntegration" class="card my-card">
+                <h3>Integración G14</h3>
+                <p>Produccion de comida (G18) + Satelites (G14)</p>
+            </a>
+
+            <a href="/integrations/G15MCSIntegration" class="card my-card">
+                <h3>Integración G15</h3>
+                <p>Produccion de comida (G18) + Felicidad (G15)</p>
+            </a>
+
+            <a href="/integrations/G26MCSIntegration" class="card my-card">
+                <h3>Integración G26</h3>
+                <p>Produccion de comida (G18) + Ranking FIFA (G26)</p>
+            </a>
+
+             <a href="/integrations/ext1MCS" class="card my-card">
+                <h3>Integración Externa 1</h3>
+                <p>Produccion de comida (G18) + Poblacion</p>
+            </a>
+
+            <a href="/integrations/ext2MCS" class="card my-card">
+                <h3>Integración Externa 2</h3>
+                <p>Produccion de comida (G18) + Fronteras</p>
+            </a>
+
+            <a href="/integrations/ext3MCS" class="card my-card">
+                <h3>Uso Externo 3</h3>
+                <p>GDP mundial</p>
+            </a>
         </div>
-    </section>
+    </section> 
 
     <div class="footer">
         <a href="/" class="btn-back">Volver al Inicio</a>
