@@ -14,7 +14,7 @@ app.use(cors());
 
 
 app.use(express.json()); //Para que el servidor entienda datos en formato JSON
- 
+  
 
 //activacion apis jlav
 load_JLAV_API_V1(app);
@@ -44,8 +44,43 @@ app.get("/api/v2/proxy-health", async (req, res) => {
         res.status(500).send("Error en el proxy de salud");
     }
 });
+// ========================================== 
+// PROXY PARA LA API EXTERNA1 (MCS)
 // ==========================================
 
+app.get("/api/v2/proxy-countries", async (req, res) => {
+
+    const url = "https://countries-api.davegarvey.workers.dev/countries";
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        res.json(data);
+
+    } catch (error) {
+        res.status(500).send("Error en el proxy de countries");
+    }
+});
+
+
+
+// ==========================================
+// PROXY PARA LA API EXTERNA3 (NVD)
+// ==========================================
+app.get("/api/v2/proxy-crypto", async (req, res) => {
+    const symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT"];
+    const url = `https://api.binance.com/api/v3/ticker/price?symbols=${JSON.stringify(symbols)}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) return res.status(502).json({ error: "Error upstream" });
+        res.json(await response.json());
+    } catch (error) {
+        res.status(500).send("Error en el proxy de crypto");
+    }
+});
+// =========================================
 
 app.use(handler)
 
