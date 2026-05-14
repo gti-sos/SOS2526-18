@@ -51,7 +51,7 @@
 
             loading = false;
             await tick();
-            
+
             const el = document.getElementById('chart-ext3');
             if (!el) return;
 
@@ -129,12 +129,14 @@
             });
         }
 
-        } catch (e) {
+        catch (e) {
             errorMsg = 'Error: ' + e.message;
             loading = false;
         }
 
+    }
     onMount(loadData);
+    
 </script>
 
 <main class="container">
